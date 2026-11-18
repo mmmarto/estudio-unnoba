@@ -19,7 +19,7 @@ function store(k, v) {
 }
 
 /* ============ TABS ============ */
-var TABS = ['teoria', 'cero', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro'];
+var TABS = ['teoria', 'cero', 'guiada', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro'];
 var rendered = {};
 var RENDER = {};
 function showTab(id) {
@@ -170,7 +170,7 @@ RENDER.teoria = function () {
     [['todas', 'Todas'], ['alta', 'Solo alta'], ['alta media', 'Alta + media'], ['pend', 'Sin dominar']].map(function (f, i) { return '<button class="chip" data-f="' + f[0] + '" aria-pressed="' + (i === 0) + '">' + f[1] + '</button>'; }).join('') +
     '</div><div class="jump"><label for="jump-t">Ir a</label><select id="jump-t"><option value="">Elegí un tema…</option>' +
     DATA.teoria.map(function (c, i) { return '<option value="c-' + c.id + '">' + (i < 9 ? '0' : '') + (i + 1) + ' · ' + esc(c.t) + '</option>'; }).join('') + '</select></div></div>';
-  html += '<div class="note"><b>¿Hay temas que todavía no viste?</b> Mirá la pestaña <button class="linkbtn" data-go="cero">Desde cero</button>: están explicados paso a paso, sin vueltas, y con la misma idea de esta pestaña pero más despacio.</div>';
+  html += '<div class="note"><b>¿Hay temas que todavía no viste?</b> Mirá la pestaña <button class="linkbtn" data-go="cero">Desde cero</button>: están explicados paso a paso y sin vueltas. Y para practicar, la pestaña <button class=\"linkbtn\" data-go=\"guiada\">Práctica guiada</button> te lleva de a un paso por cada tipo de ejercicio del parcial.</div>';
   html += '<section id="que-toman"><div><div class="eyebrow">Qué toman</div><h2>El 2.º parcial, en cinco bloques</h2></div><p class="lead">Armado con los parciales 2017, 2019, 2022, 2024 y el recuperatorio 2025 (están en las pestañas de resueltos). La estructura se repite casi igual todos los años:</p>' +
     '<div class="tbl"><table><thead><tr><th>Bloque</th><th>Qué piden</th><th>Aparece en</th></tr></thead><tbody>' +
     '<tr><td><b>Subneteo</b> <span class="tag alta">alta</span></td><td>N subredes de un bloque: máscara, red de la subred K, rango de hosts, broadcast, gateway (primer host), a qué subred pertenece una IP</td><td>2017 · 2019 · 2022 · 2024 · 2025</td></tr>' +
@@ -603,6 +603,8 @@ RENDER.simulacro = function () {
   }
   $('#sim-new').addEventListener('click', build); build();
 };
+
+/*GUIADA*/
 
 /* ============ INICIO ============ */
 document.addEventListener('DOMContentLoaded', function () {

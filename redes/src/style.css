@@ -194,3 +194,27 @@ input.in{width:17ch}
 .lesson.done .mark{color:var(--ok)}
 .les-try summary{padding:10px 14px}
 section>.jump{margin-left:0;width:100%;max-width:420px}
+
+/* Práctica guiada */
+.gsteps{display:grid;gap:10px;max-width:80ch;margin-top:14px}
+.gstep{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:10px;min-width:0}
+.gstep.cur{border-color:var(--accent);background:var(--accent-soft)}
+.gstep.done.ok{border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
+.gstep.done.help{border-color:color-mix(in srgb,var(--media) 45%,transparent)}
+.gn{font:600 .72rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.gstep.done.ok .gn{color:var(--ok)}
+.gstep.done.help .gn{color:var(--media)}
+.gq{font-size:1.02rem}
+.gans{font-weight:600}
+.gexp{color:var(--muted);font-size:.95rem}
+.gin{width:min(100%,24ch)}
+.gopts{display:grid;gap:8px}
+.gopt{display:flex;gap:10px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;min-width:0}
+.gopt input{margin-top:5px;accent-color:var(--accent)}
+.gopt span{min-width:0;overflow-wrap:anywhere}
+.gopt pre{margin:0;overflow-x:auto}
+.gmsg{min-height:1.2em;font-size:.95rem}
+.gwrong{color:var(--alta);font-weight:600}
+.ghint{color:var(--media)}
+.gfin{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 8%,var(--surface))}
+.gen-enun .topo-box{margin-top:8px}
