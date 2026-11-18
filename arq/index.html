@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Guía Arquitectura · Final de Organización y Arquitectura de Computadoras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#000; --surface:#0E1014; --ink:#E9ECF2; --muted:#9BA3B4; --line:#262B36;
+  --accent:#8FA3FF; --accent-soft:#151B33;
+  --alta:#FF9466; --alta-soft:#2A1710; --media:#EDBE58; --media-soft:#272010; --baja:#A6B0C4; --baja-soft:#181C25;
+  --ok:#5CD398; --code-bg:#07080B;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding:0 max(16px,env(safe-area-inset-right,0px)) 64px max(16px,env(safe-area-inset-left,0px));padding-top:env(safe-area-inset-top,0px)}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,5vw,3.1rem);font-weight:800;letter-spacing:-.01em}
+h2{font-size:1.75rem;font-weight:800}
+h3{font-size:1.2rem;font-weight:700}
+h4{font-size:1rem;font-weight:700;margin-top:6px}
+p{margin:0}
+a{color:var(--accent)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.muted{color:var(--muted)}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.topbar{max-width:1100px;margin:0 auto;padding-top:32px;display:grid;gap:18px}
+.hero{display:grid;gap:14px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.hero .when{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:baseline;font-family:var(--f-mono);font-size:.95rem}
+.hero .count{font-family:var(--f-display);font-weight:800;font-size:1.3rem;color:var(--alta)}
+.prose{max-width:72ch}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);z-index:5;padding-top:8px}
+.tab{font:600 .95rem var(--f-display);background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:10px 14px;cursor:pointer;margin-bottom:-1px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab .n{font:500 .72rem var(--f-mono);color:var(--muted);margin-left:6px}
+@media (max-width:600px){.tab .n{display:none}.tab{padding:10px 10px;font-size:.88rem}}
+[hidden]{display:none!important}
+.wrap{max-width:1100px;margin:0 auto}
+main{padding-top:28px;display:grid;gap:64px;min-width:0}
+section{display:grid;gap:18px;scroll-margin-top:70px;min-width:0}
+section>.lead,.lead{max-width:70ch;color:var(--muted)}
+.panel-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;margin-bottom:-32px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font:600 .82rem var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.jump{display:flex;align-items:center;gap:10px;flex:0 1 420px;min-width:0;margin-left:auto}
+.jump label{font:600 .75rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.jump select{flex:1 1 auto;min-width:0}
+select,input.in,textarea.ta{font:inherit;font-size:.92rem;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px;max-width:100%;min-width:0}
+input.in{font-family:var(--f-mono);width:auto}
+input.in.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+input.in.bad{border-color:var(--alta);background:var(--alta-soft)}
+textarea.ta{width:100%;font-family:var(--f-mono);font-size:.82rem;background:var(--code-bg);resize:vertical}
+.tag{display:inline-flex;align-items:center;font:600 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid currentColor;white-space:nowrap}
+.tag.alta{color:var(--alta);background:var(--alta-soft)}
+.tag.media{color:var(--media);background:var(--media-soft)}
+.tag.baja{color:var(--baja);background:var(--baja-soft)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 .75rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--paper)}
+tr:last-child td,tr:last-child th{border-bottom:0}
+tbody th{width:34%}
+tr.unused td{opacity:.4}
+.concepts{display:grid;gap:14px}
+.concept{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;display:grid;gap:12px;min-width:0}
+.concept-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+.concept-head h3{flex:1 1 260px}
+.concept .body{display:grid;gap:12px;min-width:0}
+.mark{display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--muted);cursor:pointer;user-select:none}
+.mark input{width:16px;height:16px;accent-color:var(--ok)}
+.concept.done{border-color:var(--ok)}
+.concept.done .mark{color:var(--ok)}
+.warn{background:var(--alta-soft);border-radius:8px;padding:12px 14px;font-size:.95rem}
+.warn b{color:var(--alta)}
+.dse{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.dse>div{border-radius:10px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0}
+.dse-k{font:600 .72rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+.dse-def{background:var(--paper);border:1px solid var(--line)}
+.dse-def .dse-k{color:var(--muted)}
+.dse-simple{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.dse-simple .dse-k{color:var(--accent)}
+.dse-ex{grid-column:1/-1;background:color-mix(in srgb,var(--ok) 7%,var(--surface));border:1px solid color-mix(in srgb,var(--ok) 30%,transparent)}
+.dse-ex .dse-k{color:var(--ok)}
+.dse ul,.dse ol{margin:0;padding-left:20px;display:grid;gap:4px}
+@media (max-width:700px){.dse{grid-template-columns:minmax(0,1fr)}}
+pre{margin:0;overflow-x:auto;background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font:400 .84rem/1.55 var(--f-mono)}
+pre code{background:none;padding:0;font-size:inherit}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.pair>*{min-width:0}
+.plan{display:grid}
+.day{display:grid;grid-template-columns:130px minmax(0,1fr);gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.day:last-child{border-bottom:0}
+.day .d{font-family:var(--f-display);font-weight:700}
+.day .d span{display:block;font:400 .78rem var(--f-mono);color:var(--muted)}
+.day.exam .d{color:var(--alta)}
+@media (max-width:520px){.day{grid-template-columns:minmax(0,1fr);gap:4px}}
+.hidden-by-filter{display:none!important}
+/* botones */
+.btn{font:600 .88rem var(--f-body);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 14px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:#000;border-color:var(--accent)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.score,.q-score{font:600 .9rem var(--f-mono);color:var(--muted)}
+.gen-bar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.gen-bar label{display:flex;gap:8px;align-items:center;font-size:.9rem}
+.gen-num{margin-left:auto;font:500 .8rem var(--f-mono);color:var(--muted)}
+.gen-enun{max-width:80ch;display:grid;gap:12px}
+ol.abc{margin:0;padding-left:22px;display:grid;gap:12px}
+ol.steps{margin:0;padding-left:22px;display:grid;gap:8px;max-width:80ch}
+.stepsbox{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:10px;padding:14px 16px}
+.ok{color:var(--ok);font-weight:700}
+.bad{color:var(--alta)}
+td .bad{font-family:var(--f-mono);font-size:.8rem}
+/* práctica ruteo */
+.prac{display:grid;gap:10px}
+.prac td input.in{width:100%;min-width:130px}
+/* topologías */
+.topo-box{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px}
+svg.topo{display:block;width:100%;min-width:620px;height:auto}
+.t-ln{stroke:var(--muted);stroke-width:2}
+.t-r{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.6}
+.t-rt{fill:var(--ink);font:700 14px var(--f-display)}
+.t-if{fill:var(--accent);font:600 11px var(--f-mono)}
+.t-ip{fill:var(--ink);font:500 11px var(--f-mono)}
+.t-net{fill:var(--media);font:600 11.5px var(--f-mono)}
+.t-pc{fill:var(--paper);stroke:var(--muted);stroke-width:1.4}
+.t-pct{fill:var(--muted);font:600 12px var(--f-mono)}
+/* tramas */
+.hexdump{display:flex;flex-wrap:wrap;gap:3px;background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:12px}
+.hb{font:500 .82rem var(--f-mono);padding:1px 4px;border-radius:4px}
+.hb.l2{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--ink)}
+.hb.l3{background:color-mix(in srgb,var(--media) 22%,transparent)}
+.hb.l4{background:color-mix(in srgb,var(--ok) 20%,transparent)}
+.hb.dat{background:var(--baja-soft);color:var(--muted)}
+#tr-out,.decout{display:grid;gap:12px;margin-top:10px}
+/* quiz */
+.q-head{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.quiz{display:grid;gap:12px}
+.q-card{display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.q-num{font:700 .9rem var(--f-mono);color:var(--muted);padding-top:2px}
+.q-body{display:grid;gap:10px;min-width:0}
+.q-q{font-weight:500}
+.q-opts{display:grid;gap:8px}
+.q-opt{display:flex;gap:10px;align-items:flex-start;font-size:.95rem;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;min-width:0}
+.q-opt span{min-width:0;overflow-wrap:anywhere}
+.q-opt:hover{border-color:var(--accent);background:var(--accent-soft)}
+.q-opt input{margin-top:5px;accent-color:var(--accent)}
+.q-opt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+.q-opt.bad{border-color:var(--alta);background:var(--alta-soft)}
+.q-fb{border-radius:8px;padding:10px 12px;font-size:.93rem}
+.q-fb.ok{background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.q-fb.bad{background:var(--alta-soft)}
+.q-fb.ok b{color:var(--ok)}.q-fb.bad b{color:var(--alta)}
+/* detalles */
+details{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+details+details{margin-top:8px}
+summary{cursor:pointer;padding:12px 16px;font-weight:500;list-style:none;display:flex;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+";font-family:var(--f-mono);color:var(--accent);font-weight:600}
+details[open] summary::before{content:"–"}
+.uc-ex{padding:4px 16px 18px;display:grid;gap:14px;min-width:0}
+.blk.enunciado{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:6px}
+.blk-k{font:600 .72rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tp-intro{display:grid;gap:10px;padding:18px 0 4px;border-top:2px solid var(--accent)}
+.checklist{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-width:72ch}
+.checklist li{position:relative;padding-left:24px}
+.checklist li::before{content:"□";position:absolute;left:0;font-family:var(--f-mono);color:var(--accent)}
+footer{max-width:1100px;margin:64px auto 0;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:20px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+.note{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:10px;padding:14px 16px}
+
+#sim-box{display:grid;gap:48px;margin-top:32px}
+input.in{width:17ch}
+.prac td input.in{width:100%}
+
+/* ===== EDD: extras ===== */
+.src{font:500 .72rem var(--f-mono);color:var(--muted);letter-spacing:.04em}
+.freq{display:inline-flex;gap:6px;align-items:center;font:500 .74rem var(--f-mono);color:var(--muted)}
+.freq b{color:var(--ink)}
+.code-ex{display:grid;gap:10px}
+.sim-bar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:end;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.sim-bar label{display:grid;gap:4px;font:600 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.sim-bar input.in,.sim-bar select{font-size:.92rem;text-transform:none;letter-spacing:0}
+.sim-bar input.wide{width:min(34ch,100%)}
+.sim-out{display:grid;gap:14px;margin-top:6px}
+.treebox{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px}
+svg.tree{display:block;margin:0 auto;max-width:100%;height:auto}
+.tn{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.6}
+.tn.bad{fill:var(--alta-soft);stroke:var(--alta)}
+.tn.rot{fill:color-mix(in srgb,var(--ok) 16%,var(--surface));stroke:var(--ok)}
+.tv{fill:var(--ink);font:700 13px var(--f-display)}
+.tf{fill:var(--media);font:600 10.5px var(--f-mono)}
+.te{stroke:var(--muted);stroke-width:1.5}
+.step{display:grid;gap:8px;border-left:3px solid var(--accent);padding:2px 0 2px 14px}
+.step.rotated{border-left-color:var(--ok)}
+.step h4{margin:0}
+.pill{display:inline-block;font:600 .74rem var(--f-mono);padding:2px 8px;border-radius:999px;border:1px solid var(--line);background:var(--paper);margin:2px 4px 2px 0}
+.pill.ok{border-color:var(--ok);color:var(--ok);background:transparent}
+.pill.alta{border-color:var(--alta);color:var(--alta)}
+.pill.acc{border-color:var(--accent);color:var(--accent)}
+.htab{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px}
+.hcell{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:6px 8px;display:grid;gap:2px;min-height:58px}
+.hcell .ix{font:500 .7rem var(--f-mono);color:var(--muted)}
+.hcell .vl{font:600 .88rem var(--f-mono);overflow-wrap:anywhere}
+.hcell.full{border-color:var(--accent);background:var(--accent-soft)}
+.gbox{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px}
+svg.graph{display:block;margin:0 auto;max-width:100%;height:auto}
+.gv{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.6}
+.gt{fill:var(--ink);font:700 13px var(--f-display)}
+.ge{stroke:var(--muted);stroke-width:1.5;fill:none}
+.gw{fill:var(--media);font:600 11px var(--f-mono)}
+.sc{display:grid;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.sc .need{display:flex;flex-wrap:wrap;gap:6px}
+.sc textarea.ta{min-height:84px;font-family:var(--f-body);font-size:.92rem;background:var(--paper)}
+.ex-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline;justify-content:space-between}
+.bank{display:grid;gap:6px}
+.bank .row{display:grid;grid-template-columns:160px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.bank .row:last-child{border-bottom:0}
+@media (max-width:620px){.bank .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+.todo{border:1px dashed var(--alta);border-radius:10px;padding:12px 14px;color:var(--alta);font-size:.92rem}
+
+.tbl tbody th{width:1%;white-space:nowrap}
+.rich{display:grid;gap:8px;min-width:0}
+.refs{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+a.pill{text-decoration:none}
+
+/* ===== Arquitectura: diagramas, registros, MESI, tablas de simulación ===== */
+.dg{margin:4px 0;overflow-x:auto}
+.dgm{width:100%;max-width:680px;height:auto;display:block;font-family:var(--f-body)}
+.dg-box{fill:var(--surface);stroke:var(--accent);stroke-width:1.5}
+.dg-in{fill:var(--accent-soft);stroke:var(--line)}
+.dg-mem{fill:var(--media-soft);stroke:var(--media);stroke-width:1.5}
+.dg-mem2{fill:var(--alta-soft);stroke:var(--alta);stroke-width:1.5}
+.dg-io{fill:var(--baja-soft);stroke:var(--baja);stroke-width:1.5}
+.dg-bus{stroke:var(--accent);stroke-width:4;fill:none}
+.dg-bus2{stroke:var(--alta);stroke-width:4;fill:none}
+.dg-ln{stroke:var(--muted);stroke-width:2}
+.dg-h{fill:var(--ink);font-weight:700;font-size:15px;text-anchor:middle}
+.dg-t{fill:var(--ink);font-size:13px;text-anchor:middle}
+.dg-sm{fill:var(--muted);font-size:12px;text-anchor:middle}
+.dg-lbl{fill:var(--muted);font:600 11px var(--f-mono);text-anchor:middle;letter-spacing:.04em}
+.regs{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.reg{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px;display:grid;gap:2px}
+.reg b{font:600 .72rem var(--f-mono);letter-spacing:.08em;color:var(--muted)}
+.reg span{font:600 1.15rem var(--f-mono)}
+.reg.chg{border-color:var(--accent);background:var(--accent-soft)}
+.reg.chg span{color:var(--accent)}
+.stepbox{display:grid;gap:12px}
+.stepmsg{border-left:3px solid var(--accent);padding:6px 12px;background:var(--surface);border-radius:0 8px 8px 0;min-height:3.2em}
+.phase{font:600 .72rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--alta)}
+.memt td,.memt th{font-family:var(--f-mono);font-size:.85rem}
+.memt tr.chg td{background:var(--accent-soft)}
+.mesi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.mcard{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface);display:grid;gap:6px;text-align:center}
+.mcard .big{font:800 2rem var(--f-display)}
+.mcard small{color:var(--muted)}
+.mcard.M{border-color:var(--alta);background:var(--alta-soft)} .mcard.M .big{color:var(--alta)}
+.mcard.E{border-color:var(--ok)} .mcard.E .big{color:var(--ok)}
+.mcard.S{border-color:var(--accent);background:var(--accent-soft)} .mcard.S .big{color:var(--accent)}
+.mcard.I{opacity:.65}
+.mlog{display:grid;gap:4px;font-size:.9rem;margin:0;padding-left:1.1em}
+.rtbl td,.rtbl th{text-align:center;font-family:var(--f-mono);font-size:.85rem}
+.rtbl td.hit{color:var(--ok);font-weight:700}
+.rtbl td.miss{color:var(--alta);font-weight:700}
+.calc{display:grid;gap:10px}
+.calc .out{font:600 1rem var(--f-mono);color:var(--accent)}
+.timer{font:800 1.6rem var(--f-display);color:var(--alta)}
+.sec-card{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--surface);display:grid;gap:12px}
+.fin h4{margin-top:10px}
+/* evita que una tabla ancha agrande la columna en pantallas chicas */
+main,section{grid-template-columns:minmax(0,1fr)}
+.sec-card,.sc{min-width:0}
+
+</style></head><body>
+<div class="topbar">
+  <header class="hero">
+    <div class="eyebrow">UNNOBA · Organización y Arquitectura de Computadoras</div>
+    <h1>Guía para el final de Arquitectura de Computadoras</h1>
+    <div class="when"><span id="mesa">Mesa de final · fecha a confirmar</span><span class="count" id="countdown"></span></div>
+    <p class="prose muted">Teoría ordenada por lo que más se repite en 4 finales distintos (45 preguntas), esqueletos para memorizar, simuladores del ciclo de instrucción, de MESI y de reemplazo de caché, calculadoras de performance, buses y GPU, quizzes, los finales y un simulacro. Lo que tildes como dominado queda guardado en este navegador.</p>
+  </header>
+  <div class="tabs" role="tablist" aria-label="Secciones de la guía">
+    <button class="tab" role="tab" id="tab-teoria" aria-controls="teoria" aria-selected="true">Teoría<span class="n">tarjetas</span></button>
+    <button class="tab" role="tab" id="tab-esqueletos" aria-controls="esqueletos" aria-selected="false">Esqueletos<span class="n">de memoria</span></button>
+    <button class="tab" role="tab" id="tab-simuladores" aria-controls="simuladores" aria-selected="false">Simuladores<span class="n">ciclo · MESI · caché</span></button>
+    <button class="tab" role="tab" id="tab-quizzes" aria-controls="quizzes" aria-selected="false">Quizzes<span class="n">preguntas</span></button>
+    <button class="tab" role="tab" id="tab-finales" aria-controls="finales" aria-selected="false">Finales<span class="n">4 resueltos</span></button>
+    <button class="tab" role="tab" id="tab-simulacro" aria-controls="simulacro" aria-selected="false">Simulacro<span class="n">nuevo</span></button>
+  </div>
+</div>
+<div class="panel" id="teoria" role="tabpanel" aria-labelledby="tab-teoria"></div>
+<div class="panel" id="esqueletos" role="tabpanel" aria-labelledby="tab-esqueletos" hidden></div>
+<div class="panel" id="simuladores" role="tabpanel" aria-labelledby="tab-simuladores" hidden></div>
+<div class="panel" id="quizzes" role="tabpanel" aria-labelledby="tab-quizzes" hidden></div>
+<div class="panel" id="finales" role="tabpanel" aria-labelledby="tab-finales" hidden></div>
+<div class="panel" id="simulacro" role="tabpanel" aria-labelledby="tab-simulacro" hidden></div>
+<footer>Armada con el material de la cátedra (filminas T1 a T8) y 4 finales: el del 10 de febrero de 2025 (Junín), dos más y el del archivo arq2. Las resoluciones son mías y no de la cátedra: ante una duda entre la filmina y un final resuelto, seguí la filmina. En la pestaña Teoría, la tabla de errores muestra los que circulan en el material.</footer>
+<script>
+/* lib.js — algoritmos de la guía de Arquitectura. Puro, sin DOM: lo usan app.js y los tests de Node. */
+var AR = (function () {
+'use strict';
+
+/* ============ MESI ============ */
+/* Una sola línea de caché y n procesadores. st[i] ∈ M, E, S, I. memOk = la memoria principal tiene el dato vigente. */
+function mesiNew(n) { var st = []; for (var i = 0; i < n; i++) st.push('I'); return { st: st, memOk: true, n: n }; }
+function mesiClone(m) { return { st: m.st.slice(), memOk: m.memOk, n: m.n }; }
+var NAME = { M: 'Modificado', E: 'Exclusivo', S: 'Compartido', I: 'Inválido' };
+function mesiStep(m0, op, i) {
+  var m = mesiClone(m0), log = [], P = function (k) { return 'P' + (k + 1); }, st = m.st, n = m.n, j;
+  var others = []; for (j = 0; j < n; j++) if (j !== i && st[j] !== 'I') others.push(j);
+  var mod = -1; for (j = 0; j < n; j++) if (j !== i && st[j] === 'M') mod = j;
+  var bus = false;
+  if (op === 'R') {
+    if (st[i] !== 'I') {
+      log.push('Acierto de lectura en ' + P(i) + ': lee su copia y el estado no cambia (' + st[i] + ').');
+    } else {
+      bus = true;
+      log.push('Falla de lectura en ' + P(i) + ': pide la línea por el bus y los demás la vigilan (snoop).');
+      if (mod >= 0) {
+        log.push(P(mod) + ' tiene la copia modificada: bloquea la lectura de memoria, entrega la línea y la memoria se actualiza. ' + P(mod) + ' pasa de M a S.');
+        st[mod] = 'S'; m.memOk = true; st[i] = 'S';
+        log.push(P(i) + ' pasa de I a S.');
+      } else if (others.length) {
+        others.forEach(function (k) { if (st[k] === 'E') log.push(P(k) + ' tenía la línea exclusiva: avisa que la comparte y pasa de E a S.'); else log.push(P(k) + ' ya la tenía compartida: avisa que la comparte y sigue en S.'); st[k] = 'S'; });
+        st[i] = 'S'; log.push(P(i) + ' lee la línea de memoria principal y pasa de I a S.');
+      } else {
+        st[i] = 'E'; log.push('Nadie más la tiene: ' + P(i) + ' lee de memoria principal y pasa de I a E.');
+      }
+    }
+  } else {
+    if (st[i] === 'M') {
+      log.push('Acierto de escritura en ' + P(i) + ' con la línea en M: escribe en su caché y el estado sigue en M.');
+    } else if (st[i] === 'E') {
+      st[i] = 'M'; m.memOk = false;
+      log.push('Acierto de escritura con la línea en E: ' + P(i) + ' ya es el único dueño, escribe sin usar el bus y pasa de E a M.');
+    } else if (st[i] === 'S') {
+      bus = true;
+      log.push('Acierto de escritura con la línea en S: antes de escribir, ' + P(i) + ' debe tener exclusividad y avisa por el bus.');
+      others.forEach(function (k) { st[k] = 'I'; log.push(P(k) + ' invalida su copia (S pasa a I).'); });
+      st[i] = 'M'; m.memOk = false;
+      log.push(P(i) + ' escribe y pasa de S a M.');
+    } else {
+      bus = true;
+      log.push('Falla de escritura en ' + P(i) + ': emite lectura con intención de modificar (RWITM).');
+      if (mod >= 0) {
+        log.push(P(mod) + ' tiene la copia modificada: la escribe en memoria principal y pasa de M a I. ' + P(i) + ' vuelve a emitir RWITM y lee la línea de memoria.');
+        st[mod] = 'I'; m.memOk = true;
+      }
+      others.forEach(function (k) { if (k !== mod) { log.push(P(k) + ' invalida su copia (' + st[k] + ' pasa a I).'); st[k] = 'I'; } });
+      st[i] = 'M'; m.memOk = false;
+      log.push(P(i) + ' modifica la línea y la marca M (I pasa a M).');
+    }
+  }
+  return { m: m, log: log, bus: bus };
+}
+function mesiRun(n, ops) { var m = mesiNew(n), out = []; ops.forEach(function (o) { var r = mesiStep(m, o.op, o.p); m = r.m; out.push(r); }); return { m: m, steps: out }; }
+
+/* ============ Reemplazo de caché (completamente asociativa) ============ */
+/* LFU: cuenta referencias mientras el bloque está en caché; ante empate se saca el que entró primero. */
+function replace(seq, cap, pol) {
+  var cache = [], steps = [], hits = 0;
+  seq.forEach(function (b, t) {
+    var ix = -1; cache.forEach(function (e, k) { if (e.b === b) ix = k; });
+    var hit = ix >= 0, ev = null;
+    if (hit) { hits++; cache[ix].last = t; cache[ix].cnt++; }
+    else {
+      if (cache.length >= cap) {
+        var v = 0;
+        for (var k = 1; k < cache.length; k++) {
+          if (pol === 'LRU' ? cache[k].last < cache[v].last : pol === 'LFU' ? (cache[k].cnt < cache[v].cnt || (cache[k].cnt === cache[v].cnt && cache[k].in < cache[v].in)) : cache[k].in < cache[v].in) v = k;
+        }
+        ev = cache[v].b; cache.splice(v, 1);
+      }
+      cache.push({ b: b, in: t, last: t, cnt: 1 });
+    }
+    steps.push({ b: b, hit: hit, ev: ev, cache: cache.map(function (e) { return e.b; }) });
+  });
+  return { steps: steps, hits: hits, misses: seq.length - hits };
+}
+
+/* ============ Performance ============ */
+function tiempo(ic, cpi, fHz) { return ic * cpi / fHz; }              /* T = Ic × CPI × τ, con τ = 1/f */
+function mips(fHz, cpi) { return fHz / (cpi * 1e6); }                  /* MIPS = f / (CPI × 10^6) */
+function tiempoRef(ic, p, m, k, fHz) { return ic * (p + m * k) / fHz; } /* T = Ic × [p + (m × k)] × τ */
+function fmtT(s) {
+  if (s >= 1) return +s.toPrecision(4) + ' s';
+  if (s >= 1e-3) return +(s * 1e3).toPrecision(4) + ' ms';
+  if (s >= 1e-6) return +(s * 1e6).toPrecision(4) + ' µs';
+  return +(s * 1e9).toPrecision(4) + ' ns';
+}
+
+/* ============ Buses ============ */
+function capacidad(n) { return Math.pow(2, n); }
+function accesos(instrBits, datosBits) { return Math.ceil(instrBits / datosBits); }
+function fmtMem(pos) { return pos.toLocaleString('es-AR') + ' posiciones'; }
+
+/* ============ GPU ============ */
+function ciclosGPU(px, sm, cores) { return Math.ceil(px / (sm * cores)); }
+
+/* ============ Máquina de la filmina (ciclo de instrucción) ============ */
+/* Instrucción de 16 bits: 4 bits de CODOP + 12 de dirección. 1 = cargar AC, 2 = almacenar AC, 5 = sumar a AC. */
+var OPS = { 1: 'Cargar AC desde memoria', 2: 'Almacenar AC en memoria', 5: 'Sumar a AC un dato de memoria' };
+function hex(x, d) { var s = (x & 0xFFFF).toString(16).toUpperCase(); while (s.length < d) s = '0' + s; return s; }
+function runProgram(mem0, pc0, nInstr) {
+  var mem = {}, k; for (k in mem0) mem[k] = mem0[k];
+  var r = { PC: pc0, IR: 0, MAR: 0, MBR: 0, AC: 0 }, steps = [];
+  function snap(txt, ph, chg) { steps.push({ txt: txt, ph: ph, regs: { PC: r.PC, IR: r.IR, MAR: r.MAR, MBR: r.MBR, AC: r.AC }, chg: chg || [], mem: JSON.parse(JSON.stringify(mem)) }); }
+  snap('Estado inicial. El PC apunta a la primera instrucción.', 'inicio');
+  for (var n = 0; n < nInstr; n++) {
+    r.MAR = r.PC; snap('Ciclo de extracción T1: MAR ← PC. La dirección de la próxima instrucción va al MAR (y de ahí al bus de direcciones).', 'extracción', ['MAR']);
+    r.MBR = mem[r.MAR] || 0; r.PC = r.PC + 1; snap('T2: MBR ← Memoria[MAR] y PC ← PC + 1. La memoria devuelve la instrucción por el bus de datos y el PC ya apunta a la que sigue.', 'extracción', ['MBR', 'PC']);
+    r.IR = r.MBR; snap('T3: IR ← MBR. La instrucción queda en el registro de instrucción.', 'extracción', ['IR']);
+    var op = (r.IR >> 12) & 0xF, ad = r.IR & 0xFFF;
+    snap('Decodificación: CODOP = ' + hex(op, 1) + ' → ' + (OPS[op] || 'operación desconocida') + '; dirección = ' + hex(ad, 3) + '.', 'decodificación');
+    r.MAR = ad;
+    if (op === 1) {
+      snap('Ejecución T1: MAR ← IR[dirección] = ' + hex(ad, 3) + '.', 'ejecución', ['MAR']);
+      r.MBR = mem[ad] || 0; snap('T2: MBR ← Memoria[' + hex(ad, 3) + '] = ' + hex(r.MBR, 4) + '.', 'ejecución', ['MBR']);
+      r.AC = r.MBR; snap('T3: AC ← MBR. El acumulador ahora vale ' + hex(r.AC, 4) + '.', 'ejecución', ['AC']);
+    } else if (op === 5) {
+      snap('Ejecución T1: MAR ← IR[dirección] = ' + hex(ad, 3) + '.', 'ejecución', ['MAR']);
+      r.MBR = mem[ad] || 0; snap('T2: MBR ← Memoria[' + hex(ad, 3) + '] = ' + hex(r.MBR, 4) + '.', 'ejecución', ['MBR']);
+      var old = r.AC; r.AC = (r.AC + r.MBR) & 0xFFFF; snap('T3: AC ← AC + MBR = ' + hex(old, 4) + ' + ' + hex(r.MBR, 4) + ' = ' + hex(r.AC, 4) + ' (la ALU hace la suma).', 'ejecución', ['AC']);
+    } else if (op === 2) {
+      snap('Ejecución T1: MAR ← IR[dirección] = ' + hex(ad, 3) + '.', 'ejecución', ['MAR']);
+      r.MBR = r.AC; snap('T2: MBR ← AC = ' + hex(r.AC, 4) + '.', 'ejecución', ['MBR']);
+      mem[ad] = r.MBR; snap('T3: Memoria[' + hex(ad, 3) + '] ← MBR. El dato queda guardado en memoria.', 'ejecución', ['MEM']);
+    }
+  }
+  return { steps: steps, regs: r, mem: mem };
+}
+
+return { mesiNew: mesiNew, mesiStep: mesiStep, mesiRun: mesiRun, NAME: NAME, replace: replace, tiempo: tiempo, mips: mips, tiempoRef: tiempoRef, fmtT: fmtT,
+  capacidad: capacidad, accesos: accesos, fmtMem: fmtMem, ciclosGPU: ciclosGPU, runProgram: runProgram, hex: hex, OPS: OPS };
+})();
+if (typeof module !== 'undefined') module.exports = AR;
+
+</script>
+<script>
+/* content.js — teoría de la guía de Arquitectura (parte 1). Editar acá para agregar/cambiar material.
+   Cada tarjeta de DATA.teoria es UNA pregunta de final: def = respuesta modelo, simple = esqueleto para memorizar,
+   ej = ejemplo o dibujo, warn = trampa, items = lo que tiene que aparecer (lo usa el simulacro). */
+var DATA = {};
+function EC(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function UL(a) { return '<ul>' + a.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>'; }
+function OL(a) { return '<ol>' + a.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>'; }
+function TB(head, rows) {
+  return '<div class="tbl"><table><thead><tr>' + head.map(function (x) { return '<th>' + x + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    rows.map(function (r) { return '<tr>' + r.map(function (c, i) { return i === 0 ? '<td><b>' + c + '</b></td>' : '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
+}
+
+/* ============ DIBUJOS ============ */
+var SVG_VN = '<div class="dg"><svg class="dgm" viewBox="0 0 640 250" role="img" aria-label="Arquitectura Von Neumann: CPU, una sola memoria y E/S unidas por un bus del sistema">' +
+  '<rect class="dg-box" x="16" y="24" width="220" height="200" rx="10"/><text class="dg-h" x="126" y="46">CPU</text>' +
+  '<rect class="dg-in" x="36" y="62" width="180" height="40" rx="6"/><text class="dg-t" x="126" y="87">Unidad de control</text>' +
+  '<rect class="dg-in" x="36" y="112" width="180" height="40" rx="6"/><text class="dg-t" x="126" y="137">ALU</text>' +
+  '<rect class="dg-in" x="36" y="162" width="180" height="40" rx="6"/><text class="dg-t" x="126" y="187">Registros</text>' +
+  '<rect class="dg-mem" x="410" y="24" width="214" height="104" rx="10"/><text class="dg-h" x="517" y="52">Memoria principal</text><text class="dg-t" x="517" y="80">UNA sola memoria</text><text class="dg-t" x="517" y="102">instrucciones + datos</text>' +
+  '<rect class="dg-io" x="410" y="148" width="214" height="76" rx="10"/><text class="dg-h" x="517" y="192">Sistema de E/S</text>' +
+  '<line class="dg-bus" x1="322" y1="34" x2="322" y2="214"/><line class="dg-ln" x1="236" y1="124" x2="322" y2="124"/><line class="dg-ln" x1="322" y1="76" x2="410" y2="76"/><line class="dg-ln" x1="322" y1="186" x2="410" y2="186"/>' +
+  '<text class="dg-lbl" x="322" y="14">Bus del sistema</text><text class="dg-sm" x="332" y="236" text-anchor="start">datos · direcciones · control</text></svg></div>';
+var SVG_HV = '<div class="dg"><svg class="dgm" viewBox="0 0 640 270" role="img" aria-label="Arquitectura Harvard: CPU con memoria de instrucciones y memoria de datos separadas, cada una con su bus">' +
+  '<rect class="dg-box" x="16" y="30" width="210" height="190" rx="10"/><text class="dg-h" x="121" y="52">CPU</text>' +
+  '<rect class="dg-in" x="34" y="66" width="174" height="36" rx="6"/><text class="dg-t" x="121" y="89">Unidad de control</text>' +
+  '<rect class="dg-in" x="34" y="112" width="174" height="36" rx="6"/><text class="dg-t" x="121" y="135">ALU</text>' +
+  '<rect class="dg-in" x="34" y="158" width="174" height="36" rx="6"/><text class="dg-t" x="121" y="181">Registros</text>' +
+  '<rect class="dg-mem" x="424" y="14" width="200" height="84" rx="10"/><text class="dg-h" x="524" y="42">Memoria de instrucciones</text><text class="dg-t" x="524" y="66">ROM / PROM / EEPROM / flash</text><text class="dg-sm" x="524" y="86">no volátil</text>' +
+  '<rect class="dg-mem2" x="424" y="150" width="200" height="84" rx="10"/><text class="dg-h" x="524" y="178">Memoria de datos</text><text class="dg-t" x="524" y="202">RAM (SRAM)</text><text class="dg-sm" x="524" y="222">lectura y escritura</text>' +
+  '<line class="dg-bus" x1="226" y1="70" x2="424" y2="56"/><text class="dg-lbl" x="320" y="40">Bus de instrucciones</text>' +
+  '<line class="dg-bus2" x1="226" y1="186" x2="424" y2="192"/><text class="dg-lbl" x="322" y="216">Bus de datos</text>' +
+  '<rect class="dg-io" x="16" y="232" width="210" height="30" rx="8"/><text class="dg-t" x="121" y="252">Sistema de E/S</text></svg></div>';
+
+/* ============ QUÉ TOMAN (resumen de 4 finales) ============ */
+DATA.toman = [
+  ['Memoria y caché', 'alta', 'Métodos de acceso, qué es la caché y dónde está según el nivel, algoritmos de reemplazo, localidad, lectura y escritura (acierto y falla), políticas de escritura, memoria principal vs caché, tipos de caché', '4 de 4'],
+  ['Coherencia de caché', 'alta', 'El problema de coherencia (casi siempre pegado a otra pregunta: multiprocesador, memoria o políticas de escritura), cómo se resuelve, snoopy y MESI', '4 de 4'],
+  ['E/S y DMA', 'alta', 'Funciones del sistema de E/S, tipos (programada, por interrupción, DMA), partes del DMA, ventajas, dónde está y cómo se comunica', '3 de 4'],
+  ['Harvard y Von Neumann', 'alta', 'Dibujo de Harvard, diferencias con Von Neumann, ventajas en el ciclo de ejecución, partes de Von Neumann', '2 de 4'],
+  ['Multiprocesador y multicomputador', 'alta', 'Qué es un multiprocesador, cómo acceden a memoria (UMA / NUMA), diferencias con un multicomputador (clúster)', '2 de 4'],
+  ['Bus', 'alta', 'Qué es un bus y los 3 buses, conexión punto a punto, ancho del bus de direcciones y de datos', '2 de 4'],
+  ['GPU', 'alta', 'CPU multiprocesador vs GPU (desarrollar GPU), qué es un Streaming Multiprocessor y qué tiene, por qué sirven para imágenes, video e IA', '2 de 4'],
+  ['Performance', 'media', 'Técnicas para mejorar la performance además de sumar transistores; mediciones y cuál es la más objetiva', '1 de 4'],
+  ['Ciclo de instrucción y set de instrucciones', 'media', 'Recorrido de una instrucción con los registros que intervienen; qué es el set de instrucciones y dónde está', '1 de 4'],
+  ['CISC / RISC, memoria interna y externa', 'baja', 'Nunca apareció en estos finales. Está en el material, por eso hay una tarjeta corta de cada uno', '0 de 4']
+];
+
+/* ============ PLAN ============ */
+DATA.plan = [
+  ['Día 1', 'Memoria y caché', 'Es el tema que no falta nunca. Tarjetas 05 a 12: acceso, caché y niveles, principal vs caché, tipos, reemplazo, escritura, localidad. Una tarjeta, cerrás, escribís de memoria, comparás.'],
+  ['Día 2', 'Coherencia y multiprocesadores', 'Tarjetas de coherencia, MESI, multiprocesador, cómo acceden a memoria y multicomputador. Dedicale 15 minutos al simulador de MESI: la coherencia aparece en los 4 finales.'],
+  ['Día 3', 'E/S, DMA y buses', 'Funciones, técnicas de E/S, DMA completo (partes, ventajas, dónde está), bus, ancho y punto a punto.'],
+  ['Día 4', 'Von Neumann, Harvard, ciclo y GPU', 'Dibujá Harvard y Von Neumann de memoria. Hacé andar el simulador del ciclo de instrucción. GPU: CPU vs GPU, SM y por qué sirve para imágenes.'],
+  ['Día 5', 'Simulacro', 'Un simulacro de 4 secciones, unos 10 minutos por consigna, escribiendo a mano. Después corregí con los checks y anotá qué se cayó.'],
+  ['Día 6', 'Barrido final', 'Pestaña Esqueletos de punta a punta (tapás, escribís, destapás), performance y las trampas. Las secciones valen todo o nada: ningún tema se queda en blanco.']
+];
+
+/* ============ ERRORES QUE CIRCULAN ============ */
+DATA.errores = [
+  ['Harvard, en la filmina y en finales resueltos', 'Una "memoria principal" que guarda instrucciones y datos (es la descripción de Von Neumann copiada).', 'Harvard tiene <b>dos memorias separadas</b>: ROM / flash para las instrucciones y RAM para los datos, cada una con su bus.'],
+  ['Escritura inmediata y posterior, en la filmina de multiprocesadores', 'Las dos definiciones están cruzadas.', '<b>Inmediata (write-through)</b> escribe en la caché <b>y</b> en la memoria. <b>Posterior (write-back)</b> escribe solo en la caché y la memoria se actualiza al reemplazar el bloque. La filmina de memoria lo tiene bien.'],
+  ['PC e IR, en la filmina del procesador', 'Describe el IR como la dirección de la próxima instrucción.', 'El <b>PC</b> tiene la dirección de la próxima instrucción. El <b>IR</b> guarda la <b>instrucción</b> que se está ejecutando (así lo muestra el ciclo de extracción: IR ← MBR).'],
+  ['Performance, en un final resuelto', 'Nombra Geekbench y dice que lo más objetivo es el tiempo de ejecución de programas reales.', 'La filmina nombra <b>SPEC</b>: un conjunto de programas de referencia. Esa es la respuesta.'],
+  ['Banco de preguntas', 'Write-through y write-back como "protocolos de coherencia".', 'Son <b>políticas de escritura</b>. Los protocolos de coherencia son directorio, vigilancia (snoopy) y MESI.'],
+  ['Banco de preguntas', 'Acceso directo: "se accede directamente al dato".', 'Directo: se salta a la zona y se busca <b>secuencialmente</b> dentro (disco). El que va directo a una celda en tiempo constante es el <b>aleatorio</b> (RAM).'],
+  ['DMA', 'Que el DMA es una interrupción, o que la CPU guarda contexto.', 'El DMA <b>roba ciclos de bus</b>: la CPU solo hace una pausa de un ciclo, no guarda contexto. Interrumpe a la CPU una sola vez, al final de la transferencia.'],
+  ['DMA', 'Lista de partes incompleta (solo registros).', 'Registro de direcciones, registro contador de datos, registro de datos y lógica de control (con las líneas de pedido de bus, lectura / escritura e interrupción).'],
+  ['DCA', 'Que mejora entrada y salida.', 'La mejora del acceso directo a caché es <b>solo para salida</b>. La entrada funciona como en DMA y la L3 no interviene.'],
+  ['Multiprocesador y multicomputador', 'En una filmina el multiprocesador usa "paso de mensajes".', 'Multiprocesador = <b>memoria compartida</b>, un solo espacio de direcciones. Multicomputador (clúster) = cada nodo con su memoria, se comunican por <b>mensajes</b> por una red.']
+];
+
+/* ============ TARJETAS DE TEORÍA ============ */
+DATA.teoria = [
+
+/* ---------- 1 · VON NEUMANN Y HARVARD ---------- */
+{ id:'harvard', unit:'Von Neumann y Harvard', prio:'alta', t:'Arquitectura Harvard: qué es y cómo se dibuja', uso:'2 de 4 finales',
+  qs:['Explique y dibuje el modelo de la Arquitectura Harvard.'],
+  def:'<p>La arquitectura Harvard usa <b>dispositivos de almacenamiento físicamente separados para las instrucciones y para los datos</b>, cada uno con su propio bus. Sus partes:</p>' + UL([
+    '<b>CPU:</b> unidad de control, ALU y registros. La unidad de control lee la instrucción de la memoria de instrucciones, genera las señales para obtener los operandos de la memoria de datos, ejecuta con la ALU y guarda el resultado en la memoria de datos.',
+    '<b>Memoria de instrucciones:</b> guarda el programa. Es <b>no volátil</b> (ROM, PROM, EPROM, EEPROM o flash) y el tamaño de su palabra se adapta al ancho de las instrucciones.',
+    '<b>Memoria de datos:</b> guarda los datos que cambian continuamente, por eso es <b>RAM</b> (habitualmente SRAM). Si hay datos que deben quedar guardados (configuración), se usa EEPROM o flash.',
+    '<b>Buses separados:</b> uno para instrucciones y otro para datos.',
+    '<b>Sistema de E/S.</b>']) + '<p>Se usa en microcontroladores (PIC, Arduino) y sistemas de propósito específico: electrodomésticos, telecomunicaciones, automóviles, audio y video, robótica.</p>',
+  simple:'<ul><li>Memoria de <b>instrucciones</b> y memoria de <b>datos</b> separadas</li><li>Instrucciones → ROM / flash (no volátil)</li><li>Datos → RAM (lectura y escritura)</li><li>Un bus para cada memoria</li><li>CPU = UC + ALU + registros · más E/S</li><li>Propósito específico: microcontroladores, PIC</li></ul>',
+  ej: SVG_HV + '<p>Si te acordás: el PIC16F84A tiene memoria de instrucciones flash de 1024 palabras de 14 bits y memoria de datos SRAM de 68 palabras de 8 bits. No hace falta para aprobar.</p>',
+  warn:'<b>Harvard no tiene una memoria principal única.</b> La filmina repite por error el texto de Von Neumann ("memoria principal que almacena instrucciones y datos") y varios finales resueltos lo copian. Instrucciones en ROM, datos en RAM.',
+  items:['Memorias físicamente separadas de instrucciones y de datos','Instrucciones en ROM / flash (no volátil) y datos en RAM','Buses separados','CPU con unidad de control, ALU y registros, más E/S','Dibujo con las dos memorias conectadas a la CPU'] },
+
+{ id:'vn_vs_harvard', unit:'Von Neumann y Harvard', prio:'alta', t:'Diferencias entre Harvard y Von Neumann', uso:'2 de 4 finales',
+  qs:['¿Cuáles son sus diferencias con la Arquitectura Von Neumann? Explique.'],
+  def:'<p>Las dos tienen <b>CPU</b> (unidad de control, ALU y registros) y <b>sistema de E/S</b>. Cambia la memoria y cómo se conecta:</p>' +
+    TB(['', 'Von Neumann', 'Harvard'], [
+      ['Memoria', 'Una sola para <b>instrucciones y datos</b> (de lectura-escritura)', 'Dos <b>separadas</b>: instrucciones (ROM / flash) y datos (RAM)'],
+      ['Buses', 'Un camino compartido (bus de datos, de direcciones y de control)', 'Un bus para instrucciones y otro para datos'],
+      ['Instrucción y dato', 'Comparten el mismo camino: no pueden viajar a la vez', 'Pueden accederse al mismo tiempo'],
+      ['Tipo de uso', 'Propósito general, necesita un sistema operativo', 'Propósito específico, no necesita sistema operativo'],
+      ['Ejemplos', 'PC con x86, Raspberry Pi, celulares', 'Microcontroladores: PIC, Arduino UNO']]) +
+    '<p>Von Neumann trae el concepto de <b>programa almacenado</b>, pero separa memoria y CPU y eso genera el <b>cuello de botella de Von Neumann</b>: la CPU puede quedar ociosa esperando a la memoria.</p>',
+  simple:'<ul><li><b>Igual:</b> CPU (UC, ALU, registros) y E/S</li><li><b>Memoria:</b> una sola vs separadas</li><li><b>Buses:</b> uno compartido vs uno por memoria</li><li><b>Uso:</b> propósito general + SO vs propósito específico, sin SO</li><li>Von Neumann tiene el cuello de botella</li></ul>',
+  ej:'<p>Un Intel Core i9 es Von Neumann (y su procesador es CISC). Un Arduino UNO con el ATmega328P es Harvard. Son dos clasificaciones distintas: Von Neumann / Harvard describen la <i>computadora</i>; CISC / RISC describen el <i>set de instrucciones del procesador</i>.</p>',
+  warn:'No digas que Harvard no tiene RAM: tiene RAM para <b>datos</b> y ROM / flash para <b>instrucciones</b>.',
+  items:['Von Neumann: una sola memoria para instrucciones y datos','Harvard: memorias separadas (instrucciones y datos)','Buses: compartido vs separados','Lo que comparten: CPU y E/S','Uso: propósito general con SO vs propósito específico'] },
+
+{ id:'harvard_ventajas', unit:'Von Neumann y Harvard', prio:'alta', t:'Ventajas de Harvard en el ciclo de ejecución', uso:'2 de 4 finales',
+  qs:['¿Qué ventajas en cuanto al ciclo de ejecución posee la Arquitectura Harvard?'],
+  def:'<p>Como las instrucciones y los datos están en memorias distintas y viajan por buses distintos, <b>la CPU puede buscar la próxima instrucción mientras accede a los datos de la actual</b>. Se superponen la captación de la instrucción y la captación o escritura del operando, y se reduce el cuello de botella de Von Neumann.</p>' + UL([
+    '<b>Mayor velocidad y ancho de banda:</b> no compiten por un único bus.',
+    '<b>Memoria de instrucciones a medida:</b> su palabra tiene el ancho exacto de la instrucción.',
+    '<b>Cachés separadas</b> de instrucciones y de datos (Harvard modificado) para mejorar el rendimiento.']) +
+    '<p><b>Inconveniente:</b> hay que repartir la caché entre instrucciones y datos, y funciona mejor cuando se leen instrucciones y datos con una frecuencia parecida. Además hay dos espacios de memoria y más líneas de conexión.</p>',
+  simple:'<ul><li>Instrucción y dato por <b>buses distintos</b> → se acceden a la vez</li><li>Se solapan el fetch y el acceso a operandos</li><li>Menos cuello de botella · más ancho de banda</li><li>Palabra de memoria de instrucciones a medida</li><li>Contra: dividir la caché, más hardware</li></ul>',
+  ej:'',
+  warn:'La ventaja de Harvard "pura" se redujo en los procesadores modernos con cachés separadas de instrucciones y datos (Harvard modificado), porque hoy casi todos tienen caché.',
+  items:['Instrucciones y datos se acceden por caminos separados al mismo tiempo','Se solapan la captación de la instrucción y el acceso a datos','Se reduce el cuello de botella de Von Neumann','Mencionar un inconveniente (dividir la caché, más hardware)'] },
+
+{ id:'vn', unit:'Von Neumann y Harvard', prio:'media', t:'Arquitectura Von Neumann: partes y cómo se comunican', uso:'1 de 4 finales',
+  qs:['¿Cuáles son las partes de una Arquitectura Von Neumann y cómo se comunican entre sí?'],
+  def:'<p>Modelo de 1945 (primer borrador del informe sobre el EDVAC). Datos y programas se guardan en <b>la misma memoria de lectura-escritura</b>, se accede por posición sin importar el tipo de contenido, las instrucciones se ejecutan en secuencia (salvo que se indique lo contrario) y todo se representa en binario. De ahí el <b>programa almacenado</b>. Partes:</p>' + UL([
+    '<b>CPU:</b> unidad de control, ALU y registros.',
+    '<b>Memoria principal:</b> guarda instrucciones y datos.',
+    '<b>Sistema de entrada / salida.</b>']) +
+    '<p><b>Comunicación:</b> todos los componentes se conectan por el <b>bus del sistema</b>, un camino compartido formado por el <b>bus de datos</b> (mueve la información), el <b>bus de direcciones</b> (dice a qué posición) y el <b>bus de control</b> (órdenes y temporización). Como es compartido, hace falta un <b>arbitraje</b> para decidir quién lo usa.</p>',
+  simple:'<ul><li>CPU (UC + ALU + registros) · memoria principal · E/S</li><li>Una memoria: instrucciones + datos (programa almacenado)</li><li>Se comunican por el bus del sistema: datos, direcciones, control</li><li>Bus compartido → arbitraje</li><li>Cuello de botella de Von Neumann</li></ul>',
+  ej: SVG_VN,
+  warn:'Las tres partes son CPU, memoria y E/S. Los tres buses van aparte: son cómo se comunican, no son partes.',
+  items:['CPU: unidad de control, ALU y registros','Memoria principal con instrucciones y datos','Sistema de E/S','Comunicación por bus del sistema: datos, direcciones y control'] },
+
+{ id:'ciclo', unit:'Von Neumann y Harvard', prio:'media', t:'Ciclo de una instrucción: recorrido y registros', uso:'1 de 4 finales',
+  qs:['¿Cómo es el ciclo de una instrucción? ¿Qué recorrido hace la instrucción en las diferentes partes de la arquitectura? Indique qué registros se ven involucrados.'],
+  def:'<p>La CPU ejecuta el programa repitiendo el <b>ciclo de instrucción</b>:</p>' + OL([
+    '<b>Extracción (FI):</b> la UC toma la dirección que está en el <b>PC</b>, la pasa al <b>MAR</b> y la coloca en el bus de direcciones; pide la lectura por el bus de control; la instrucción vuelve por el bus de datos al <b>MBR</b> y se copia al <b>IR</b>. El PC se incrementa.',
+    '<b>Decodificación (DI):</b> la UC interpreta el CODOP que está en el IR.',
+    '<b>Cálculo y captación de operandos (CO, FO):</b> si hay operandos en memoria, la dirección va al MAR y el dato vuelve al MBR. Si el direccionamiento es indirecto hay un ciclo indirecto más.',
+    '<b>Ejecución y escritura (EI, WO):</b> la ALU opera y el resultado queda en un registro o se escribe en memoria (por MAR y MBR).',
+    '<b>Interrupciones (IN):</b> se verifica si hay una pendiente. Si no, se vuelve a 1.']) +
+    '<p><b>Micro-operaciones del ciclo de extracción:</b> T1: MAR ← (PC) · T2: MBR ← Memoria, PC ← (PC) + 1 · T3: IR ← (MBR).</p>' +
+    '<p><b>Registros:</b> PC (dirección de la próxima instrucción), IR (instrucción en ejecución), MAR (dirección de memoria a la que se accede), MBR (dato leído o por escribir), registros de propósito general o acumulador, y el registro de estado (flags).</p>',
+  simple:'<ul><li>Extracción → decodificación → operandos → ejecución → escritura → interrupciones</li><li>T1: MAR ← PC · T2: MBR ← Mem, PC ← PC+1 · T3: IR ← MBR</li><li>Registros: <b>PC · IR · MAR · MBR</b> · AC / generales · estado (flags)</li><li>Bus de direcciones (MAR) · bus de control (lectura) · bus de datos (MBR)</li></ul>',
+  ej:'<p><b>Ejemplo de la filmina</b> (instrucciones de 16 bits: 4 de CODOP y 12 de dirección). PC = 300. En 300 está <code>1940</code>: cargar AC desde la dirección 940. En 301, <code>5941</code>: sumar a AC el dato de la 941. En 302, <code>2941</code>: guardar AC en la 941. Con 3 en la 940 y 2 en la 941, la 941 termina valiendo 5. Podés verlo paso a paso en la pestaña Simuladores.</p>',
+  warn:'<b>PC no es IR.</b> El PC apunta a la próxima instrucción y se incrementa durante la extracción; el IR tiene la instrucción actual (la filmina del procesador describe mal el IR). Y el recorrido siempre pasa por MAR y MBR cuando se toca la memoria.',
+  items:['Extracción: PC → MAR → bus de direcciones → memoria → bus de datos → MBR → IR, y PC se incrementa','Decodificación en la unidad de control','Captación de operandos y ejecución en la ALU','Escritura del resultado e interrupciones','Registros nombrados: PC, IR, MAR, MBR (y acumulador / estado)'] },
+
+{ id:'isa_set', unit:'Von Neumann y Harvard', prio:'media', t:'Set de instrucciones: qué es y dónde está', uso:'1 de 4 finales',
+  qs:['¿Qué es el set de instrucciones? ¿Dónde piensa que se encuentra este?'],
+  def:'<p>El <b>set de instrucciones</b> es el conjunto de operaciones (instrucciones de máquina) que un procesador sabe ejecutar. Define la <b>ISA</b>: qué tipos de datos maneja, cómo se almacenan y se acceden, qué operaciones ejecuta y cómo se codifican. Una instrucción es una secuencia de bits dividida en campos: el <b>CODOP</b> (qué hacer) y la <b>referencia a los operandos</b> (memoria, registros, inmediato o E/S).</p>' +
+    '<p>Los tipos de operaciones son: transferencia de datos, aritméticas, lógicas, conversión, entrada / salida, control del sistema y transferencia de control.</p>' +
+    '<p><b>¿Dónde está?</b> En el <b>procesador</b>: lo implementa la <b>unidad de control</b>, que decodifica el CODOP y genera las señales de control (puede estar cableada o microprogramada). Los programas, escritos con esas instrucciones, sí viven en la memoria principal.</p>',
+  simple:'<ul><li>Repertorio de instrucciones que entiende la CPU (la ISA)</li><li>Instrucción = CODOP + operandos</li><li>Tipos: transferencia, aritméticas, lógicas, conversión, E/S, control del sistema, saltos</li><li>Está en la <b>CPU</b>, en la unidad de control (cableada o microprogramada)</li><li>El programa (las instrucciones usadas) está en memoria</li></ul>',
+  ej:'<p>El mismo <code>a = a * b</code> en x86 (CISC): una instrucción compleja que opera en memoria. En ARM (RISC): LOAD, LOAD, PROD, STORE, porque solo LOAD y STORE tocan la memoria. Una ISA define cuál de las dos formas ofrece el procesador.</p>',
+  warn:'No digas que el set de instrucciones "está en la memoria". Lo que está en memoria es el programa; el set es una propiedad del procesador.',
+  items:['Conjunto de instrucciones de máquina que la CPU puede ejecutar','Instrucción = CODOP + referencia a operandos','Tipos de operaciones (al menos tres)','Se encuentra en el procesador / unidad de control, no en la memoria'] },
+
+/* ---------- 2 · MEMORIA ---------- */
+{ id:'acceso', unit:'Memoria y caché', prio:'alta', t:'Métodos de acceso a memoria', uso:'2 de 4 finales',
+  qs:['¿Cuáles son los distintos métodos de acceso a memoria? Explique y ejemplifique.'],
+  def:'<p>Hay cuatro métodos de acceso:</p>' + UL([
+    '<b>Secuencial:</b> no se puede acceder directo a la celda deseada; hay que pasar por todas las que la preceden. Ejemplo: <b>cinta magnética</b>.',
+    '<b>Directo:</b> los bloques tienen una dirección única basada en su ubicación física. Se accede <b>saltando a la zona</b> y haciendo una <b>búsqueda secuencial</b> dentro de ella. Ejemplo: <b>discos</b>.',
+    '<b>Aleatorio:</b> cada posición direccionable se identifica con exactitud y el tiempo de acceso es <b>constante</b>, independiente de los accesos anteriores. Ejemplo: <b>RAM</b> (y ROM).',
+    '<b>Asociativo:</b> se compara una parte del contenido de todas las palabras <b>simultáneamente</b>: se recupera la palabra por su <b>contenido</b>, no por su dirección. Ejemplo: <b>memoria caché</b>.']),
+  simple:'<ul><li><b>Secuencial</b> → pasar por todo lo anterior · cinta</li><li><b>Directo</b> → saltar a la zona + búsqueda secuencial · disco</li><li><b>Aleatorio</b> → dirección única, tiempo constante · RAM</li><li><b>Asociativo</b> → por contenido, comparación simultánea · caché</li></ul>',
+  ej:'<p>Con la lista <code>[0] ana, [1] juan, [2] pedro</code>: en secuencial llegás a pedro pasando por ana y juan; en aleatorio vas a la posición 2 en el mismo tiempo que a la 0; en asociativo preguntás "¿dónde está pedro?" y no das ninguna dirección.</p>',
+  warn:'<b>Directo no es aleatorio.</b> En el directo hay una búsqueda secuencial dentro de la zona y el tiempo varía (disco). En el aleatorio el tiempo es constante (RAM). Varios finales resueltos los mezclan.',
+  items:['Los cuatro métodos: secuencial, directo, aleatorio y asociativo','Secuencial: recorrer en orden · cinta','Directo: salto a la zona + búsqueda secuencial · disco','Aleatorio: tiempo constante · RAM','Asociativo: por contenido · caché'] },
+
+{ id:'cache_que', unit:'Memoria y caché', prio:'alta', t:'Qué es la memoria caché y dónde está según el nivel', uso:'2 de 4 finales',
+  qs:['¿Qué es la memoria caché y dónde se encuentra dependiendo del nivel?'],
+  def:'<p>La <b>memoria caché</b> es una memoria <b>pequeña, muy rápida, volátil y cara</b> (SRAM) que se ubica entre la CPU y la memoria principal y guarda una <b>copia de partes de la memoria principal</b> (los datos e instrucciones que el procesador usa continuamente). Funciona así: cuando la CPU pide una palabra, se comprueba si está en la caché. Si está (<b>acierto</b>), se entrega. Si no (<b>falla</b>), se lee de la memoria principal un <b>bloque</b> completo, se guarda en la caché y se entrega la palabra. Por la localidad de referencia, es probable que lo próximo que se pida esté en ese bloque.</p>' +
+    '<p>CPU ↔ caché se transfiere por <b>palabras</b> (rápido); caché ↔ memoria principal por <b>bloques</b> (más lento).</p>' +
+    TB(['Nivel', 'Dónde está', 'Características'], [
+      ['L1', 'Dentro de cada núcleo del procesador', 'La más rápida, cara y pequeña; opera a la frecuencia del procesador; separada en datos e instrucciones'],
+      ['L2', 'Hoy en el chip: por núcleo o compartida entre núcleos', 'Más grande y más lenta que L1; frecuencia cercana a la del procesador'],
+      ['L3', 'En el chip, compartida por todos los núcleos', 'La más grande y la más barata de las tres; menos frecuencia']]) +
+    '<p>A medida que se baja en la jerarquía: más capacidad, menos costo por bit, más tiempo de acceso y menos accesos del procesador.</p>',
+  simple:'<ul><li>Pequeña · rápida · cara · volátil (SRAM) · entre CPU y RAM</li><li>Copia de partes de la memoria principal</li><li>Acierto → entrega · falla → trae un <b>bloque</b></li><li>CPU–caché por palabra · caché–RAM por bloque</li><li><b>L1</b> en cada núcleo (la más rápida) · <b>L2</b> por núcleo o compartida · <b>L3</b> compartida (la más grande)</li></ul>',
+  ej:'<p>Intel Core i7 8700K: L1 de 64 KB por núcleo (32 KB de datos y 32 KB de instrucciones), L2 de 256 KB por núcleo y L3 de 12 MB compartida. Son datos de la filmina; no hace falta saberlos.</p>',
+  warn:'En un final resuelto dice que L2 "puede estar dentro o fuera del procesador". Era así antes: hoy casi todos los microprocesadores la tienen en el chip, y también la L3.',
+  items:['Memoria pequeña, rápida y cara entre la CPU y la memoria principal','Guarda copia de partes de la memoria principal','Qué pasa en acierto y en falla (trae un bloque)','L1 dentro del núcleo (la más rápida y chica)','L2 y L3: más grandes y lentas, L3 compartida'] },
+
+{ id:'cache_vs_principal', unit:'Memoria y caché', prio:'media', t:'Memoria principal vs memoria caché', uso:'1 de 4 finales',
+  qs:['¿Qué diferencias hay entre la memoria principal y la memoria caché?'],
+  def: TB(['', 'Memoria principal', 'Memoria caché'], [
+    ['Tecnología', '<b>DRAM</b> (SDRAM, DDR): el bit se guarda como carga en un capacitor', '<b>SRAM</b>: el bit se guarda en un flip-flop (compuertas lógicas, como el procesador)'],
+    ['Refresco', 'Necesita refresco periódico', 'No lo necesita mientras tenga energía'],
+    ['Velocidad', 'Más lenta', 'Mucho más rápida'],
+    ['Costo y tamaño', 'Construcción simple, celda pequeña, más barata', 'Construcción más compleja, celda más grande, más cara'],
+    ['Capacidad', 'Grande (GB)', 'Pequeña (KB a MB)'],
+    ['Ubicación', 'Fuera del procesador, en módulos sobre la placa', 'Dentro del procesador (L1, L2, L3)'],
+    ['Función', 'Memoria de trabajo: guarda programas y datos en ejecución', 'Copia de lo más usado, para que la CPU no espere a la principal'],
+    ['Transferencia', 'Con la caché, por <b>bloques</b>', 'Con la CPU, por <b>palabras</b>']]) +
+    '<p>La principal sigue siendo DRAM porque la SRAM es mucho más cara, y agrandar la caché más allá de cierto punto da retornos decrecientes.</p>',
+  simple:'<ul><li>Principal = <b>DRAM</b> · caché = <b>SRAM</b></li><li>DRAM: capacitores, refresco, lenta, barata, grande</li><li>SRAM: flip-flops, sin refresco, rápida, cara, chica</li><li>La caché está en el procesador; la principal, afuera</li><li>CPU–caché por palabra · caché–principal por bloque</li></ul>',
+  ej:'',
+  warn:'Memoria <b>volátil</b> son las dos (RAM). La diferencia no es la volatilidad sino la tecnología, la velocidad, el costo y el lugar.',
+  items:['Principal = DRAM, caché = SRAM','DRAM necesita refresco, SRAM no','Caché más rápida, más cara y más chica','Caché dentro del procesador, principal afuera','Rol de cada una (trabajo vs copia de lo más usado)'] },
+
+{ id:'cache_tipos', unit:'Memoria y caché', prio:'media', t:'Tipos de memoria caché', uso:'1 de 4 finales',
+  qs:['¿Cuáles son los diferentes tipos de memoria caché que existen?'],
+  def:'<p>Se las puede clasificar según cuatro criterios de diseño:</p>' + UL([
+    '<b>Por nivel:</b> L1 (dentro del núcleo, la más rápida y chica), L2 y L3 (más grandes, más lentas; la L3 compartida).',
+    '<b>Unificada o dividida:</b> la <b>unificada</b> guarda datos e instrucciones juntos (mejor tasa de aciertos para un mismo tamaño porque equilibra la carga, y se diseña una sola). La <b>dividida</b> tiene una para instrucciones y otra para datos (evita la disputa entre la unidad de búsqueda de instrucciones y la de ejecución). La tendencia: dividida en L1 y unificada en los niveles superiores.',
+    '<b>Por direcciones:</b> <b>lógica (virtual)</b>, que guarda direcciones virtuales y responde antes de que la MMU traduzca; <b>física</b>, que guarda direcciones físicas y es más lenta porque pasa por la MMU.',
+    '<b>Por función de mapeo</b> de bloques a líneas: <b>directo</b> (cada bloque a una sola línea), <b>asociativo</b> (a cualquier línea) y <b>asociativo por conjuntos</b> (un compromiso entre los dos).']),
+  simple:'<ul><li>Por <b>nivel</b>: L1 · L2 · L3</li><li><b>Unificada</b> vs <b>dividida</b> (datos / instrucciones)</li><li><b>Lógica</b> (virtual) vs <b>física</b></li><li><b>Mapeo</b>: directo · asociativo · asociativo por conjuntos</li></ul>',
+  ej:'',
+  warn:'Si te piden "tipos" sin más, empezá por nivel (L1, L2, L3) y sumá unificada / dividida. Los otros dos criterios te suman puntos si te alcanza el tiempo.',
+  items:['Por nivel: L1, L2, L3','Unificada vs dividida','Lógica (virtual) vs física','Mapeo: directo, asociativo, asociativo por conjuntos'] },
+
+{ id:'reemplazo', unit:'Memoria y caché', prio:'media', t:'Algoritmos de reemplazo de la caché', uso:'1 de 4 finales',
+  qs:['¿Cuáles son los algoritmos de reemplazo existentes para la memoria caché?'],
+  def:'<p>Cuando la caché está llena y entra un bloque nuevo hay que sacar uno. En el <b>mapeo directo</b> no hay elección (cada bloque tiene una sola línea posible); en las técnicas <b>asociativas</b> hace falta un algoritmo, y para ser rápido tiene que estar implementado en <b>hardware</b>:</p>' + UL([
+    '<b>LRU</b> (Least Recently Used, menos recientemente usado): reemplaza el bloque que más tiempo estuvo en la caché <b>sin ser referenciado</b>. Es el más usado.',
+    '<b>FIFO</b> (First In, First Out): reemplaza el bloque que <b>entró primero</b>, sin mirar si se usó. Se implementa fácil con un buffer circular (round-robin).',
+    '<b>LFU</b> (Least Frequently Used, menos frecuentemente usado): reemplaza el bloque con <b>menos referencias</b>. Se implementa con un contador por línea.',
+    '<b>Aleatorio:</b> elige una línea al azar. Rinde apenas peor que LRU y LFU.']),
+  simple:'<ul><li><b>LRU</b> → hace más tiempo que no se usa</li><li><b>FIFO</b> → el que entró primero</li><li><b>LFU</b> → el menos usado en cantidad</li><li><b>Aleatorio</b></li><li>Mapeo directo: no hay elección · lo demás: en hardware</li></ul>',
+  ej:'<p>Probalo en la pestaña Simuladores: cargá una secuencia de bloques y compará cuántas fallas tiene cada algoritmo.</p>',
+  warn:'LRU mira <b>cuándo</b> se usó por última vez, FIFO mira <b>cuándo entró</b>, LFU mira <b>cuántas veces</b> se usó. Un bloque que entró hace mucho pero se usa siempre: FIFO lo saca, LRU y LFU no.',
+  items:['LRU (menos recientemente usado)','FIFO (el primero en entrar)','LFU (el menos frecuentemente usado)','Aleatorio','Se implementan en hardware / en mapeo directo no hay elección'] },
+
+{ id:'escritura', unit:'Memoria y caché', prio:'alta', t:'Lectura y escritura en la caché: acierto, falla y políticas de escritura', uso:'2 de 4 finales',
+  qs:['¿Cómo es la lectura / escritura? ¿Qué pasa en un acierto de caché o en una falla?', '¿Cuáles son los protocolos (políticas) de escritura de la memoria caché?'],
+  def:'<p><b>Lectura.</b> <i>Acierto:</i> el dato está en la caché y se entrega a la CPU sin usar el bus del sistema. <i>Falla:</i> se pone la dirección en el bus del sistema, se lee de la memoria principal el <b>bloque</b> que contiene el dato, se guarda en una línea de la caché (reemplazando una si está llena) y se entrega a la CPU.</p>' +
+    '<p><b>Escritura.</b> Cuando el dato está en la caché, qué se hace con la memoria principal depende de la política:</p>' +
+    TB(['', 'Escritura inmediata (write-through)', 'Escritura posterior (write-back)'], [
+      ['Qué hace', 'Escribe <b>en la caché y en la memoria principal</b> a la vez', 'Escribe <b>solo en la caché</b> y marca la línea con un bit de uso (modificada); la escribe en memoria <b>solo al reemplazarla</b>'],
+      ['A favor', 'La memoria principal siempre está válida; otros módulos pueden vigilar el tráfico', 'Minimiza las escrituras a memoria'],
+      ['En contra', 'Mucho tráfico de memoria: cuello de botella', 'Partes de la memoria no son válidas: la E/S solo puede acceder a través de la caché; circuitos más complejos']]) +
+    '<p>En una falla de escritura en un sistema con escritura posterior, lo habitual es traer el bloque y modificarlo (en MESI: lectura con intención de modificar, RWITM, y la línea queda Modificada).</p>',
+  simple:'<ul><li>Lectura: <b>acierto</b> → la entrega · <b>falla</b> → trae el bloque de la RAM, lo guarda, entrega</li><li><b>Write-through</b>: caché + memoria a la vez · memoria siempre válida · mucho tráfico</li><li><b>Write-back</b>: solo caché + bit de modificado · escribe al reemplazar · menos tráfico, riesgo de incoherencia</li></ul>',
+  ej:'',
+  warn:'<b>Las definiciones no se cruzan.</b> La filmina de multiprocesadores las tiene al revés. Inmediata = las dos a la vez; posterior = solo caché hasta reemplazar. Y son políticas de escritura, no "protocolos de coherencia".',
+  items:['Acierto de lectura: la caché entrega el dato','Falla de lectura: se trae el bloque de la memoria principal y se entrega','Escritura inmediata: caché y memoria a la vez','Escritura posterior: solo caché, se escribe al reemplazar (bit de modificado)','Ventaja y desventaja de cada una'] },
+
+{ id:'localidad', unit:'Memoria y caché', prio:'media', t:'Principio de localidad temporal y espacial', uso:'1 de 4 finales',
+  qs:['¿Qué es el principio de localidad temporal y espacial en la memoria caché?'],
+  def:'<p>Es la observación de que los programas hacen la mayoría de sus referencias a memoria sobre un conjunto pequeño de direcciones:</p>' + UL([
+    '<b>Localidad temporal:</b> si se accedió a una posición de memoria, es probable que se vuelva a acceder pronto. Ejemplo: las instrucciones de un bucle.',
+    '<b>Localidad espacial:</b> si se accede a una posición, es probable que pronto se acceda a las <b>cercanas</b>. Ejemplo: ejecución secuencial de instrucciones, recorrer un arreglo.']) +
+    '<p><b>Consecuencia:</b> por eso la caché guarda lo usado recientemente (temporal) y trae <b>bloques completos</b> y no una sola palabra (espacial), lo que reduce los accesos a la memoria principal.</p>' +
+    '<p><b>Tamaño del bloque:</b> al principio, bloques más grandes aumentan los aciertos; pasado cierto punto los empeoran, porque caben menos bloques en la caché y las palabras extra están más lejos de la pedida. No hay un tamaño óptimo definitivo.</p>',
+  simple:'<ul><li><b>Temporal</b> → lo usado hace poco se usa de nuevo · bucles · la caché lo guarda</li><li><b>Espacial</b> → se usan las posiciones vecinas · secuencial · la caché trae <b>bloques</b></li><li>Resultado: menos accesos a la memoria principal</li></ul>',
+  ej:'',
+  warn:'Se confunden fácil: temporal = <i>mismo</i> dato otra vez; espacial = datos <i>vecinos</i>.',
+  items:['Temporal: lo usado recientemente se vuelve a usar','Espacial: se usan posiciones cercanas','Ejemplo de cada una','Consecuencia: la caché trae bloques y guarda lo reciente'] },
+
+{ id:'coherencia', unit:'Memoria y caché', prio:'alta', t:'El problema de coherencia de caché y cómo se resuelve', uso:'4 de 4 finales',
+  qs:['¿Qué es el problema de coherencia de caché?', '¿Qué problemas hay con las memorias caché en una CPU multiprocesador?', '¿Qué problema existe con la memoria caché?'],
+  def:'<p>Puede haber <b>varias copias del mismo dato</b> en distintas cachés a la vez. Si cada procesador actualiza su copia libremente, el sistema queda con una <b>visión inconsistente de la memoria</b>: copias distintas y desactualizadas del mismo dato. Eso es la <b>incoherencia</b>. También pasa entre la caché y la memoria principal cuando un módulo de E/S escribe directo en memoria (la palabra de la caché queda inválida) o cuando una palabra se altera solo en la caché (la de memoria queda inválida).</p>' +
+    '<p><b>Cómo se resuelve:</b></p>' +
+    TB(['', 'Por software', 'Por hardware'], [
+      ['Cómo', 'El compilador y el sistema operativo analizan el código y marcan los datos que no conviene guardar en caché', 'Detección <b>dinámica</b> en tiempo de ejecución de la posible incoherencia'],
+      ['Cuándo', 'Se detecta en la <b>compilación</b>', 'Solo cuando el problema <b>aparece</b>'],
+      ['A favor', 'No necesita circuitos extra', 'Mejor rendimiento; <b>transparente</b> para el programador y el compilador'],
+      ['En contra', 'Más conservador: deja de cachear datos que quizás no daban problema', 'Requiere hardware adicional']]) +
+    '<p>Los protocolos por hardware son el de <b>directorio</b> (un controlador centralizado y un directorio en memoria con el estado global de las cachés) y el de <b>vigilancia o snoopy</b> (cada controlador de caché vigila el bus y reacciona a lo que hacen los demás). Dentro de snoopy: <i>invalidación de escritura</i> (varios lectores, un solo escritor) o <i>actualización de escritura</i> (varios escritores). x86 usa <b>MESI</b>, de invalidación.</p>',
+  simple:'<ul><li>Varias copias del mismo dato → si una cambia, las otras quedan viejas</li><li><b>Software:</b> compilador y SO marcan datos no cacheables · en compilación · conservador</li><li><b>Hardware:</b> detección dinámica · transparente · más eficiente · necesita hardware</li><li>Protocolos: <b>directorio</b> (centralizado) y <b>snoopy</b> (distribuido, vigila el bus) · <b>MESI</b></li></ul>',
+  ej:'<p>P1 y P2 tienen x = 5 en su caché. P1 cambia x a 10. Si nada se lo avisa a P2, P2 sigue leyendo 5. La coherencia garantiza que la copia de P2 se invalide o se actualice.</p>',
+  warn:'<b>Write-through y write-back no son protocolos de coherencia</b> (son políticas de escritura). Los protocolos son directorio, snoopy y MESI.',
+  items:['Varias copias del mismo dato en distintas cachés','Si un procesador modifica su copia, las otras quedan desactualizadas (visión inconsistente)','Solución por software (compilador y SO) y por hardware (dinámica)','Ventajas y desventajas de una y otra','Protocolos: snoopy / directorio / MESI'] },
+
+{ id:'mesi', unit:'Memoria y caché', prio:'media', t:'MESI: los cuatro estados y las transiciones', uso:'se pregunta junto con coherencia',
+  qs:['(Suele pedirse como parte de la respuesta sobre coherencia.)'],
+  def:'<p>Protocolo de <b>vigilancia con invalidación de escritura</b>. Cada línea de la caché tiene dos bits de estado y puede estar en uno de cuatro:</p>' + UL([
+    '<b>M (Modificado):</b> la línea fue modificada (distinta de la memoria principal) y <b>solo está en esta caché</b>.',
+    '<b>E (Exclusivo):</b> igual a la memoria principal y <b>no está en ninguna otra caché</b>.',
+    '<b>S (Compartido):</b> igual a la memoria principal y <b>puede estar en otras cachés</b>.',
+    '<b>I (Inválido):</b> no tiene datos válidos.']) +
+    TB(['Evento en el procesador', 'Qué pasa'], [
+      ['<b>Acierto de lectura</b> (M, E o S)', 'Lee y no cambia el estado'],
+      ['<b>Falla de lectura</b>', 'Pide la línea por el bus. Si otra caché la tiene <b>M</b>: la entrega, la memoria se actualiza y ambas quedan en <b>S</b>. Si otra la tiene en E o S: todas quedan en <b>S</b>. Si nadie la tiene: lee de memoria y queda en <b>E</b>'],
+      ['<b>Acierto de escritura</b>', 'En <b>M</b>: escribe. En <b>E</b>: escribe y pasa a <b>M</b>. En <b>S</b>: avisa por el bus, las otras copias pasan a <b>I</b>, escribe y pasa a <b>M</b>'],
+      ['<b>Falla de escritura</b>', 'Emite RWITM (lectura con intención de modificar). Si otra la tiene en M, la escribe en memoria y pasa a I. Las copias E y S pasan a I. La línea se carga y queda en <b>M</b>']]),
+  simple:'<ul><li><b>M</b> modificada, solo acá · <b>E</b> limpia, solo acá · <b>S</b> limpia, puede estar en otras · <b>I</b> inválida</li><li>Leer con falla: nadie la tiene → <b>E</b> · alguien la tiene → todos <b>S</b></li><li>Escribir: siempre termina en <b>M</b> y las demás copias pasan a <b>I</b></li></ul>',
+  ej:'<p>El simulador de la pestaña Simuladores aplica estas reglas paso a paso con tres procesadores.</p>',
+  warn:'Después de cualquier escritura, <b>solo una caché tiene la línea</b> (en M) y la memoria principal queda desactualizada hasta que esa línea se reemplace o alguien la lea.',
+  items:['Los cuatro estados: Modificado, Exclusivo, Compartido, Inválido','Qué significa cada uno','Falla de lectura: a E si nadie la tiene, a S si alguien la tiene','Escritura: pasa a M e invalida las otras copias'] },
+
+/* ---------- 3 · BUS ---------- */
+{ id:'bus_que', unit:'Bus', prio:'alta', t:'Qué es un bus y los 3 buses', uso:'2 de 4 finales',
+  qs:['¿Qué es un bus? Explique cuáles son los 3 buses que utilizan actualmente las arquitecturas de computadoras.'],
+  def:'<p>Un <b>bus</b> es una vía de comunicación que conecta <b>dos o más dispositivos</b>. Es un <b>medio compartido</b>: lo que transmite un dispositivo lo reciben todos los conectados. Físicamente son conductores paralelos (líneas de metal en la placa). El que une procesador, memoria y E/S es el <b>bus del sistema</b>. Para usarlo, un módulo primero obtiene el bus (arbitraje) y después transfiere. Los tres buses:</p>' + UL([
+    '<b>Bus de datos:</b> lleva los datos entre los módulos del sistema. Su ancho (de 32 a cientos de líneas) es clave para las prestaciones.',
+    '<b>Bus de direcciones:</b> indica la fuente o destino del dato que va por el bus de datos (la posición de memoria o el puerto de E/S). Su ancho determina la <b>capacidad máxima de memoria</b>.',
+    '<b>Bus de control:</b> controla el acceso y el uso de las líneas de datos y direcciones: lleva órdenes (lectura y escritura de memoria o de E/S, petición y cesión del bus, petición de interrupción, ACK, reloj, reset) y señales de temporización que indican que los datos y direcciones son válidos.']),
+  simple:'<ul><li>Bus = vía de comunicación compartida entre dos o más dispositivos</li><li><b>Datos</b> → transporta la información</li><li><b>Direcciones</b> → de dónde / a dónde (define la memoria máxima)</li><li><b>Control</b> → órdenes y temporización (lectura, escritura, interrupción, reloj, pedir y ceder el bus)</li></ul>',
+  ej:'',
+  warn:'Los "3 buses" son datos, direcciones y control. No pongas PCI, USB ni SATA: esos son tipos de bus o interfaces.',
+  items:['Vía de comunicación compartida entre dispositivos','Bus de datos','Bus de direcciones','Bus de control con ejemplos de señales'] },
+
+{ id:'bus_ancho', unit:'Bus', prio:'media', t:'Ancho del bus de direcciones y del bus de datos', uso:'1 de 4 finales',
+  qs:['¿Qué es el ancho del bus de direcciones y del bus de datos? ¿En qué influye de manera directa esta característica?'],
+  def:'<p>El <b>ancho</b> de un bus es la <b>cantidad de líneas</b>, es decir, cuántos bits viajan a la vez.</p>' + UL([
+    '<b>Ancho del bus de direcciones → capacidad máxima de memoria.</b> Con <i>n</i> líneas se pueden direccionar 2<sup>n</sup> posiciones. Es un límite: la memoria por encima de eso no se puede usar.',
+    '<b>Ancho del bus de datos → cuántos accesos hacen falta por instrucción</b> y, por lo tanto, el rendimiento. Cuanto más ancho, más bits por acceso.']) +
+    '<p>Ejemplo: bus de datos de 8 bits e instrucciones de 16 bits → el procesador debe acceder a memoria <b>dos veces</b> por cada ciclo de instrucción. Con 16 líneas de direcciones se direccionan 2<sup>16</sup> = 65.536 posiciones.</p>',
+  simple:'<ul><li>Ancho = cantidad de líneas (bits a la vez)</li><li>Direcciones: <b>2ⁿ</b> posiciones → <b>memoria máxima</b></li><li>Datos: bits por acceso → <b>accesos por instrucción</b> y rendimiento</li></ul>',
+  ej:'<p>Probalo con las calculadoras de la pestaña Simuladores.</p>',
+  warn:'El bus de direcciones <b>no</b> influye en la velocidad de transferencia sino en cuánta memoria se puede direccionar. El de datos es el que influye en el rendimiento.',
+  items:['Ancho = cantidad de líneas','Direcciones: 2ⁿ posiciones, capacidad máxima de memoria','Datos: accesos por instrucción y rendimiento','Un ejemplo numérico'] },
+
+{ id:'bus_p2p', unit:'Bus', prio:'media', t:'Conexión punto a punto', uso:'1 de 4 finales',
+  qs:['¿Qué es la conexión punto a punto de los buses? Explique y detalle sus características.'],
+  def:'<p>La interconexión <b>punto a punto</b> reemplaza al bus compartido: cada componente se conecta <b>directamente por pares</b> con otros. Surgió porque, al subir la frecuencia de los buses síncronos, aparecían límites eléctricos y se hacía muy difícil sincronizar y arbitrar a tiempo, sobre todo con chips multinúcleo que tienen varios procesadores y memoria en un solo chip. Características:</p>' + OL([
+    '<b>Múltiples conexiones directas:</b> conexiones por pares entre los componentes, lo que <b>elimina el arbitraje</b> de los sistemas de transmisión compartida.',
+    '<b>Arquitectura de protocolo en capas:</b> en vez de simples señales de control.',
+    '<b>Transferencia de datos empaquetados:</b> los datos viajan en <b>paquetes</b> con cabeceras de control y códigos de control de errores, no como un flujo de bits en bruto.']) +
+    '<p><b>Ventajas:</b> menor latencia, mayor velocidad de datos y mejor escalabilidad. <b>Ejemplo: PCI Express (PCIe)</b>, que sustituye al bus PCI; un chipset o puente conecta el procesador y la memoria con la estructura PCIe (conmutadores y dispositivos finales).</p>',
+  simple:'<ul><li>Conexiones directas <b>por pares</b> (no bus compartido)</li><li>1) múltiples conexiones directas → <b>sin arbitraje</b></li><li>2) <b>protocolo en capas</b></li><li>3) datos en <b>paquetes</b> (cabecera + control de errores)</li><li>Ventajas: menos latencia, más velocidad, escalable · <b>PCIe</b></li></ul>',
+  ej:'',
+  warn:'Las tres características son las que preguntan. Si solo escribís "es más rápido", perdés casi todo.',
+  items:['Conexión directa por pares en lugar de bus compartido','Elimina el arbitraje','Protocolo en capas','Datos empaquetados','Ventajas y ejemplo (PCIe)'] },
+
+/* ---------- 4 · E/S ---------- */
+{ id:'es_funciones', unit:'Entrada / Salida', prio:'alta', t:'Funciones del sistema de E/S', uso:'2 de 4 finales',
+  qs:['¿Cuáles son las funciones del sistema de E/S?'],
+  def:'<p>Los periféricos no se conectan directo al bus del sistema porque hay una gran variedad con distintos métodos de funcionamiento, sus velocidades son muy distintas a las de la memoria y el procesador (más lentas o más rápidas) y usan formatos y longitudes de palabra diferentes. Por eso existe el <b>módulo de E/S</b>, con dos funciones principales: <b>interfaz con el procesador y la memoria</b> (por el bus del sistema) e <b>interfaz con uno o más periféricos</b> (por enlaces de datos adaptados). Sus funciones se agrupan en cinco categorías:</p>' + OL([
+    '<b>Control y sincronización:</b> coordinar el tráfico entre los recursos internos y los dispositivos externos, manejando las distintas velocidades.',
+    '<b>Comunicación con el procesador:</b> decodificar comandos, intercambiar datos, informar el estado (BUSY, READY, errores) y reconocer la dirección de cada periférico.',
+    '<b>Comunicación con el dispositivo.</b>',
+    '<b>Almacenamiento temporal de datos</b> (buffer).',
+    '<b>Detección de errores</b> y aviso al procesador.']),
+  simple:'<ul><li>Módulo de E/S = interfaz entre el bus del sistema y los periféricos</li><li>1 <b>control y sincronización</b></li><li>2 <b>comunicación con el procesador</b> (comandos, datos, estado, dirección)</li><li>3 <b>comunicación con el dispositivo</b></li><li>4 <b>buffer</b> (almacenamiento de datos)</li><li>5 <b>detección de errores</b></li></ul>',
+  ej:'<p>Una lectura típica: la CPU consulta el estado del módulo, el módulo responde, la CPU pide la transferencia, el módulo obtiene el dato (8 o 16 bits) del periférico y lo pasa a la CPU.</p>',
+  warn:'Pueden pedirte también por qué hace falta el módulo: variedad de periféricos, velocidades distintas y formatos distintos. Eso lo escribís en una línea antes de la lista.',
+  items:['Control y sincronización','Comunicación con el procesador','Comunicación con el dispositivo','Almacenamiento temporal (buffer)','Detección de errores'] },
+
+{ id:'es_tipos', unit:'Entrada / Salida', prio:'alta', t:'Tipos de E/S: programada, por interrupción y DMA', uso:'2 de 4 finales',
+  qs:['¿Cuáles son los diferentes tipos de entrada / salida? Explique.'],
+  def:'<p>Hay tres técnicas para las operaciones de E/S (más una cuarta, el DCA). En las dos primeras el procesador mueve los datos entre la memoria y el módulo; en el DMA no.</p>' +
+    TB(['', 'E/S programada', 'E/S por interrupción', 'DMA'], [
+      ['Cómo funciona', 'La CPU ejecuta el programa de E/S: pregunta el estado, manda el comando y transfiere los datos', 'La CPU emite el comando y sigue con otras instrucciones; el módulo la <b>interrumpe</b> cuando termina', 'Un módulo DMA intercambia datos entre el periférico y la memoria <b>sin intervención de la CPU</b>'],
+      ['Qué hace la CPU', '<b>Espera</b> y consulta el estado una y otra vez (polling)', 'Hace otra cosa; al terminar cada instrucción mira si hay interrupciones; guarda el contexto y atiende', 'Solo configura al principio y es avisada al final'],
+      ['Problema', 'Pierde mucho tiempo esperando: degrada el rendimiento', 'La CPU sigue moviendo cada dato; cada interrupción cuesta guardar y restaurar contexto', 'Necesita un módulo extra; roba ciclos del bus'],
+      ['Se usa para', 'Operaciones simples y lentas', 'Eventos esporádicos', 'Grandes volúmenes de datos']]) +
+    '<p><b>Comandos de E/S programada:</b> control, prueba, lectura y escritura. <b>DCA (acceso directo a caché):</b> permite que la E/S acceda directo a la caché L3; mejora solo las operaciones de <b>salida</b>.</p>' +
+    '<p>Si lo preguntan por los dispositivos externos, se clasifican en: de <b>interacción con humanos</b> (impresora), de <b>interacción con máquinas</b> (sensores) y de <b>comunicación</b> con dispositivos remotos (otra computadora).</p>',
+  simple:'<ul><li><b>Programada</b> → la CPU espera y consulta (polling) · pierde tiempo</li><li><b>Por interrupción</b> → la CPU sigue; el módulo la interrumpe al terminar · sigue moviendo los datos</li><li><b>DMA</b> → módulo aparte mueve el bloque sin la CPU · avisa al final</li><li>DCA: acceso directo a caché, solo mejora la salida</li></ul>',
+  ej:'',
+  warn:'En un final puede decir "tipos de sistemas de E/S" o "tipos de E/S": se contesta con las técnicas (programada, interrupciones, DMA). Los tres tipos de dispositivos van como complemento.',
+  items:['E/S programada: la CPU espera y consulta el estado','E/S por interrupción: la CPU sigue y es interrumpida','DMA: transfiere sin pasar por la CPU','Ventaja o desventaja de cada una','Mencionar DCA o las categorías de dispositivos'] },
+
+{ id:'dma', unit:'Entrada / Salida', prio:'alta', t:'DMA: qué es, partes, funcionamiento, ventajas y dónde está', uso:'3 de 4 finales',
+  qs:['Describa las partes que conforman un DMA y explique su funcionamiento.', '¿Qué es el DMA y qué ventajas introduce respecto del resto de las técnicas? ¿Cómo está conformado y cómo funciona?', '¿Dónde se encuentra el DMA y a través de qué se comunica con los demás dispositivos?'],
+  def:'<p>El <b>DMA (acceso directo a memoria)</b> es un módulo adicional conectado al bus del sistema, capaz de imitar al procesador y tomar el control del bus para <b>transferir datos entre la memoria principal y un periférico sin pasar por la CPU</b>. Se usa cuando hay que mover grandes volúmenes de datos.</p>' +
+    '<p><b>Partes:</b></p>' + UL([
+      '<b>Registro de direcciones:</b> la posición inicial de memoria a leer o escribir.',
+      '<b>Registro contador de datos:</b> cuántas palabras faltan transferir.',
+      '<b>Registro de datos</b> (buffer): lo que se está transfiriendo.',
+      '<b>Lógica de control:</b> maneja las líneas de control (pedido y cesión del bus, lectura / escritura, interrupción).']) +
+    '<p><b>Funcionamiento:</b></p>' + OL([
+      'La CPU inicializa el DMA: le envía si es lectura o escritura, la dirección del dispositivo de E/S, la posición inicial de memoria y la cantidad de palabras. Después sigue con otro trabajo.',
+      'El DMA transfiere el bloque, <b>una palabra a la vez</b>, directo entre el periférico y la memoria. Usa el bus solo cuando la CPU no lo necesita o la obliga a pausar un ciclo: esto es el <b>robo de ciclos</b>.',
+      'Al terminar, el DMA envía una <b>interrupción</b> a la CPU. La CPU interviene solo al principio y al final.']) +
+    '<p><b>Ventajas:</b> libera a la CPU de las transferencias largas, reduce las interrupciones y mejora el rendimiento y la eficiencia de la E/S frente a la programada y la de interrupciones.</p>' +
+    '<p><b>¿Dónde está y cómo se comunica?</b> Es un módulo conectado al <b>bus del sistema</b> (en los procesadores actuales, integrado en el chipset / puente). Con la CPU se comunica por las <b>líneas de control</b> (lectura / escritura, pedido de bus, interrupción); con la memoria y el periférico, por el bus del sistema (<b>direcciones, datos y control</b>).</p>',
+  simple:'<ul><li>Módulo en el bus que transfiere memoria ↔ periférico <b>sin la CPU</b></li><li>Partes: registro de <b>direcciones</b> · <b>contador</b> de datos · registro de <b>datos</b> · <b>lógica de control</b></li><li>CPU configura → DMA transfiere (<b>roba ciclos</b>) → <b>interrumpe</b> al final</li><li>Ventaja: la CPU queda libre en transferencias largas</li><li>Se comunica por el <b>bus del sistema</b> y las líneas de control</li></ul>',
+  ej:'',
+  warn:'<b>El DMA no es una interrupción:</b> la CPU no guarda contexto, solo hace una pausa de un ciclo de bus. La interrupción llega una sola vez, al final. Y la lista de partes tiene que incluir los registros <i>y</i> la lógica de control.',
+  items:['Módulo que transfiere memoria ↔ periférico sin pasar por la CPU','Registro de direcciones y contador de datos','Lógica de control (y registro de datos)','La CPU inicializa, el DMA transfiere y avisa por interrupción al final','Robo de ciclos de bus','Ventaja: libera a la CPU / está en el bus del sistema'] },
+
+{ id:'dca', unit:'Entrada / Salida', prio:'baja', t:'DCA: acceso directo a caché', uso:'0 de 4 finales',
+  qs:['(No apareció, pero está en la filmina.)'],
+  def:'<p>El DMA no escala para los aumentos de datos de E/S de red (switches Ethernet de 10 y 100 Gbps, Wi-Fi de gigabits). El <b>DCA</b> permite que la función de E/S acceda <b>directo a la caché</b>.</p><p>Cuando el controlador de E/S pide una lectura, se comprueba si el dato está en la caché L3. Si está, se entrega de ahí y no se accede a la memoria principal. La mejora es <b>solo para las operaciones de salida</b>: la entrada funciona como en DMA y la L3 no participa.</p>',
+  simple:'<ul><li>La E/S accede directo a la <b>caché L3</b></li><li>Evita ir a la memoria principal</li><li>Mejora solo la <b>salida</b></li></ul>',
+  ej:'',
+  warn:'No digas que mejora la entrada: ese es un error que circula.',
+  items:['Acceso directo a la caché L3','Mejora solo la salida'] }
+];
+
+/* content2.js — teoría de la guía de Arquitectura (parte 2): multiprocesadores, GPU, performance y temas de baja prioridad. */
+DATA.teoria = DATA.teoria.concat([
+
+/* ---------- 5 · MULTIPROCESADORES ---------- */
+{ id:'mp_que', unit:'Multiprocesadores', prio:'alta', t:'Qué es un multiprocesador (SMP)', uso:'2 de 4 finales',
+  qs:['¿Qué es una arquitectura multiprocesador?'],
+  def:'<p>Un <b>multiprocesador</b> es un computador paralelo formado por <b>varios procesadores interconectados que comparten un mismo sistema de memoria</b>. Es una arquitectura de <b>memoria compartida</b>: hay <b>un único espacio de direcciones</b> para todos los procesadores y se comunican leyendo y escribiendo en esa memoria. Varios procesadores pueden acceder a un mismo módulo.</p>' +
+    '<p>El caso típico es el <b>SMP (multiprocesador simétrico)</b>:</p>' + OL([
+      'Hay dos o más procesadores con capacidad comparable.',
+      'Comparten la misma memoria principal y el mismo sistema de E/S, y se conectan por un bus.',
+      'Todos acceden a los dispositivos de E/S.',
+      'Todos pueden hacer las mismas funciones (de ahí "simétrico").',
+      'Un sistema operativo controla el conjunto y gestiona la interacción entre procesadores y programas.']) +
+    '<p><b>Ventajas:</b> más rendimiento (si el trabajo se reparte), disponibilidad (si uno falla el sistema sigue), crecimiento incremental y escalabilidad. Cada procesador tiene su propia caché (L1, a veces L2): de ahí aparece el problema de coherencia.</p>',
+  simple:'<ul><li>Varios procesadores + <b>memoria compartida</b> + un solo espacio de direcciones</li><li>SMP: 2 o más procesadores parecidos · misma memoria y E/S · por un bus · todos hacen lo mismo · un SO los controla</li><li>Ventajas: rendimiento, disponibilidad, escalabilidad</li><li>Cada uno con su caché → coherencia</li></ul>',
+  ej:'',
+  warn:'La filmina dice que la comunicación se basa en "paso de mensajes". Es un error: eso es de los <b>multicomputadores</b>. En el multiprocesador se comunican por la memoria compartida.',
+  items:['Varios procesadores que comparten la misma memoria','Un único espacio de direcciones','SMP: procesadores comparables, misma memoria y E/S, bus, SO','Ventaja (rendimiento / disponibilidad / escalabilidad)','Se acompaña del problema de coherencia de las cachés'] },
+
+{ id:'mp_memoria', unit:'Multiprocesadores', prio:'alta', t:'Cómo acceden a memoria los procesadores: UMA y NUMA', uso:'2 de 4 finales',
+  qs:['¿Cómo acceden a memoria los procesadores de una arquitectura multiprocesador? ¿Qué problema surge con la memoria caché?'],
+  def:'<p>Todos los procesadores acceden a la <b>memoria compartida</b> con lecturas y escrituras. Según el tiempo que tarda ese acceso, se clasifican:</p>' +
+    TB(['', 'UMA (acceso uniforme)', 'NUMA (acceso no uniforme)'], [
+      ['Acceso', 'Todos acceden a toda la memoria principal', 'Todos acceden a toda la memoria principal'],
+      ['Tiempo', '<b>El mismo</b> para todos los procesadores y todas las regiones', '<b>Distinto</b> según la región: la memoria cercana es más rápida que la lejana'],
+      ['Ejemplo', '<b>SMP</b> (un bus compartido)', 'Cada procesador (o nodo) tiene su memoria local, pero ve todo el espacio de direcciones'],
+      ['Variante', '—', '<b>CC-NUMA</b>: NUMA con coherencia de caché entre los procesadores']]) +
+    '<p>(También existe COMA, con memorias que funcionan como cachés.)</p>' +
+    '<p><b>Problema con las cachés:</b> cada procesador tiene su caché, así que el mismo dato puede estar en varias a la vez. Si uno lo modifica, las demás copias quedan desactualizadas: es el <b>problema de coherencia</b> (ver su tarjeta). Se resuelve con protocolos de coherencia por hardware (snoopy, directorio, MESI) y mecanismos de sincronización.</p>',
+  simple:'<ul><li>Acceden a una memoria compartida</li><li><b>UMA</b>: mismo tiempo para todos · es el SMP</li><li><b>NUMA</b>: el tiempo depende de la región · CC-NUMA tiene coherencia</li><li>Problema: coherencia de cachés → snoopy / directorio / MESI</li></ul>',
+  ej:'',
+  warn:'Cuando preguntan "¿cómo acceden a memoria?" y "¿qué problema surge con la caché?" juntos, son <b>dos</b> respuestas. La segunda es la tarjeta de coherencia: no la dejes sin contestar.',
+  items:['Acceden a memoria compartida con lecturas y escrituras','UMA: mismo tiempo de acceso (SMP)','NUMA: tiempo según la región de memoria','Problema: coherencia de caché (copias desactualizadas)','Cómo se resuelve (protocolos de coherencia)'] },
+
+{ id:'mp_vs_mc', unit:'Multiprocesadores', prio:'alta', t:'Multiprocesador vs multicomputador (clúster)', uso:'2 de 4 finales',
+  qs:['¿Qué diferencias posee con una arquitectura multicomputadora?'],
+  def:'<p>Un <b>multicomputador (clúster)</b> es un grupo de computadoras completas, interconectadas, que trabajan juntas como un recurso de cómputo unificado. Cada computadora es un <b>nodo</b>: tiene su propio procesador, su propia memoria y su E/S.</p>' +
+    TB(['', 'Multiprocesador (SMP)', 'Multicomputador (clúster)'], [
+      ['Memoria', '<b>Compartida</b>, un único espacio de direcciones', '<b>Cada nodo tiene la suya</b> (memoria distribuida)'],
+      ['Comunicación', 'Leyendo y escribiendo la memoria compartida (bus)', 'Por <b>paso de mensajes</b> por una red o conexión de alta velocidad'],
+      ['Sistema operativo', 'Uno solo para todo el sistema', 'Uno por nodo, más software que coordina'],
+      ['Coherencia de caché', 'Es un problema central', 'No hay: no se comparten datos por memoria'],
+      ['Escalabilidad', 'Limitada por el bus y la memoria compartida', 'Mucho mejor: se agregan nodos'],
+      ['Programación', 'Más simple (memoria común)', 'Más trabajo: hay que repartir datos y coordinar nodos'],
+      ['Ejemplo', 'Servidor SMP, CPU multinúcleo', 'Clúster de servidores, supercomputadora']]) +
+    '<p><b>Ventajas del clúster:</b> escalabilidad absoluta e incremental, alta disponibilidad (si un nodo falla, los otros siguen) y mejor relación precio / rendimiento (usa computadoras comunes).</p>',
+  simple:'<ul><li>Multiprocesador: <b>memoria compartida</b> · un SO · coherencia · escala poco</li><li>Multicomputador: <b>memoria por nodo</b> · mensajes por red · un SO por nodo · escala mucho</li><li>Clúster: alta disponibilidad, buena relación precio / rendimiento</li><li>Contra: programación y coordinación más difíciles</li></ul>',
+  ej:'',
+  warn:'La palabra clave es <b>memoria</b>: compartida vs propia de cada nodo. Si escribís eso y los mensajes por red, tenés el corazón de la respuesta.',
+  items:['Multiprocesador: memoria compartida, un espacio de direcciones','Multicomputador: cada nodo con su propia memoria','Comunicación por memoria vs por mensajes en red','Escalabilidad / disponibilidad del clúster','Dificultad de programación del multicomputador'] },
+
+/* ---------- 6 · GPU ---------- */
+{ id:'cpu_gpu', unit:'GPU', prio:'alta', t:'CPU multiprocesador vs GPU', uso:'2 de 4 finales',
+  qs:['Una CPU es un multiprocesador de propósito general. Desarrolle la arquitectura de una GPU.'],
+  def:'<p>La <b>CPU</b> es un multiprocesador de <b>propósito general</b>: sirve para cualquier tipo de cálculo, tiene pocos núcleos potentes y rápidos, mucha caché y control sofisticado, y está optimizada para <b>latencia</b>. La <b>GPU</b> es un multiprocesador de <b>propósito específico</b>: está optimizada para trabajar con <b>grandes cantidades de datos aplicando las mismas operaciones una y otra vez</b>. Tiene cientos o miles de núcleos más simples y está optimizada para <b>rendimiento (throughput)</b>.</p>' +
+    TB(['', 'CPU', 'GPU'], [
+      ['Propósito', 'General', 'Específico: gráficos y cálculo paralelo'],
+      ['Núcleos', 'Pocos y potentes', 'Muchísimos y simples'],
+      ['Paralelismo', 'Poco paralelismo, hilos pesados', 'Paralelismo masivo, miles de hilos livianos (modelo SIMD / SIMT)'],
+      ['Caché y control', 'Mucha caché y lógica de control compleja', 'Poca caché por núcleo; más espacio para unidades de cálculo'],
+      ['Optimiza', 'Latencia: terminar rápido una tarea', 'Rendimiento: muchos datos a la vez']]) +
+    '<p><b>Arquitectura de una GPU (de afuera hacia adentro):</b></p>' + UL([
+      '<b>Interfaz con el host</b> (PCI Express) y un <b>GigaThread Engine</b> que reparte el trabajo.',
+      '<b>GPC</b> (Graphics Processing Cluster): bloques que contienen un Raster Engine y varios SM.',
+      '<b>SM</b> (Streaming Multiprocessor): la unidad de cómputo, con muchos <b>cores CUDA</b>.',
+      '<b>Caché L2</b> compartida y <b>controladores de memoria</b> hacia la memoria gráfica (DRAM).']) +
+    '<p>Los hilos se agrupan en <b>warps de 32 hilos</b> que ejecutan la misma instrucción a la vez.</p>',
+  simple:'<ul><li>CPU: propósito general · pocos núcleos potentes · latencia</li><li>GPU: propósito específico · miles de núcleos simples · rendimiento · mismas operaciones sobre muchos datos</li><li>Estructura: PCIe → GigaThread → <b>GPC → SM → cores CUDA</b> · L2 · memoria</li><li>Hilos en <b>warps de 32</b></li></ul>',
+  ej:'<p>Pensá en pintar un cuadro de 2 millones de píxeles: una CPU los hace de a poco con mucha inteligencia por píxel; una GPU hace miles a la vez, todos con la misma regla.</p>',
+  warn:'Si piden "desarrollar la arquitectura de la GPU", no alcanza con "tiene muchos núcleos": tenés que bajar a GPC → SM → CUDA cores, y qué hay en el SM (próxima tarjeta).',
+  items:['CPU de propósito general vs GPU de propósito específico','Muchos núcleos simples, paralelismo masivo','Estructura GPC → SM → cores CUDA','Warps de 32 hilos','Caché L2 y controladores de memoria'] },
+
+{ id:'sm', unit:'GPU', prio:'alta', t:'Streaming Multiprocessor (SM) y qué contiene', uso:'2 de 4 finales',
+  qs:['¿Qué es un Streaming Multiprocessor? ¿Qué elementos contiene dentro?'],
+  def:'<p>Un <b>Streaming Multiprocessor (SM)</b> es la unidad de cómputo de la GPU: un bloque con varios núcleos (<b>cores CUDA</b>) que ejecutan en paralelo, más todo lo que necesitan para planificar y alimentar a esos núcleos. Contiene:</p>' + UL([
+    '<b>Cores CUDA:</b> cada uno ejecuta una instrucción de un hilo (entera o de punto flotante) por ciclo. Cada core tiene una <b>ALU entera</b> y una <b>FPU</b> (unidad de punto flotante).',
+    '<b>Warp schedulers y unidades de despacho (dispatch):</b> organizan los warps (grupos de 32 hilos) y despachan sus instrucciones. Hay dos por SM, así que dos warps pueden ejecutarse a la vez.',
+    '<b>Unidades LOAD / STORE:</b> calculan las direcciones de datos origen o destino y leen o guardan en caché o DRAM.',
+    '<b>SFU (Special Function Units):</b> ejecutan seno, coseno, inversa y raíz cuadrada.',
+    '<b>Archivo de registros y memoria compartida / caché L1.</b>',
+    '<b>Unidades de textura</b> y <b>PolyMorph Engine</b> (procesamiento gráfico: vértices, teselación, transformación de vista).']),
+  simple:'<ul><li>SM = unidad de cómputo de la GPU con muchos <b>cores CUDA</b> (ALU entera + FPU)</li><li><b>Warp schedulers</b> + dispatch</li><li><b>LOAD/STORE</b> · <b>SFU</b> (seno, coseno, raíz)</li><li><b>Registros</b> y <b>caché L1 / memoria compartida</b></li><li><b>Texturas</b> y <b>PolyMorph Engine</b></li></ul>',
+  ej:'<p>En la filmina el SM de Fermi tiene 32 cores, 16 unidades LOAD/STORE y 4 SFU; un archivo de 32.768 registros de 32 bits y 64 KB de memoria compartida / L1. Los números no hacen falta.</p>',
+  warn:'No definas el SM como "un core". Es un <b>conjunto</b> de cores con su planificación, registros y caché.',
+  items:['Unidad de cómputo de la GPU con varios cores CUDA en paralelo','Cores: ALU entera y FPU','Warp schedulers y unidades de despacho (warps de 32 hilos)','Unidades LOAD/STORE y SFU','Registros y caché L1 / memoria compartida','Unidades de textura y PolyMorph Engine'] },
+
+{ id:'gpu_uso', unit:'GPU', prio:'alta', t:'Por qué las GPU sirven para imágenes, video e IA', uso:'2 de 4 finales',
+  qs:['¿Por qué las GPU son buenas para procesar imágenes, video e inteligencia artificial?'],
+  def:'<p>Porque estas tareas aplican <b>la misma operación a enormes cantidades de datos independientes</b>, que es exactamente lo que una GPU hace mejor:</p>' + UL([
+    '<b>Procesamiento paralelo masivo:</b> miles de núcleos trabajan a la vez, uno por píxel, por elemento de la matriz o por neurona.',
+    '<b>Modelo SIMD / SIMT:</b> una instrucción sobre muchos datos (los 32 hilos de un warp).',
+    '<b>Cálculo matemático rápido:</b> las matrices y las <b>convoluciones</b> son la base tanto de los filtros de imagen y video como de las redes neuronales.',
+    '<b>Alta eficiencia por operación</b> (energía y costo) en tareas repetitivas.']) +
+    '<p><b>Ejemplo:</b> un filtro de convolución sobre una imagen aplica el mismo cálculo a cada píxel de forma independiente: la GPU reparte los píxeles entre sus núcleos. Una imagen de 1920×1080 son 2.073.600 píxeles; con 16 SM de 32 cores (512 en total) hacen falta unos 4.050 ciclos, mientras que una CPU de 4 núcleos necesita unos 518.400 (en el simulador de la pestaña Simuladores).</p>',
+  simple:'<ul><li>Misma operación sobre muchos datos independientes</li><li>Paralelismo masivo (miles de núcleos) · SIMD</li><li>Matrices y convoluciones → filtros e IA</li><li>Eficiente en energía y costo por operación</li></ul>',
+  ej:'',
+  warn:'No digas que "la GPU es más rápida que la CPU" a secas: es más rápida en tareas <b>paralelas y repetitivas</b>. En tareas secuenciales o con mucha lógica, gana la CPU.',
+  items:['Misma operación sobre muchos datos independientes (SIMD)','Paralelismo masivo con miles de núcleos','Matrices y convoluciones, base de imágenes y redes neuronales','Eficiencia por operación'] },
+
+/* ---------- 7 · PERFORMANCE ---------- */
+{ id:'perf_tecnicas', unit:'Performance', prio:'media', t:'Técnicas para mejorar la performance (además de más transistores)', uso:'1 de 4 finales',
+  qs:['¿Qué otras técnicas incorporan los fabricantes de procesadores para mejorar la performance además de incorporar cada vez más transistores?'],
+  def:'<p>Mientras los fabricantes logran chips con más transistores, los diseñadores incorporan técnicas cada vez más elaboradas:</p>' + UL([
+    '<b>Pipelining (segmentación):</b> se divide la ejecución de una instrucción en etapas y se superponen varias instrucciones a la vez, cada una en una etapa distinta.',
+    '<b>Predicción de ramas:</b> el procesador predice qué instrucciones se van a procesar a continuación para no detener el pipeline.',
+    '<b>Ejecución superescalar:</b> emitir más de una instrucción por ciclo de reloj.',
+    '<b>Análisis del flujo de datos:</b> detecta qué instrucciones dependen de los resultados de otras para armar un orden de ejecución optimizado.',
+    '<b>Ejecución especulativa:</b> con la predicción de ramas y el análisis de flujo de datos, ejecuta instrucciones antes de que les toque, y descarta el resultado si no era el camino.',
+    '<b>Multihilo (SMT / hyper-threading) y multinúcleo:</b> varios hilos por núcleo y varios núcleos en un chip.',
+    '<b>Cachés más grandes y multinivel.</b>']),
+  simple:'<ul><li><b>Pipeline</b> · <b>predicción de ramas</b> · <b>superescalar</b></li><li><b>Flujo de datos</b> · <b>ejecución especulativa</b></li><li><b>Multihilo</b> y <b>multinúcleo</b> · <b>cachés</b> multinivel</li></ul>',
+  ej:'',
+  warn:'Las cinco primeras son las de la filmina; las otras son complemento. Aprendé las cinco con una frase cada una.',
+  items:['Pipelining','Predicción de ramas','Ejecución superescalar','Análisis del flujo de datos / ejecución especulativa','Multihilo / multinúcleo / cachés'] },
+
+{ id:'perf_medidas', unit:'Performance', prio:'media', t:'Mediciones de performance y cuál es la más objetiva', uso:'1 de 4 finales',
+  qs:['¿Qué mediciones de performance existen para evaluar los procesadores? ¿Son todas objetivas? ¿Cuál es la más objetiva?'],
+  def:'<p><b>Tiempo de ejecución:</b> T = Ic × CPI × τ, con Ic = cantidad de instrucciones, CPI = ciclos por instrucción y τ = tiempo de ciclo (1 / frecuencia). Si hay accesos a memoria: T = Ic × [p + (m × k)] × τ.</p>' + UL([
+    '<b>MIPS:</b> millones de instrucciones por segundo. MIPS = f / (CPI × 10<sup>6</sup>).',
+    '<b>MFLOPS:</b> millones de operaciones de punto flotante por segundo; sirve para cálculo científico.',
+    '<b>Benchmarks (SPEC):</b> conjuntos de programas reales de referencia que se ejecutan en la máquina y se comparan con una de referencia.',
+    '<b>Eficiencia energética</b> y tiempo de ejecución de un programa concreto.']) +
+    '<p><b>¿Son todas objetivas?</b> No. MIPS depende del tipo de instrucciones y del conjunto de instrucciones (un CISC y un RISC no son comparables), y MFLOPS solo sirve para punto flotante. <b>La más objetiva es SPEC</b>: mide el tiempo con programas reales y comparables, no una cifra teórica del procesador.</p>',
+  simple:'<ul><li><b>T = Ic × CPI × τ</b> · <b>MIPS = f / (CPI × 10⁶)</b> · <b>MFLOPS</b></li><li><b>SPEC</b>: programas de referencia</li><li>No todas son objetivas: MIPS cambia según el set de instrucciones</li><li>Más objetiva: <b>SPEC</b> (tiempo con programas reales)</li></ul>',
+  ej:'<p>Un procesador de 2 GHz con CPI = 2 hace 2×10⁹ / 2 = 1.000 MIPS. Para un programa de 10<sup>9</sup> instrucciones, T = 10<sup>9</sup> × 2 × 0,5 ns = 1 s. Probalo en la calculadora.</p>',
+  warn:'Un final resuelto contesta "Geekbench" y "tiempo de ejecución de programas reales" como lo más objetivo. La filmina dice <b>SPEC</b>.',
+  items:['MIPS','MFLOPS','Benchmarks estándar (SPEC)','Tiempo de ejecución (T = Ic × CPI × τ)','No todas son objetivas y por qué','La más objetiva: SPEC'] },
+
+/* ---------- 8 · BAJA PRIORIDAD ---------- */
+{ id:'riscs', unit:'ISA', prio:'baja', t:'CISC vs RISC', uso:'0 de 4 finales',
+  qs:['(No apareció en estos finales, pero está en el material.)'],
+  def: TB(['', 'CISC', 'RISC'], [
+    ['Instrucciones', 'Muchas y complejas', 'Pocas y simples'],
+    ['Formato', 'Longitud variable', 'Longitud fija'],
+    ['Acceso a memoria', 'Muchas instrucciones operan sobre memoria', 'Solo <b>LOAD</b> y <b>STORE</b> tocan la memoria; el resto, entre registros'],
+    ['Registros', 'Pocos', 'Muchos'],
+    ['Control', 'Microprogramada', 'Cableada, ciclo corto, pipeline eficiente'],
+    ['Programa', 'Más corto', 'Más largo'],
+    ['Ejemplos', 'x86 (Intel, AMD)', 'ARM, MIPS, RISC-V']]),
+  simple:'<ul><li>CISC: complejas, longitud variable, opera en memoria</li><li>RISC: simples, longitud fija, LOAD/STORE, muchos registros, pipeline</li><li>x86 = CISC · ARM = RISC</li></ul>',
+  ej:'',
+  warn:'No lo confundas con Von Neumann / Harvard: CISC / RISC es sobre el <b>set de instrucciones</b>.',
+  items:['CISC: instrucciones complejas y variables','RISC: instrucciones simples, LOAD/STORE','Ejemplos'] },
+
+{ id:'mem_interna_externa', unit:'Memoria y caché', prio:'baja', t:'Memoria interna y externa', uso:'0 de 4 finales',
+  qs:['(No apareció en estos finales, pero está en el material.)'],
+  def:'<p>La <b>memoria interna</b> es la que la CPU accede directamente: registros, caché y memoria principal (RAM / ROM). Es la más rápida, pero cara y de menor capacidad (y la RAM, volátil).</p><p>La <b>memoria externa</b> es el almacenamiento secundario: discos duros, SSD, cintas, discos ópticos. Es <b>no volátil</b>, de mucha capacidad y más barata por bit, pero mucho más lenta. La CPU accede a ella a través del sistema de E/S, no directamente.</p><p>La jerarquía de memoria: registros → caché → memoria principal → almacenamiento externo. Hacia abajo: más capacidad, menos costo por bit, más tiempo de acceso.</p>',
+  simple:'<ul><li>Interna: registros, caché, RAM · rápida, cara, chica</li><li>Externa: disco, SSD, cinta · no volátil, grande, lenta, por E/S</li><li>Jerarquía: más abajo = más capacidad, menos costo, más lento</li></ul>',
+  ej:'',
+  warn:'',
+  items:['Interna: registros, caché, memoria principal','Externa: discos, SSD, cinta','Diferencias: velocidad, capacidad, costo, volatilidad'] }
+]);
+
+/* content3.js — los 4 finales. Cada pregunta apunta (ref) a las tarjetas de teoría que la responden:
+   la respuesta modelo es el contenido de esas tarjetas. */
+DATA.finales = [
+{ id:'f1', nombre:'Final 1', nota:'Parcial 4 · 10 de febrero de 2025 · Junín · 10 preguntas', secciones:[
+  { t:'GPU', ex:[
+    { n:'1.a', en:'¿Qué diferencias hay entre CPU multiprocesador y GPU? Desarrolle sobre GPU.', ref:['cpu_gpu'] },
+    { n:'1.b', en:'¿Qué es un Streaming Multiprocessor? ¿Qué elementos contiene dentro?', ref:['sm'] },
+    { n:'1.c', en:'¿Por qué son buenas para procesamiento de imágenes, videos e inteligencia artificial?', ref:['gpu_uso'] }] },
+  { t:'Memoria', ex:[
+    { n:'2.a', en:'¿Cuáles son los distintos métodos de acceso a memoria? Explique y ejemplifique.', ref:['acceso'] },
+    { n:'2.b', en:'¿Qué problema existe con la memoria caché? ¿Cuáles son los protocolos de escritura de la memoria caché?', ref:['coherencia', 'escritura'], aviso:'Son dos preguntas: el problema (coherencia) y las políticas de escritura.' },
+    { n:'2.c', en:'¿Qué es el principio de localidad temporal y espacial en la memoria caché?', ref:['localidad'] }] },
+  { t:'DMA', ex:[
+    { n:'3.a', en:'Describa las partes que conforman un DMA y explique su funcionamiento.', ref:['dma'] },
+    { n:'3.b', en:'¿Qué es el DMA y qué ventajas introduce su uso respecto del resto de las técnicas? ¿Cómo está conformado internamente y cómo funciona?', ref:['dma', 'es_tipos'] }] },
+  { t:'Performance', ex:[
+    { n:'4.a', en:'¿Qué otras técnicas incorporan los fabricantes de procesadores para mejorar la performance además de incorporar cada vez más transistores?', ref:['perf_tecnicas'] },
+    { n:'4.b', en:'¿Qué mediciones de performance existen para evaluar los procesadores? ¿Son todas objetivas? ¿Cuál es la más objetiva?', ref:['perf_medidas'] }] }
+]},
+{ id:'f2', nombre:'Final 2', nota:'3 secciones: Memoria (4 pts) · Bus (2 pts) · Multiprocesador (4 pts)', secciones:[
+  { t:'1. Memoria', pts:'4 pts', ex:[
+    { n:'1.a', en:'¿Cuáles son los distintos métodos de acceso a memoria? Explique y ejemplifique.', ref:['acceso'] },
+    { n:'1.b', en:'¿Qué es la memoria caché y dónde se encuentra dependiendo del nivel?', ref:['cache_que'] },
+    { n:'1.c', en:'¿Cuáles son los algoritmos de reemplazo existentes para la memoria caché?', ref:['reemplazo'] }] },
+  { t:'2. Bus', pts:'2 pts', ex:[
+    { n:'2.a', en:'¿Qué es un bus? Explique cuáles son los 3 buses que utilizan actualmente las arquitecturas de computadoras.', ref:['bus_que'] },
+    { n:'2.b', en:'¿Qué es la conexión punto a punto de los buses? Explique y detalle sus características.', ref:['bus_p2p'] }] },
+  { t:'3. Multiprocesador', pts:'4 pts', ex:[
+    { n:'3.a', en:'¿Qué es una arquitectura multiprocesador?', ref:['mp_que'] },
+    { n:'3.b', en:'¿Qué diferencias hay entre CPU multiprocesador y GPU? Desarrolle sobre GPU.', ref:['cpu_gpu', 'sm'] },
+    { n:'3.c', en:'¿Cómo acceden a memoria los procesadores? ¿Qué problema surge con la memoria caché?', ref:['mp_memoria', 'coherencia'] },
+    { n:'3.d', en:'¿Qué diferencias posee con una arquitectura multicomputador?', ref:['mp_vs_mc'] }] }
+]},
+{ id:'f3', nombre:'Final 3', nota:'4 secciones de 2,5 pts cada una', secciones:[
+  { t:'1. Entrada / Salida', pts:'2,5 pts', ex:[
+    { n:'1.a', en:'¿Cuáles son las funciones del sistema de E/S?', ref:['es_funciones'] },
+    { n:'1.b', en:'¿Cuáles son los diferentes tipos de sistemas de entrada / salida? Explique.', ref:['es_tipos'] },
+    { n:'1.c', en:'¿Dónde se encuentra el Acceso Directo a Memoria (DMA) y a través de qué se comunica con los demás dispositivos?', ref:['dma'] }] },
+  { t:'2. Arquitectura PC y PIC', pts:'2,5 pts', ex:[
+    { n:'2.a', en:'Explique y dibuje el modelo de la arquitectura Harvard.', ref:['harvard'] },
+    { n:'2.b', en:'¿Cuáles son sus diferencias con la arquitectura Von Neumann? Explique.', ref:['vn_vs_harvard'] },
+    { n:'2.c', en:'¿Qué ventajas en cuanto al ciclo de ejecución posee la arquitectura Harvard?', ref:['harvard_ventajas'] }] },
+  { t:'3. Memoria principal vs caché', pts:'2,5 pts', ex:[
+    { n:'3.a', en:'¿Qué diferencias hay entre la memoria principal y la memoria caché?', ref:['cache_vs_principal'] },
+    { n:'3.b', en:'¿Cuáles son los diferentes tipos de memoria caché que existen?', ref:['cache_tipos'] },
+    { n:'3.c', en:'¿Qué problemas hay con las memorias caché en una CPU multiprocesador?', ref:['coherencia'] }] },
+  { t:'4. Von Neumann y ciclo de ejecución', pts:'2,5 pts', ex:[
+    { n:'4.a', en:'¿Cuáles son las partes de una arquitectura Von Neumann y cómo se comunican entre sí?', ref:['vn'] },
+    { n:'4.b', en:'¿Cómo es el ciclo de una instrucción? ¿Qué recorrido hace la instrucción en las diferentes partes de la arquitectura? Indique qué registros se ven involucrados.', ref:['ciclo'] },
+    { n:'4.c', en:'¿Qué es el set de instrucciones? ¿Dónde piensa que se encuentra este?', ref:['isa_set'] }] }
+]},
+{ id:'f4', nombre:'Final 4', nota:'Del archivo arq2.docx · 5 secciones · sin puntajes indicados', secciones:[
+  { t:'Arquitectura PC y PIC', ex:[
+    { n:'a', en:'Explique y dibuje el modelo de la arquitectura Harvard.', ref:['harvard'] },
+    { n:'b', en:'¿Cuáles son sus diferencias con la arquitectura Von Neumann? Explique.', ref:['vn_vs_harvard'] },
+    { n:'c', en:'¿Qué ventajas en cuanto al ciclo de ejecución posee la arquitectura Harvard?', ref:['harvard_ventajas'] }] },
+  { t:'Multiprocesador', ex:[
+    { n:'a', en:'¿Qué es una arquitectura multiprocesador?', ref:['mp_que'] },
+    { n:'b', en:'¿Cómo acceden a memoria los procesadores? ¿Qué problema surge con la memoria caché?', ref:['mp_memoria', 'coherencia'] },
+    { n:'c', en:'¿Qué diferencias posee con una arquitectura multicomputador?', ref:['mp_vs_mc'] }] },
+  { t:'Bus', ex:[
+    { n:'a', en:'¿Qué es un bus? Explique cuáles son los 3 buses que utilizan actualmente las arquitecturas de computadoras.', ref:['bus_que'] },
+    { n:'b', en:'¿Qué es el ancho del bus de direcciones y del bus de datos? ¿En qué influye de manera directa esta característica?', ref:['bus_ancho'] }] },
+  { t:'Entrada / Salida', ex:[
+    { n:'a', en:'¿Cuáles son las funciones del sistema de E/S?', ref:['es_funciones'] },
+    { n:'b', en:'¿Cuáles son los diferentes tipos de entrada / salida? Explique.', ref:['es_tipos'] },
+    { n:'c', en:'¿Dónde se encuentra el Acceso Directo a Memoria (DMA) y a través de qué se comunica con los demás dispositivos?', ref:['dma'] }] },
+  { t:'Memoria caché', ex:[
+    { n:'a', en:'¿Qué es la memoria caché y dónde se encuentra dependiendo del nivel?', ref:['cache_que'] },
+    { n:'b', en:'¿Qué es el problema de coherencia de caché?', ref:['coherencia'] },
+    { n:'c', en:'¿Cómo es la lectura / escritura? ¿Qué pasa en un acierto de caché o en una falla de caché?', ref:['escritura'] }] }
+]}
+];
+
+/* content4.js — preguntas de quiz. t = tema · q = pregunta · o = opciones · a = índices correctos · e = explicación · r = tarjeta de teoría relacionada */
+DATA.quiz = [
+ /* Memoria */
+ { t:'Memoria', r:'acceso', q:'Una cinta magnética usa el método de acceso…', o:['Aleatorio', 'Secuencial', 'Asociativo', 'Directo'], a:[1], e:'Para llegar a un dato hay que pasar por todos los anteriores. Es el secuencial.' },
+ { t:'Memoria', r:'acceso', q:'En el acceso <b>directo</b> (por ejemplo un disco)…', o:['El tiempo de acceso es constante', 'Se salta a la zona y se busca secuencialmente dentro de ella', 'Se recupera el dato por su contenido', 'Hay que leer todo lo anterior desde el principio'], a:[1], e:'Directo: salto a la zona + búsqueda secuencial. El de tiempo constante es el aleatorio (RAM).' },
+ { t:'Memoria', r:'acceso', q:'¿Qué método de acceso usa la memoria caché?', o:['Secuencial', 'Directo', 'Aleatorio', 'Asociativo'], a:[3], e:'Se compara el contenido de las palabras en simultáneo: se recupera por contenido, no por dirección.' },
+ { t:'Memoria', r:'cache_vs_principal', q:'¿Con qué tecnología se construye la memoria caché y con cuál la principal?', o:['Caché: DRAM · principal: SRAM', 'Caché: SRAM · principal: DRAM', 'Las dos DRAM', 'Las dos SRAM'], a:[1], e:'SRAM (flip-flops, rápida, cara, sin refresco) en la caché; DRAM (capacitores, con refresco, barata) en la principal.' },
+ { t:'Memoria', r:'cache_que', q:'¿Dónde se encuentra la caché L1?', o:['Fuera del procesador, en la placa', 'Dentro de cada núcleo del procesador', 'En el disco', 'Compartida entre todos los núcleos'], a:[1], e:'L1 es la más rápida y chica y está dentro de cada núcleo. La L3 es la compartida.' },
+ { t:'Memoria', r:'cache_que', q:'En una falla de lectura de la caché…', o:['Se descarta la petición', 'Se lee de la memoria principal el bloque que contiene el dato, se guarda en la caché y se entrega', 'Se lee solo la palabra pedida y no se guarda', 'Se escribe en el disco'], a:[1], e:'Se trae un bloque entero de la memoria principal; por localidad, lo próximo que se pida probablemente esté ahí.' },
+ { t:'Memoria', r:'localidad', q:'La localidad <b>espacial</b> es la razón por la que…', o:['La caché guarda lo usado recientemente', 'La caché trae bloques completos y no una sola palabra', 'Se usa el algoritmo LRU', 'Se escribe en memoria al reemplazar'], a:[1], e:'Espacial: se acceden posiciones vecinas → se trae el bloque. Temporal: lo usado recientemente se usa de nuevo.' },
+ { t:'Memoria', r:'localidad', q:'Las instrucciones de un bucle son un ejemplo de localidad…', o:['Espacial', 'Temporal', 'Lógica', 'Asociativa'], a:[1], e:'Se vuelve a acceder a las mismas posiciones en poco tiempo: temporal.' },
+ { t:'Memoria', r:'reemplazo', q:'El algoritmo LRU reemplaza el bloque que…', o:['Entró primero a la caché', 'Tiene menos referencias en total', 'Hace más tiempo que no se usa', 'Se elige al azar'], a:[2], e:'LRU: menos recientemente usado. FIFO: el primero en entrar. LFU: el menos frecuentemente usado.' },
+ { t:'Memoria', r:'reemplazo', q:'¿Qué algoritmos de reemplazo existen para la caché? (elegí todos los que correspondan)', o:['LRU', 'FIFO', 'LFU', 'MESI'], a:[0, 1, 2], e:'MESI es un protocolo de coherencia, no de reemplazo. También existe el reemplazo aleatorio.' },
+ { t:'Memoria', r:'reemplazo', q:'En el mapeo directo, ¿hace falta un algoritmo de reemplazo?', o:['Sí, siempre LRU', 'No: cada bloque tiene una sola línea posible', 'Sí, FIFO', 'Solo si la caché es dividida'], a:[1], e:'Sin elección posible no hay algoritmo. Se necesitan en las técnicas asociativas.' },
+ { t:'Memoria', r:'escritura', q:'En la política de <b>escritura inmediata</b> (write-through)…', o:['Se escribe solo en la caché hasta reemplazar el bloque', 'Se escribe en la caché y en la memoria principal a la vez', 'Se escribe solo en la memoria principal', 'Nunca se escribe en la memoria'], a:[1], e:'La memoria principal siempre está válida, a costa de mucho tráfico.' },
+ { t:'Memoria', r:'escritura', q:'En la escritura <b>posterior</b> (write-back), la memoria principal se actualiza…', o:['En cada escritura', 'Cuando se reemplaza la línea modificada', 'Cada 10 ciclos', 'Nunca'], a:[1], e:'Se marca la línea como modificada (bit de uso) y se escribe en memoria solo al reemplazarla.' },
+ { t:'Memoria', r:'escritura', q:'Write-through y write-back son…', o:['Protocolos de coherencia', 'Políticas de escritura', 'Algoritmos de reemplazo', 'Tipos de bus'], a:[1], e:'Los protocolos de coherencia son directorio, snoopy y MESI. Es un error frecuente llamarlos protocolos de coherencia.' },
+ { t:'Memoria', r:'cache_tipos', q:'¿Qué ventaja tiene una caché <b>unificada</b> sobre una dividida?', o:['Evita la disputa entre búsqueda de instrucciones y ejecución', 'Mejor tasa de aciertos para el mismo tamaño y se diseña una sola', 'Es más rápida', 'No necesita direcciones'], a:[1], e:'La unificada equilibra la carga entre instrucciones y datos. La dividida evita la disputa entre las unidades de búsqueda y ejecución.' },
+ /* Coherencia */
+ { t:'Coherencia', r:'coherencia', q:'El problema de coherencia de caché aparece porque…', o:['La caché es muy chica', 'Pueden existir varias copias del mismo dato en distintas cachés y una se modifica', 'La memoria principal es lenta', 'El bus es compartido'], a:[1], e:'Si un procesador modifica su copia y las otras no se enteran, quedan desactualizadas.' },
+ { t:'Coherencia', r:'coherencia', q:'La solución de coherencia <b>por software</b>…', o:['Detecta la incoherencia en tiempo de ejecución', 'La analiza en la compilación y marca los datos que no conviene guardar en caché', 'Usa el protocolo MESI', 'Necesita un directorio'], a:[1], e:'Es más conservadora, pero no necesita hardware extra. La detección dinámica es la de hardware.' },
+ { t:'Coherencia', r:'coherencia', q:'¿Cuáles son protocolos de coherencia por hardware? (elegí todos los que correspondan)', o:['Directorio', 'Vigilancia (snoopy)', 'MESI', 'Write-back'], a:[0, 1, 2], e:'MESI es una implementación del snoopy con invalidación. Write-back es política de escritura.' },
+ { t:'Coherencia', r:'mesi', q:'En MESI, un procesador lee una línea que ningún otro tiene en caché. Queda en estado…', o:['M', 'E', 'S', 'I'], a:[1], e:'Exclusivo: igual a la memoria y solo en esta caché. Si alguien más la tenía, todos quedan en S.' },
+ { t:'Coherencia', r:'mesi', q:'En MESI, P1 y P2 tienen la línea en S y P1 escribe. Queda…', o:['P1 en M y P2 en I', 'P1 en E y P2 en S', 'Las dos en M', 'P1 en S y P2 en I'], a:[0], e:'Tras una escritura la línea queda Modificada solo en una caché: P1 avisa por el bus y las otras copias pasan a I.' },
+ { t:'Coherencia', r:'mesi', q:'¿Qué significa el estado <b>M</b> de MESI?', o:['Igual a la memoria y compartida', 'Modificada y presente solo en esta caché', 'Inválida', 'Igual a la memoria y no está en otras cachés'], a:[1], e:'M = modificada y exclusiva. E = igual a la memoria y exclusiva. S = igual a la memoria y compartida. I = inválida.' },
+ /* Buses */
+ { t:'Bus', r:'bus_que', q:'¿Cuáles son los 3 buses del bus del sistema?', o:['PCI, USB y SATA', 'Datos, direcciones y control', 'Entrada, salida y memoria', 'L1, L2 y L3'], a:[1], e:'PCI, USB y SATA son tipos de bus o interfaces.' },
+ { t:'Bus', r:'bus_ancho', q:'El ancho del bus de <b>direcciones</b> determina…', o:['La velocidad de transferencia', 'La capacidad máxima de memoria direccionable', 'La cantidad de dispositivos de E/S', 'El tamaño de la caché'], a:[1], e:'Con n líneas se direccionan 2ⁿ posiciones.' },
+ { t:'Bus', r:'bus_ancho', q:'Un bus de datos de 8 bits y una instrucción de 16 bits: ¿cuántos accesos a memoria hacen falta para buscar la instrucción?', o:['1', '2', '4', '8'], a:[1], e:'16 / 8 = 2 accesos por instrucción: por eso el ancho del bus de datos influye en el rendimiento.' },
+ { t:'Bus', r:'bus_p2p', q:'¿Qué características tiene la interconexión punto a punto? (elegí todas las que correspondan)', o:['Elimina el arbitraje del bus compartido', 'Usa protocolo en capas', 'Los datos viajan en paquetes', 'Todos los dispositivos comparten un único bus'], a:[0, 1, 2], e:'El bus compartido único es lo que reemplaza. Ejemplo: PCI Express.' },
+ /* E/S */
+ { t:'E/S', r:'es_tipos', q:'En la E/S <b>programada</b>, la CPU…', o:['Sigue con otras tareas hasta que la interrumpen', 'Espera y consulta el estado del módulo una y otra vez', 'No participa', 'Solo configura y es avisada al final'], a:[1], e:'Pierde mucho tiempo esperando. Lo de "sigue y la interrumpen" es la E/S por interrupción; lo de "solo configura" es el DMA.' },
+ { t:'E/S', r:'dma', q:'¿Cuáles son partes de un módulo DMA? (elegí todas las que correspondan)', o:['Registro de direcciones', 'Registro contador de datos', 'Lógica de control', 'Unidad aritmético-lógica'], a:[0, 1, 2], e:'También tiene un registro de datos (buffer). La ALU es de la CPU.' },
+ { t:'E/S', r:'dma', q:'¿Cuándo el DMA interrumpe a la CPU?', o:['En cada palabra transferida', 'Cuando termina la transferencia', 'Nunca', 'Antes de empezar'], a:[1], e:'La CPU interviene solo al principio (configura) y al final (recibe la interrupción). Mientras tanto el DMA roba ciclos de bus.' },
+ { t:'E/S', r:'dma', q:'¿Dónde se encuentra el DMA y cómo se comunica?', o:['Dentro de la ALU, por registros', 'Es un módulo conectado al bus del sistema y se comunica por sus líneas de control, direcciones y datos', 'En el disco, por cable', 'En la caché L3'], a:[1], e:'Con la CPU, por las líneas de control (pedido de bus, interrupción); con memoria y periférico, por el bus del sistema.' },
+ { t:'E/S', r:'es_funciones', q:'¿Cuáles son funciones del módulo de E/S? (elegí todas las que correspondan)', o:['Control y sincronización', 'Detección de errores', 'Almacenamiento temporal de datos (buffer)', 'Ejecutar las instrucciones del programa'], a:[0, 1, 2], e:'Además: comunicación con el procesador y con el dispositivo. Ejecutar instrucciones es de la CPU.' },
+ { t:'E/S', r:'dca', q:'El acceso directo a caché (DCA) mejora…', o:['Solo las operaciones de salida', 'Solo las de entrada', 'Entrada y salida', 'Ninguna'], a:[0], e:'Si el dato está en la L3 se entrega de ahí. La entrada funciona como en DMA.' },
+ /* Harvard y Von Neumann */
+ { t:'Harvard / Von Neumann', r:'harvard', q:'La arquitectura Harvard tiene…', o:['Una sola memoria para instrucciones y datos', 'Memorias físicamente separadas para instrucciones y para datos', 'Solo memoria ROM', 'Sin memoria de datos'], a:[1], e:'Cada una con su bus. Instrucciones en ROM / flash (no volátil), datos en RAM.' },
+ { t:'Harvard / Von Neumann', r:'harvard_ventajas', q:'La ventaja de Harvard en el ciclo de ejecución es que…', o:['Tiene más memoria', 'Puede acceder a la instrucción siguiente y a los datos al mismo tiempo', 'No necesita CPU', 'Usa una sola memoria'], a:[1], e:'Instrucciones y datos viajan por buses distintos, se superpone el fetch con el acceso a operandos.' },
+ { t:'Harvard / Von Neumann', r:'vn', q:'¿Cómo se comunican los componentes de una arquitectura Von Neumann?', o:['Con cables punto a punto sin bus', 'Por el bus del sistema (datos, direcciones y control)', 'Solo por la caché', 'Por la memoria secundaria'], a:[1], e:'Es un camino compartido, por eso hace falta arbitraje.' },
+ { t:'Harvard / Von Neumann', r:'vn_vs_harvard', q:'¿Cuál es un ejemplo típico de arquitectura Harvard?', o:['Un Intel Core i9', 'Un microcontrolador PIC o Arduino', 'Una PC con x86', 'Un celular con Android'], a:[1], e:'Propósito específico, sin sistema operativo. Von Neumann: propósito general.' },
+ /* Ciclo */
+ { t:'Ciclo de instrucción', r:'ciclo', q:'¿Cuál registro guarda la <b>dirección de la próxima instrucción</b>?', o:['IR', 'MAR', 'PC', 'MBR'], a:[2], e:'PC (contador de programa). El IR guarda la instrucción que se está ejecutando; el MAR, la dirección que se envía a memoria; el MBR, el dato leído.' },
+ { t:'Ciclo de instrucción', r:'ciclo', q:'¿Cuáles registros intervienen en la extracción de una instrucción? (elegí todos los que correspondan)', o:['PC', 'MAR', 'MBR', 'IR'], a:[0, 1, 2, 3], e:'T1: MAR ← PC · T2: MBR ← memoria, PC ← PC + 1 · T3: IR ← MBR.' },
+ { t:'Ciclo de instrucción', r:'isa_set', q:'¿Dónde se encuentra el set de instrucciones?', o:['En la memoria principal', 'En el procesador (unidad de control)', 'En el disco', 'En el bus de control'], a:[1], e:'Es una propiedad del procesador. Los programas sí están en memoria.' },
+ /* Multiprocesadores */
+ { t:'Multiprocesadores', r:'mp_memoria', q:'En un sistema <b>UMA</b>…', o:['El tiempo de acceso a memoria depende de la región', 'El tiempo de acceso a memoria es el mismo para todos los procesadores', 'Cada nodo tiene su propia memoria', 'No hay memoria compartida'], a:[1], e:'El SMP es UMA. En NUMA el tiempo depende de qué región de memoria se acceda.' },
+ { t:'Multiprocesadores', r:'mp_vs_mc', q:'En un multicomputador (clúster), la comunicación entre nodos se hace por…', o:['Memoria compartida', 'Paso de mensajes por una red', 'El bus de un solo procesador', 'La caché L3'], a:[1], e:'Cada nodo tiene su propia memoria. En el multiprocesador se comunican por la memoria compartida.' },
+ { t:'Multiprocesadores', r:'mp_que', q:'¿Cuáles son características del SMP? (elegí todas las que correspondan)', o:['Procesadores de capacidad comparable', 'Comparten memoria principal y E/S', 'Un sistema operativo controla el conjunto', 'Cada procesador tiene su propia memoria sin compartir nada'], a:[0, 1, 2], e:'Y todos pueden hacer las mismas funciones (simétrico).' },
+ /* GPU */
+ { t:'GPU', r:'sm', q:'¿Cuántos hilos tiene un <b>warp</b>?', o:['8', '16', '32', '64'], a:[2], e:'Un warp son 32 hilos que ejecutan la misma instrucción a la vez.' },
+ { t:'GPU', r:'sm', q:'¿Qué contiene un Streaming Multiprocessor? (elegí todas las que correspondan)', o:['Cores CUDA (ALU y FPU)', 'Warp schedulers', 'Unidades LOAD/STORE y SFU', 'Disco duro'], a:[0, 1, 2], e:'También registros, caché L1 / memoria compartida, unidades de textura y el PolyMorph Engine.' },
+ { t:'GPU', r:'gpu_uso', q:'¿Por qué las GPU son buenas para imágenes e IA?', o:['Tienen pocos núcleos muy rápidos', 'Aplican la misma operación a muchos datos independientes con miles de núcleos', 'Tienen más caché que una CPU', 'Ejecutan un sistema operativo'], a:[1], e:'Paralelismo masivo (SIMD) sobre píxeles, matrices y convoluciones.' },
+ { t:'GPU', r:'cpu_gpu', q:'Estructura de una GPU, de mayor a menor:', o:['SM → GPC → core CUDA', 'GPC → SM → core CUDA', 'Core CUDA → SM → GPC', 'GPC → core CUDA → SM'], a:[1], e:'La GPU se divide en GPC, que tienen varios SM, y cada SM tiene varios cores CUDA.' },
+ /* Performance */
+ { t:'Performance', r:'perf_medidas', q:'¿Cuál es la medida de performance más objetiva según la filmina?', o:['MIPS', 'MFLOPS', 'SPEC (programas de referencia)', 'La frecuencia del reloj'], a:[2], e:'MIPS depende del tipo de instrucciones y MFLOPS solo sirve para punto flotante. SPEC mide con programas reales y comparables.' },
+ { t:'Performance', r:'perf_tecnicas', q:'¿Cuáles son técnicas de mejora de performance? (elegí todas las que correspondan)', o:['Pipelining', 'Predicción de ramas', 'Ejecución superescalar', 'Aumentar el tamaño del bus de control'], a:[0, 1, 2], e:'También análisis de flujo de datos, ejecución especulativa, multihilo, multinúcleo y cachés.' }
+];
+
+</script>
+<script>
+/* app.js — interfaz de la guía de Arquitectura */
+(function () {
+'use strict';
+var L = AR;
+var $ = function (s, r) { return (r || document).querySelector(s); };
+var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+function h(tag, attrs, html) {
+  var e = document.createElement(tag);
+  if (attrs) for (var k in attrs) { if (k === 'class') e.className = attrs[k]; else e.setAttribute(k, attrs[k]); }
+  if (html != null) e.innerHTML = html;
+  return e;
+}
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function rnd(n) { return Math.floor(Math.random() * n); }
+function pick(a) { return a[rnd(a.length)]; }
+function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = rnd(i + 1), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function store(k, v) {
+  try { if (v === undefined) { var r = localStorage.getItem('arq.' + k); return r ? JSON.parse(r) : null; } localStorage.setItem('arq.' + k, JSON.stringify(v)); } catch (e) { return null; }
+}
+function blk(x) {
+  if (!x) return '';
+  return /<(ol|ul|div|pre|table|p)[ >]/.test(x) ? '<div class="rich">' + x + '</div>' : '<p>' + x + '</p>';
+}
+function sameSet(a, b) { return a.length === b.length && a.every(function (x) { return b.indexOf(x) >= 0; }); }
+function parseNums(s) { return String(s).split(/[\s,;]+/).filter(Boolean).map(Number).filter(function (x) { return !isNaN(x); }); }
+function num(id) { var v = String($(id).value).replace(',', '.'); return v === '' ? NaN : parseFloat(v); }
+function card(id) { for (var i = 0; i < DATA.teoria.length; i++) if (DATA.teoria[i].id === id) return DATA.teoria[i]; return null; }
+function plain(s) { return String(s).replace(/<[^>]+>/g, ''); }
+function cardTitle(id) { var c = card(id); return c ? plain(c.t) : id; }
+
+/* ============ TABS ============ */
+var TABS = ['teoria', 'esqueletos', 'simuladores', 'quizzes', 'finales', 'simulacro'];
+var rendered = {};
+var RENDER = {};
+function showTab(id, anchor) {
+  if (TABS.indexOf(id) < 0) id = 'teoria';
+  TABS.forEach(function (t) {
+    var on = t === id;
+    $('#tab-' + t).setAttribute('aria-selected', on ? 'true' : 'false');
+    $('#' + t).hidden = !on;
+  });
+  if (!rendered[id]) { rendered[id] = true; RENDER[id](); }
+  try { if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id); } catch (e) { /* nada */ }
+  if (anchor) { var el = document.getElementById(anchor); if (el) setTimeout(function () { el.scrollIntoView({ behavior: 'smooth' }); }, 30); }
+}
+function initTabs() {
+  TABS.forEach(function (t) {
+    $('#tab-' + t).addEventListener('click', function () { showTab(t); window.scrollTo(0, 0); });
+  });
+  window.addEventListener('hashchange', function () { showTab(location.hash.replace('#', '')); });
+  showTab(location.hash.replace('#', '') || 'teoria');
+}
+
+/* ============ FECHA DE LA MESA ============ */
+/* Cuando se confirme la fecha: EXAM = '2026-12-10T09:00:00-03:00' y MESA_TXT = 'Mesa de final · jueves 10 de diciembre'. */
+var EXAM = null;
+var MESA_TXT = null;
+function countdown() {
+  var el = $('#countdown');
+  if (MESA_TXT) $('#mesa').textContent = MESA_TXT;
+  if (!EXAM) { el.textContent = ''; return; }
+  var target = new Date(EXAM).getTime();
+  function tick() {
+    var d = target - Date.now();
+    if (d <= 0) { el.textContent = 'La mesa ya empezó o terminó'; return; }
+    var days = Math.floor(d / 864e5), hs = Math.floor(d % 864e5 / 36e5), mi = Math.floor(d % 36e5 / 6e4);
+    el.textContent = 'Faltan ' + (days > 0 ? days + ' d ' : '') + hs + ' h ' + mi + ' min';
+  }
+  tick(); setInterval(tick, 30000);
+}
+
+/* ============ TEORÍA ============ */
+function cardHtml(c, i) {
+  return '<article class="concept" id="c-' + c.id + '" data-prio="' + c.prio + '"><div class="concept-head"><div><div class="eyebrow">' + (i < 9 ? '0' : '') + (i + 1) + ' · ' + esc(c.unit) + (c.uso ? ' · ' + esc(c.uso) : '') + '</div><h3>' + c.t + '</h3></div><span class="tag ' + c.prio + '">' + c.prio + '</span>' +
+    '<label class="mark"><input type="checkbox" data-id="' + c.id + '"> Lo domino</label></div>' +
+    '<div class="body">' + (c.qs && c.qs.length ? '<div class="blk enunciado"><div class="blk-k">Cómo lo preguntan</div>' + c.qs.map(function (q) { return '<p>' + esc(q) + '</p>'; }).join('') + '</div>' : '') +
+    '<div class="dse"><div class="dse-def"><div class="dse-k">Respuesta modelo</div>' + blk(c.def) + '</div><div class="dse-simple"><div class="dse-k">Esqueleto</div>' + blk(c.simple) + '</div>' +
+    (c.ej ? '<div class="dse-ex"><div class="dse-k">Ejemplo</div>' + blk(c.ej) + '</div>' : '') + '</div>' +
+    (c.warn ? '<div class="warn"><b>Ojo.</b> ' + c.warn + '</div>' : '') + '</div></article>';
+}
+RENDER.teoria = function () {
+  var P = $('#teoria');
+  var done = store('done') || [];
+  var filter = 'todas';
+  var html = '<div class="panel-head"><div class="filters" role="group" aria-label="Filtrar por prioridad"><span class="eyebrow">Mostrar</span>' +
+    [['todas', 'Todas'], ['alta', 'Solo alta'], ['alta media', 'Alta + media'], ['pend', 'Sin dominar']].map(function (f, i) { return '<button class="chip" data-f="' + f[0] + '" aria-pressed="' + (i === 0) + '">' + f[1] + '</button>'; }).join('') +
+    '</div><div class="jump"><label for="jump-t">Ir a</label><select id="jump-t"><option value="">Elegí un tema…</option>' +
+    DATA.teoria.map(function (c, i) { return '<option value="c-' + c.id + '">' + (i < 9 ? '0' : '') + (i + 1) + ' · ' + esc(plain(c.t)) + '</option>'; }).join('') + '</select></div></div>';
+  html += '<section id="que-toman"><div><div class="eyebrow">Qué toman</div><h2>Lo que se repite en 4 finales</h2></div><p class="lead">Armado con 4 finales (45 preguntas). Es un examen escrito de desarrollo con secciones temáticas: <b>cada sección vale todo o nada</b>, así que conviene no dejar ningún tema en blanco. El pozo de preguntas es cerrado: casi todo lo que sale ya apareció en alguno de estos finales.</p>' +
+    '<div class="tbl"><table><thead><tr><th>Tema</th><th>Qué piden</th><th>Aparece en</th></tr></thead><tbody>' +
+    DATA.toman.map(function (t) { return '<tr><td><b>' + t[0] + '</b> <span class="tag ' + t[1] + '">' + t[1] + '</span></td><td>' + t[2] + '</td><td>' + t[3] + '</td></tr>'; }).join('') + '</tbody></table></div></section>';
+  html += '<section id="plan"><div><div class="eyebrow">Plan</div><h2>6 sesiones</h2></div><p class="lead">Ordenadas por lo que más se repite. Sin fechas fijas, para que entre en los huecos que te dejen los otros finales.</p><div class="plan">' +
+    DATA.plan.map(function (d, i) { return '<div class="day' + (i === DATA.plan.length - 1 ? ' exam' : '') + '"><div class="d">' + d[0] + '<span>' + d[1] + '</span></div><div>' + d[2] + '</div></div>'; }).join('') + '</div></section>';
+  html += '<section id="errores"><div><div class="eyebrow">Material con errores</div><h2>Lo que circula mal</h2></div><p class="lead">Algunas filminas y varios finales resueltos tienen errores. Si te toman estos puntos, escribí la columna de la derecha.</p>' +
+    '<div class="tbl"><table><thead><tr><th>Dónde</th><th>Qué dice mal</th><th>Lo correcto</th></tr></thead><tbody>' +
+    DATA.errores.map(function (r) { return '<tr><td><b>' + r[0] + '</b></td><td>' + r[1] + '</td><td>' + r[2] + '</td></tr>'; }).join('') + '</tbody></table></div></section>';
+  html += '<div class="concepts" id="cards">' + DATA.teoria.map(cardHtml).join('') + '</div>';
+  P.innerHTML = '<div class="wrap"><main>' + html + '</main></div>';
+
+  function apply() {
+    $$('.concept', P).forEach(function (a) {
+      var id = a.id.slice(2), d = done.indexOf(id) >= 0;
+      a.classList.toggle('done', d); $('input', a).checked = d;
+      var pr = a.dataset.prio, show = true;
+      if (filter === 'alta') show = pr === 'alta';
+      else if (filter === 'alta media') show = pr !== 'baja';
+      else if (filter === 'pend') show = !d;
+      a.classList.toggle('hidden-by-filter', !show);
+    });
+  }
+  P.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.matches('.mark input')) {
+      var id = t.dataset.id, i = done.indexOf(id);
+      if (t.checked && i < 0) done.push(id); if (!t.checked && i >= 0) done.splice(i, 1);
+      store('done', done); apply();
+    }
+    if (t.id === 'jump-t' && t.value) { var el = document.getElementById(t.value); if (el) el.scrollIntoView({ behavior: 'smooth' }); t.value = ''; }
+  });
+  P.addEventListener('click', function (e) {
+    var b = e.target.closest('.chip'); if (!b) return;
+    filter = b.dataset.f;
+    $$('.chip', P).forEach(function (c) { c.setAttribute('aria-pressed', c === b ? 'true' : 'false'); });
+    apply();
+  });
+  apply();
+};
+function refChips(ids) {
+  if (!ids || !ids.length) return '';
+  return '<div class="refs"><span class="muted">Desarrollo completo en la teoría:</span> ' + ids.map(function (id) { return '<a class="pill acc" href="#teoria" data-card="' + id + '">' + esc(cardTitle(id)) + '</a>'; }).join(' ') + '</div>';
+}
+document.addEventListener('click', function (e) {
+  var a = e.target.closest('a[data-card]'); if (!a) return;
+  e.preventDefault();
+  var f = $('#teoria .chip[data-f="todas"]');
+  if (rendered.teoria && f) f.click();
+  showTab('teoria', 'c-' + a.dataset.card);
+});
+
+/* ============ ESQUELETOS ============ */
+RENDER.esqueletos = function () {
+  var P = $('#esqueletos');
+  var done = store('esq') || [];
+  var list = DATA.teoria.filter(function (c) { return c.prio !== 'baja'; });
+  P.innerHTML = '<div class="wrap"><main><section><div><div class="eyebrow">Memorizar</div><h2>Esqueletos: tapá, escribí, destapá</h2></div><p class="lead">Cada tarjeta es una pregunta de final. Leé el enunciado, escribí de memoria los puntos que tiene que tener la respuesta, y recién ahí abrí el esqueleto. Si te faltó algo, volvé a la teoría. Tildá las que ya te salen sin mirar.</p>' +
+    '<div class="filters"><button class="chip" data-f="todos" aria-pressed="true">Todas</button><button class="chip" data-f="pend" aria-pressed="false">Sin dominar</button><button class="btn" id="es-shuf">Mezclar</button></div><div class="concepts" id="es-list"></div></section></main></div>';
+  var order = list.map(function (c) { return c.id; }), filt = 'todos';
+  function draw() {
+    var box = $('#es-list', P); box.innerHTML = '';
+    order.forEach(function (id) {
+      var c = card(id), d = done.indexOf(id) >= 0;
+      if (filt === 'pend' && d) return;
+      var a = h('article', { class: 'concept' + (d ? ' done' : '') });
+      a.innerHTML = '<div class="concept-head"><div><div class="eyebrow">' + esc(c.unit) + ' · ' + esc(c.uso || '') + '</div><h3>' + c.t + '</h3></div><label class="mark"><input type="checkbox" data-id="' + id + '"' + (d ? ' checked' : '') + '> Me sale de memoria</label></div>' +
+        '<div class="body"><div class="blk enunciado"><div class="blk-k">Cómo lo preguntan</div>' + (c.qs || []).map(function (q) { return '<p>' + esc(q) + '</p>'; }).join('') + '</div>' +
+        '<details><summary>Ver el esqueleto</summary><div class="uc-ex">' + blk(c.simple) + (c.warn ? '<div class="warn"><b>Ojo.</b> ' + c.warn + '</div>' : '') + '</div></details></div>';
+      box.appendChild(a);
+    });
+  }
+  P.addEventListener('change', function (e) {
+    var t = e.target; if (!t.matches('.mark input')) return;
+    var id = t.dataset.id, i = done.indexOf(id);
+    if (t.checked && i < 0) done.push(id); if (!t.checked && i >= 0) done.splice(i, 1);
+    store('esq', done); t.closest('.concept').classList.toggle('done', t.checked);
+  });
+  P.addEventListener('click', function (e) {
+    var b = e.target.closest('.chip'); if (!b) return;
+    filt = b.dataset.f; $$('.chip', P).forEach(function (c) { c.setAttribute('aria-pressed', c === b ? 'true' : 'false'); }); draw();
+  });
+  $('#es-shuf', P).addEventListener('click', function () { order = shuffle(order); draw(); });
+  draw();
+};
+
+/* ============ SIMULADORES ============ */
+function hx(x, d) { return L.hex(x, d); }
+function simCiclo(root) {
+  var A = 3, B = 2, steps = [], i = 0;
+  root.innerHTML = '<div><div class="eyebrow">Simulador 1</div><h3>Ciclo de instrucción, paso a paso</h3></div><p>Máquina de la filmina: instrucciones de 16 bits (4 de CODOP y 12 de dirección). Programa: <code>300: 1940</code> (cargar AC desde 940), <code>301: 5941</code> (sumar el dato de 941), <code>302: 2941</code> (guardar AC en 941). Todo en hexadecimal. Cambiá los datos y mirá cómo se mueve cada registro.</p>' +
+    '<div class="sim-bar"><label>Dato en 940<input class="in" id="ci-a" type="number" min="0" max="9999" value="3" style="width:8ch"></label><label>Dato en 941<input class="in" id="ci-b" type="number" min="0" max="9999" value="2" style="width:8ch"></label><button class="btn" id="ci-rs">Reiniciar</button></div>' +
+    '<div class="stepbox" id="ci-box"></div><div class="actions"><button class="btn" id="ci-prev">← Anterior</button><button class="btn primary" id="ci-next">Siguiente →</button><button class="btn" id="ci-end">Hasta el final</button><span class="muted" id="ci-n"></span></div>';
+  function load() {
+    A = Math.max(0, Math.min(9999, parseInt($('#ci-a', root).value, 10) || 0)); B = Math.max(0, Math.min(9999, parseInt($('#ci-b', root).value, 10) || 0));
+    var r = L.runProgram({ 0x300: 0x1940, 0x301: 0x5941, 0x302: 0x2941, 0x940: A, 0x941: B }, 0x300, 3);
+    steps = r.steps; i = 0; draw();
+  }
+  function draw() {
+    var s = steps[i], prev = i > 0 ? steps[i - 1] : null;
+    var regs = ['PC', 'IR', 'MAR', 'MBR', 'AC'].map(function (k) {
+      var chg = s.chg.indexOf(k) >= 0;
+      return '<div class="reg' + (chg ? ' chg' : '') + '"><b>' + k + '</b><span>' + hx(s.regs[k], k === 'PC' || k === 'MAR' ? 3 : 4) + '</span></div>';
+    }).join('');
+    var addrs = [0x300, 0x301, 0x302, 0x940, 0x941];
+    var mem = '<div class="tbl"><table class="memt"><thead><tr><th>Dirección</th><th>Contenido</th><th>Qué es</th></tr></thead><tbody>' + addrs.map(function (a) {
+      var changed = prev && prev.mem[a] !== s.mem[a];
+      var kind = a < 0x400 && a >= 0x300 ? 'instrucción' : 'dato';
+      return '<tr' + (changed ? ' class="chg"' : '') + '><td>' + hx(a, 3) + '</td><td>' + hx(s.mem[a] || 0, 4) + '</td><td>' + kind + '</td></tr>';
+    }).join('') + '</tbody></table></div>';
+    $('#ci-box', root).innerHTML = '<div class="phase">' + esc(s.ph) + '</div><div class="stepmsg">' + esc(s.txt) + '</div><div class="regs">' + regs + '</div>' + mem;
+    $('#ci-n', root).textContent = 'Paso ' + (i + 1) + ' de ' + steps.length;
+    $('#ci-prev', root).disabled = i === 0; $('#ci-next', root).disabled = i === steps.length - 1;
+  }
+  $('#ci-next', root).addEventListener('click', function () { if (i < steps.length - 1) { i++; draw(); } });
+  $('#ci-prev', root).addEventListener('click', function () { if (i > 0) { i--; draw(); } });
+  $('#ci-end', root).addEventListener('click', function () { i = steps.length - 1; draw(); });
+  $('#ci-rs', root).addEventListener('click', load);
+  $('#ci-a', root).addEventListener('change', load); $('#ci-b', root).addEventListener('change', load);
+  load();
+}
+
+function simMesi(root) {
+  var N = 3, m = L.mesiNew(N), log = [];
+  root.innerHTML = '<div><div class="eyebrow">Simulador 2</div><h3>MESI con tres procesadores</h3></div><p>Una sola línea de memoria. Apretá una operación y mirá cómo cambia el estado en cada caché y qué dice el protocolo.</p>' +
+    '<div class="mesi" id="me-st"></div><div class="actions" id="me-btn">' + [0, 1, 2].map(function (p) { return '<button class="btn" data-op="R" data-p="' + p + '">P' + (p + 1) + ' lee</button><button class="btn primary" data-op="W" data-p="' + p + '">P' + (p + 1) + ' escribe</button>'; }).join('') + '<button class="btn" id="me-rs">Reiniciar</button></div>' +
+    '<ol class="mlog" id="me-log"></ol>' +
+    '<div class="sc"><div class="eyebrow">Ejercicio</div><h4>Predecí los estados</h4><div id="me-ex"></div></div>';
+  function draw() {
+    $('#me-st', root).innerHTML = m.st.map(function (s, p) { return '<div class="mcard ' + s + '"><small>Caché de P' + (p + 1) + '</small><div class="big">' + s + '</div><small>' + L.NAME[s] + '</small></div>'; }).join('') +
+      '<div class="mcard"><small>Memoria principal</small><div class="big" style="font-size:1.1rem">' + (m.memOk ? 'válida' : 'desactualizada') + '</div><small>' + (m.memOk ? 'igual a la caché' : 'hay una copia M') + '</small></div>';
+    $('#me-log', root).innerHTML = log.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('');
+  }
+  $('#me-btn', root).addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-op]'); if (!b) return;
+    var r = L.mesiStep(m, b.dataset.op, +b.dataset.p); m = r.m; log = r.log; draw();
+  });
+  $('#me-rs', root).addEventListener('click', function () { m = L.mesiNew(N); log = []; draw(); });
+  var ex = null;
+  function newEx() {
+    var ops = [], k = 3 + rnd(2);
+    for (var j = 0; j < k; j++) ops.push({ op: pick(['R', 'R', 'W']), p: rnd(N) });
+    var r = L.mesiRun(N, ops);
+    ex = { ops: ops, res: r };
+    $('#me-ex', root).innerHTML = '<p>Las cachés empiezan inválidas (I). Se ejecuta, en orden: <b>' + ops.map(function (o) { return 'P' + (o.p + 1) + (o.op === 'R' ? ' lee' : ' escribe'); }).join(' → ') + '</b>. ¿Cómo queda cada una?</p>' +
+      '<div class="sim-bar">' + [0, 1, 2].map(function (p) { return '<label>P' + (p + 1) + '<select data-p="' + p + '"><option value="">…</option><option>M</option><option>E</option><option>S</option><option>I</option></select></label>'; }).join('') + '<button class="btn primary" id="me-chk">Corregir</button><button class="btn" id="me-new">Otro</button></div><div id="me-fb"></div>';
+    $('#me-chk', root).addEventListener('click', function () {
+      var ok = 0, all = true;
+      $$('select[data-p]', root).forEach(function (s) { var g = s.value === r.m.st[+s.dataset.p]; if (s.value === '') all = false; if (g) ok++; s.classList.toggle('ok', g); s.classList.toggle('bad', !g); });
+      if (!all) return;
+      $('#me-fb', root).innerHTML = '<div class="q-fb ' + (ok === N ? 'ok' : 'bad') + '"><b>' + (ok === N ? 'Correcto.' : ok + ' de ' + N + '.') + '</b> Estados finales: ' + r.m.st.map(function (s, p) { return 'P' + (p + 1) + ' = ' + s; }).join(', ') + '.<ol class="mlog">' + r.steps.map(function (s, j) { return '<li><b>' + (j + 1) + '.</b> ' + s.log.map(esc).join(' ') + '</li>'; }).join('') + '</ol></div>';
+    });
+    $('#me-new', root).addEventListener('click', newEx);
+  }
+  draw(); newEx();
+}
+
+function simReemplazo(root) {
+  root.innerHTML = '<div><div class="eyebrow">Simulador 3</div><h3>Algoritmos de reemplazo de caché</h3></div><p>Escribí la secuencia de bloques que pide la CPU y la cantidad de marcos de la caché. Se comparan FIFO, LRU y LFU (en LFU, si hay empate se reemplaza el que entró primero). Con la secuencia de ejemplo y 3 marcos: FIFO 10 fallas, LRU 9.</p>' +
+    '<div class="sim-bar"><label>Secuencia de bloques<input class="in wide" id="re-s" type="text" value="7 0 1 2 0 3 0 4 2 3 0 3 2"></label><label>Marcos<input class="in" id="re-c" type="number" min="1" max="8" value="3" style="width:7ch"></label><label>Mostrar<select id="re-p"><option>FIFO</option><option selected>LRU</option><option>LFU</option></select></label><button class="btn primary" id="re-go">Simular</button></div><div id="re-out"></div>';
+  function run() {
+    var seq = parseNums($('#re-s', root).value), cap = Math.max(1, Math.min(8, parseInt($('#re-c', root).value, 10) || 3)), pol = $('#re-p', root).value;
+    if (!seq.length) { $('#re-out', root).innerHTML = '<p class="muted">Escribí al menos un bloque.</p>'; return; }
+    var all = { FIFO: L.replace(seq, cap, 'FIFO'), LRU: L.replace(seq, cap, 'LRU'), LFU: L.replace(seq, cap, 'LFU') }, r = all[pol];
+    var head = '<tr><th>Pedido</th>' + seq.map(function (b) { return '<th>' + b + '</th>'; }).join('') + '</tr>';
+    var rows = '';
+    for (var k = 0; k < cap; k++) rows += '<tr><th>Marco ' + (k + 1) + '</th>' + r.steps.map(function (s) { return '<td>' + (s.cache[k] !== undefined ? s.cache[k] : '') + '</td>'; }).join('') + '</tr>';
+    rows += '<tr><th>Resultado</th>' + r.steps.map(function (s) { return '<td class="' + (s.hit ? 'hit' : 'miss') + '">' + (s.hit ? 'acierto' : 'falla') + '</td>'; }).join('') + '</tr>';
+    rows += '<tr><th>Sale</th>' + r.steps.map(function (s) { return '<td>' + (s.ev !== null ? s.ev : '') + '</td>'; }).join('') + '</tr>';
+    $('#re-out', root).innerHTML = '<div class="tbl"><table class="rtbl"><thead>' + head + '</thead><tbody>' + rows + '</tbody></table></div>' +
+      '<div class="tbl"><table><thead><tr><th>Algoritmo</th><th>Aciertos</th><th>Fallas</th><th>Tasa de aciertos</th></tr></thead><tbody>' + ['FIFO', 'LRU', 'LFU'].map(function (k) { return '<tr' + (k === pol ? ' class="chg"' : '') + '><td><b>' + k + '</b></td><td>' + all[k].hits + '</td><td>' + all[k].misses + '</td><td>' + Math.round(all[k].hits / seq.length * 100) + ' %</td></tr>'; }).join('') + '</tbody></table></div>';
+  }
+  $('#re-go', root).addEventListener('click', run); $('#re-p', root).addEventListener('change', run); run();
+}
+
+function simCalc(root) {
+  root.innerHTML = '<div><div class="eyebrow">Simulador 4</div><h3>Calculadoras de performance, buses y GPU</h3></div><div class="calc">' +
+    '<div class="sc"><h4>Tiempo de ejecución y MIPS</h4><div class="sim-bar"><label>Instrucciones (Ic)<input class="in" id="ca-ic" type="number" value="1000000000" style="width:15ch"></label><label>CPI<input class="in" id="ca-cpi" type="number" step="0.1" value="2" style="width:8ch"></label><label>Frecuencia (GHz)<input class="in" id="ca-f" type="number" step="0.1" value="2" style="width:8ch"></label></div><div class="out" id="ca-o1"></div><p class="muted">T = Ic × CPI × τ, con τ = 1 / f · MIPS = f / (CPI × 10⁶)</p></div>' +
+    '<div class="sc"><h4>Buses</h4><div class="sim-bar"><label>Líneas de direcciones<input class="in" id="ca-n" type="number" min="1" max="64" value="16" style="width:8ch"></label><label>Bits por instrucción<input class="in" id="ca-ib" type="number" value="16" style="width:8ch"></label><label>Ancho del bus de datos<input class="in" id="ca-db" type="number" value="8" style="width:8ch"></label></div><div class="out" id="ca-o2"></div><p class="muted">Posiciones = 2ⁿ · accesos por instrucción = ⌈bits de la instrucción / ancho del bus de datos⌉</p></div>' +
+    '<div class="sc"><h4>GPU: filtro sobre una imagen</h4><div class="sim-bar"><label>Píxeles<input class="in" id="ca-px" type="number" value="2073600" style="width:12ch"></label><label>SM<input class="in" id="ca-sm" type="number" value="16" style="width:7ch"></label><label>Cores por SM<input class="in" id="ca-co" type="number" value="32" style="width:7ch"></label><label>Núcleos de la CPU<input class="in" id="ca-cpu" type="number" value="4" style="width:7ch"></label></div><div class="out" id="ca-o3"></div><p class="muted">Se supone un píxel por core por ciclo: ciclos = ⌈píxeles / (SM × cores)⌉.</p></div></div>';
+  function run() {
+    var ic = num('#ca-ic'), cpi = num('#ca-cpi'), f = num('#ca-f');
+    $('#ca-o1', root).innerHTML = (ic > 0 && cpi > 0 && f > 0) ? 'T = ' + L.fmtT(L.tiempo(ic, cpi, f * 1e9)) + ' · ' + (+L.mips(f * 1e9, cpi).toPrecision(5)).toLocaleString('es-AR') + ' MIPS' : 'Completá los tres datos con valores positivos.';
+    var n = parseInt($('#ca-n', root).value, 10), ib = num('#ca-ib'), db = num('#ca-db');
+    $('#ca-o2', root).innerHTML = (n > 0 && n <= 64 && ib > 0 && db > 0) ? n + ' líneas → ' + L.fmtMem(L.capacidad(n)) + ' · ' + ib + ' bits sobre un bus de ' + db + ' bits → ' + L.accesos(ib, db) + ' accesos por instrucción' : 'Completá los datos.';
+    var px = num('#ca-px'), sm = num('#ca-sm'), co = num('#ca-co'), cp = num('#ca-cpu');
+    $('#ca-o3', root).innerHTML = (px > 0 && sm > 0 && co > 0 && cp > 0) ? 'GPU: ' + L.ciclosGPU(px, sm, co).toLocaleString('es-AR') + ' ciclos (' + (sm * co) + ' cores) · CPU: ' + L.ciclosGPU(px, 1, cp).toLocaleString('es-AR') + ' ciclos (' + cp + ' núcleos)' : 'Completá los datos.';
+  }
+  $$('input', root).forEach(function (i) { i.addEventListener('input', run); }); run();
+}
+RENDER.simuladores = function () {
+  var P = $('#simuladores');
+  P.innerHTML = '<div class="wrap"><main><section id="sim1"></section><section id="sim2"></section><section id="sim3"></section><section id="sim4"></section></main></div>';
+  simCiclo($('#sim1', P)); simMesi($('#sim2', P)); simReemplazo($('#sim3', P)); simCalc($('#sim4', P));
+};
+
+/* ============ QUIZZES ============ */
+function quizCard(q, num, onAnswer) {
+  var multi = q.a.length > 1;
+  var cd = h('div', { class: 'q-card' });
+  var rid = Math.random().toString(36).slice(2, 6);
+  var opts = q.o.map(function (o, i) { return '<label class="q-opt"><input type="' + (multi ? 'checkbox' : 'radio') + '" name="q' + num + '-' + rid + '" value="' + i + '"> <span>' + o + '</span></label>'; }).join('');
+  cd.innerHTML = '<div class="q-num">' + num + '</div><div class="q-body"><div class="eyebrow">' + (q.t || '') + (multi ? ' · elegí ' + q.a.length : '') + '</div><div class="q-q">' + q.q + '</div><div class="q-opts">' + opts + '</div>' +
+    '<div class="q-actions"><button class="btn primary q-chk">Corregir</button></div><div class="q-fb" hidden></div></div>';
+  var done = false;
+  $('.q-chk', cd).addEventListener('click', function () {
+    if (done) return;
+    var sel = $$('input:checked', cd).map(function (i) { return parseInt(i.value, 10); });
+    if (!sel.length) return;
+    done = true;
+    var ok = sameSet(sel, q.a);
+    $$('.q-opt', cd).forEach(function (lab, i) {
+      $('input', lab).disabled = true;
+      if (q.a.indexOf(i) >= 0) lab.classList.add('ok'); else if (sel.indexOf(i) >= 0) lab.classList.add('bad');
+    });
+    var fb = $('.q-fb', cd); fb.hidden = false; fb.className = 'q-fb ' + (ok ? 'ok' : 'bad');
+    fb.innerHTML = '<b>' + (ok ? 'Correcto.' : 'No es esa.') + '</b> ' + (q.e || '') + (q.r ? refChips([q.r]) : ''); $('.q-chk', cd).hidden = true;
+    if (onAnswer) onAnswer(ok);
+  });
+  return cd;
+}
+function uniqueOpts(correct, cands, n) {
+  var o = [correct];
+  shuffle(cands).forEach(function (c) { if (o.length < n && o.indexOf(c) < 0) o.push(c); });
+  return o;
+}
+function mkGen(t, q, correct, cands, e) {
+  var o = shuffle(uniqueOpts(String(correct), cands.map(String), 4));
+  return { t: 'Generada · ' + t, q: q, o: o, a: [o.indexOf(String(correct))], e: e };
+}
+function fmtN(x) { return x.toLocaleString('es-AR'); }
+var GENQ = [
+  function () { var n = pick([8, 10, 12, 16, 20, 24, 32]), c = L.capacidad(n);
+    return mkGen('Buses', 'Un procesador tiene un bus de direcciones de <b>' + n + '</b> líneas. ¿Cuántas posiciones de memoria puede direccionar?', L.fmtMem(c), [L.fmtMem(L.capacidad(n - 1)), L.fmtMem(L.capacidad(n + 1)), L.fmtMem(n * n), L.fmtMem(n * 2), L.fmtMem(L.capacidad(n / 2))], 'Con n líneas se direccionan 2ⁿ posiciones: 2^' + n + ' = ' + fmtN(c) + '.'); },
+  function () { var db = pick([8, 16, 32]), ib = pick([16, 32, 64].filter(function (x) { return x > db; })), c = L.accesos(ib, db);
+    return mkGen('Buses', 'Un bus de datos de <b>' + db + '</b> bits y instrucciones de <b>' + ib + '</b> bits. ¿Cuántos accesos a memoria hacen falta por instrucción?', c, [c * 2, c + 1, Math.max(1, c - 1), c * 4, ib], 'Accesos = bits de la instrucción / ancho del bus de datos = ' + ib + ' / ' + db + ' = ' + c + '.'); },
+  function () { var ic = pick([1, 2, 5, 10]) * 1e9, cpi = pick([1, 2, 4]), f = pick([1, 2, 4]), t = L.tiempo(ic, cpi, f * 1e9);
+    return mkGen('Performance', 'Un programa tiene <b>' + fmtN(ic) + '</b> instrucciones, CPI = <b>' + cpi + '</b>, frecuencia <b>' + f + ' GHz</b>. ¿Cuánto tarda (T = Ic × CPI × τ)?', L.fmtT(t), [L.fmtT(t * 2), L.fmtT(t / 2), L.fmtT(t * 4), L.fmtT(t / 4), L.fmtT(ic / (f * 1e9))], 'T = ' + fmtN(ic) + ' × ' + cpi + ' × (1 / ' + f + ' GHz) = ' + L.fmtT(t) + '.'); },
+  function () { var cpi = pick([1, 2, 4, 5]), f = pick([1, 2, 2.5, 4]), m = L.mips(f * 1e9, cpi);
+    return mkGen('Performance', 'Un procesador de <b>' + f + ' GHz</b> con CPI = <b>' + cpi + '</b>. ¿Cuántos MIPS rinde?', fmtN(+m.toFixed(2)) + ' MIPS', [fmtN(+(m * 2).toFixed(2)) + ' MIPS', fmtN(+(m / 2).toFixed(2)) + ' MIPS', fmtN(+(m * cpi).toFixed(2)) + ' MIPS', fmtN(+(m * 10).toFixed(2)) + ' MIPS'], 'MIPS = f / (CPI × 10⁶) = ' + fmtN(f * 1e9) + ' / (' + cpi + ' × 10⁶) = ' + fmtN(+m.toFixed(2)) + '.'); },
+  function () { var px = pick([1280 * 720, 1920 * 1080, 2560 * 1440]), sm = pick([8, 16, 32]), co = pick([32, 64]), c = L.ciclosGPU(px, sm, co);
+    return mkGen('GPU', 'Un filtro se aplica a una imagen de <b>' + fmtN(px) + '</b> píxeles en una GPU con <b>' + sm + '</b> SM de <b>' + co + '</b> cores cada uno (un píxel por core por ciclo). ¿Cuántos ciclos hacen falta?', fmtN(c), [fmtN(c * 2), fmtN(Math.ceil(px / sm)), fmtN(Math.ceil(px / co)), fmtN(px), fmtN(Math.ceil(c / 2))], 'Ciclos = ⌈píxeles / (SM × cores)⌉ = ⌈' + fmtN(px) + ' / ' + (sm * co) + '⌉ = ' + fmtN(c) + '.'); },
+  function () { var ops = [], k = 2 + rnd(2); for (var j = 0; j < k; j++) ops.push({ op: pick(['R', 'R', 'W']), p: rnd(3) });
+    var who = rnd(3), r = L.mesiRun(3, ops), fin = r.m.st[who];
+    return mkGen('MESI', 'Tres cachés empiezan en I. Se ejecuta: <b>' + ops.map(function (o) { return 'P' + (o.p + 1) + (o.op === 'R' ? ' lee' : ' escribe'); }).join(' → ') + '</b>. ¿En qué estado queda la línea en P' + (who + 1) + '?', fin, ['M', 'E', 'S', 'I'], r.steps.map(function (s, j) { return (j + 1) + '. ' + s.log.join(' '); }).join(' ')); },
+  function () { var seq = []; for (var j = 0; j < 10; j++) seq.push(rnd(5)); var cap = 3, pol = pick(['FIFO', 'LRU']), r = L.replace(seq, cap, pol);
+    return mkGen('Reemplazo', 'Caché de <b>' + cap + '</b> marcos, política <b>' + pol + '</b>, pedidos: <b>' + seq.join(' ') + '</b>. ¿Cuántas fallas hay?', r.misses, [r.misses + 1, Math.max(0, r.misses - 1), r.misses + 2, Math.max(0, r.misses - 2), seq.length], 'Fallas: ' + r.steps.map(function (s) { return s.b + (s.hit ? ' acierto' : ' falla'); }).join(', ') + '. Total: ' + r.misses + '.'); },
+  function () { var op = pick([1, 2, 5]), ad = 0x100 + rnd(0x800), ins = (op << 12) | ad, name = L.OPS[op];
+    return mkGen('Ciclo de instrucción', 'En la máquina de la filmina (4 bits de CODOP y 12 de dirección), el IR contiene <b>' + hx(ins, 4) + '</b> (hexadecimal). ¿Qué hace?', name + ' ' + hx(ad, 3), [L.OPS[1] + ' ' + hx(ad, 3), L.OPS[2] + ' ' + hx(ad, 3), L.OPS[5] + ' ' + hx(ad, 3), name + ' ' + hx(ad ^ 0x111, 3), L.OPS[op === 1 ? 5 : 1] + ' ' + hx(ins & 0xFFF ^ 0x0F0, 3)].filter(function (x, ix, a) { return a.indexOf(x) === ix; }), 'CODOP = ' + hx(op, 1) + ' → ' + name + ' · dirección = ' + hx(ad, 3) + '.'); }
+];
+function genQuestion() { return pick(GENQ)(); }
+RENDER.quizzes = function () {
+  var P = $('#quizzes');
+  var temas = ['Todas'].concat(DATA.quiz.map(function (q) { return q.t; }).filter(function (v, i, a) { return a.indexOf(v) === i; }));
+  var score = { ok: 0, n: 0 }, topic = 'Todas';
+  P.innerHTML = '<div class="wrap"><main><section><div><div class="eyebrow">Autoevaluación</div><h2>Preguntas tipo final</h2></div><p class="lead">' + DATA.quiz.length + ' preguntas armadas con lo que se repite en los finales, más un generador con números nuevos. Elegí la opción (o las opciones, si la pregunta lo dice) y apretá Corregir.</p>' +
+    '<div class="q-head"><div class="filters" id="q-filters">' + temas.map(function (t, i) { return '<button class="chip" data-t="' + t + '" aria-pressed="' + (i === 0) + '">' + t + '</button>'; }).join('') + '</div><div class="q-score" id="q-score">0 de 0</div></div>' +
+    '<div class="actions"><button class="btn" id="q-shuf">Mezclar</button><button class="btn" id="q-reset">Reiniciar</button></div><div class="quiz" id="q-list"></div></section>' +
+    '<section><div><div class="eyebrow">Sin fin</div><h2>Generador de preguntas</h2></div><p class="lead">Cada una sale con datos distintos: capacidad de un bus de direcciones, accesos por instrucción, tiempo de ejecución, MIPS, ciclos de una GPU, estados de MESI, fallas de FIFO y LRU, y decodificación de una instrucción.</p><div class="actions"><button class="btn primary" id="gq-new">Pregunta nueva</button><span class="muted" id="gq-sc"></span></div><div id="gq-box" class="quiz"></div></section></main></div>';
+  var order = DATA.quiz.map(function (q, i) { return i; });
+  function upd() { $('#q-score').textContent = score.ok + ' de ' + score.n + ' bien'; }
+  function draw() {
+    var box = $('#q-list'); box.innerHTML = '';
+    order.forEach(function (i) { var q = DATA.quiz[i]; if (topic !== 'Todas' && q.t !== topic) return; box.appendChild(quizCard(q, i + 1, function (ok) { score.n++; if (ok) score.ok++; upd(); })); });
+  }
+  P.addEventListener('click', function (e) {
+    var b = e.target.closest('#q-filters .chip');
+    if (b) { topic = b.dataset.t; $$('#q-filters .chip', P).forEach(function (c) { c.setAttribute('aria-pressed', c === b ? 'true' : 'false'); }); draw(); }
+  });
+  $('#q-shuf').addEventListener('click', function () { order = shuffle(order); draw(); });
+  $('#q-reset').addEventListener('click', function () { score = { ok: 0, n: 0 }; upd(); draw(); });
+  var gs = { ok: 0, n: 0 };
+  function gnew() { var box = $('#gq-box'); box.innerHTML = ''; box.appendChild(quizCard(genQuestion(), gs.n + 1, function (ok) { gs.n++; if (ok) gs.ok++; $('#gq-sc').textContent = gs.ok + ' de ' + gs.n + ' bien'; })); }
+  $('#gq-new').addEventListener('click', gnew); gnew();
+  draw(); upd();
+};
+
+/* ============ FINALES ============ */
+function answerHtml(ids) {
+  return ids.map(function (id) {
+    var c = card(id); if (!c) return '';
+    return '<div class="ans"><h4>' + c.t + '</h4>' + blk(c.def) + (c.ej && c.id !== 'harvard' && c.id !== 'vn' ? '' : (c.ej ? c.ej : '')) + (c.warn ? '<div class="warn"><b>Ojo.</b> ' + c.warn + '</div>' : '') + '</div>';
+  }).join('');
+}
+RENDER.finales = function () {
+  var P = $('#finales');
+  var done = store('fin') || [];
+  var uni = {};
+  DATA.finales.forEach(function (f) { f.secciones.forEach(function (s) { s.ex.forEach(function (x) { var u = card(x.ref[0]).unit, t = uni[u] = uni[u] || { fin: {}, n: 0 }; t.fin[f.id] = 1; t.n++; }); }); });
+  var rows = Object.keys(uni).map(function (k) { return [k, Object.keys(uni[k].fin).length, uni[k].n]; }).sort(function (a, b) { return b[1] - a[1] || b[2] - a[2]; });
+  var total = DATA.finales.reduce(function (s, f) { return s + f.secciones.reduce(function (z, x) { return z + x.ex.length; }, 0); }, 0);
+  var html = '<section><div><div class="eyebrow">Banco de finales</div><h2>4 finales</h2></div><p class="lead">' + total + ' preguntas en ' + DATA.finales.length + ' finales. Las que se repiten comparten la respuesta modelo, que es la tarjeta de la teoría. Intentá cada una en papel antes de abrir la respuesta. Las respuestas son mías, no de la cátedra.</p>' +
+    '<div class="tbl"><table><thead><tr><th>Tema</th><th>En cuántos finales (de ' + DATA.finales.length + ')</th><th>Preguntas</th></tr></thead><tbody>' + rows.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td><b>' + r[1] + '</b></td><td>' + r[2] + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+    '<div class="filters" id="f-fil"><button class="chip" data-f="todos" aria-pressed="true">Todos los finales</button>' + DATA.finales.map(function (f) { return '<button class="chip" data-f="' + f.id + '" aria-pressed="false">' + f.nombre + '</button>'; }).join('') + '</div></section>';
+  html += DATA.finales.map(function (f) {
+    return '<section class="fin" id="' + f.id + '" data-f="' + f.id + '"><div class="tp-intro"><div class="eyebrow">' + esc(f.nota) + '</div><h2>' + f.nombre + '</h2></div>' + f.secciones.map(function (s) {
+      return '<h3>' + esc(s.t) + (s.pts ? ' <span class="tag media">' + esc(s.pts) + '</span>' : '') + '</h3><div class="concepts">' + s.ex.map(function (x) {
+        var key = f.id + ':' + s.t + ':' + x.n, d = done.indexOf(key) >= 0;
+        return '<article class="concept' + (d ? ' done' : '') + '"><div class="concept-head"><div><div class="eyebrow">Pregunta ' + x.n + '</div></div><label class="mark"><input type="checkbox" data-k="' + esc(key) + '"' + (d ? ' checked' : '') + '> La resolví</label></div>' +
+          '<div class="body"><div class="blk enunciado"><div class="blk-k">Enunciado</div><p>' + x.en + '</p>' + (x.aviso ? '<p class="muted">' + x.aviso + '</p>' : '') + '</div><details><summary>Ver respuesta modelo</summary><div class="uc-ex">' + answerHtml(x.ref) + refChips(x.ref) + '</div></details></div></article>';
+      }).join('') + '</div>';
+    }).join('') + '</section>';
+  }).join('');
+  P.innerHTML = '<div class="wrap"><main>' + html + '</main></div>';
+  var ff = 'todos';
+  P.addEventListener('click', function (e) {
+    var b = e.target.closest('#f-fil .chip'); if (!b) return;
+    ff = b.dataset.f; $$('#f-fil .chip', P).forEach(function (c) { c.setAttribute('aria-pressed', c === b ? 'true' : 'false'); });
+    $$('.fin', P).forEach(function (s) { s.classList.toggle('hidden-by-filter', ff !== 'todos' && s.dataset.f !== ff); });
+  });
+  P.addEventListener('change', function (e) {
+    var t = e.target; if (!t.matches('.mark input')) return;
+    var k = t.dataset.k, i = done.indexOf(k);
+    if (t.checked && i < 0) done.push(k); if (!t.checked && i >= 0) done.splice(i, 1);
+    store('fin', done); t.closest('.concept').classList.toggle('done', t.checked);
+  });
+};
+
+/* ============ SIMULACRO ============ */
+/* Examen de 4 secciones de 2,5 pts, cada sección es un tema y vale todo o nada. Se arma con secciones de los finales reales. */
+RENDER.simulacro = function () {
+  var P = $('#simulacro');
+  P.innerHTML = '<div class="wrap"><main><section><div><div class="eyebrow">Simulacro</div><h2>Un final armado con secciones de los finales reales</h2></div><p class="lead">4 secciones de 2,5 puntos, de temas distintos. En el examen cada sección vale <b>todo o nada</b>, así que acá también: una sección suma sus 2,5 puntos solo si tildás todos los puntos que tenía que tener la respuesta. Escribilas en papel, unos 10 minutos por sección, sin mirar la teoría.</p>' +
+    '<div class="actions"><button class="btn primary" id="sim-new">Nuevo simulacro</button><button class="btn" id="sim-t">Iniciar cronómetro (40 min)</button><span class="timer" id="sim-clock">40:00</span><span class="q-score" id="sim-total"></span></div></section><div id="sim-box"></div></main></div>';
+  var timer = null, left = 2400;
+  function clock() { var m = Math.floor(left / 60), s = left % 60; $('#sim-clock').textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s; }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } $('#sim-t').textContent = 'Iniciar cronómetro (40 min)'; }
+  $('#sim-t').addEventListener('click', function () {
+    if (timer) { stop(); return; }
+    left = 2400; clock(); $('#sim-t').textContent = 'Detener cronómetro';
+    timer = setInterval(function () { left--; clock(); if (left <= 0) { stop(); $('#sim-clock').textContent = '¡Tiempo!'; } }, 1000);
+  });
+  function build() {
+    stop(); left = 2400; clock();
+    var box = $('#sim-box'); box.innerHTML = '';
+    var pool = [];
+    DATA.finales.forEach(function (f) { f.secciones.forEach(function (s) { if (s.ex.length >= 2) pool.push({ f: f, s: s, u: card(s.ex[0].ref[0]).unit }); }); });
+    var chosen = [], used = {};
+    shuffle(pool).forEach(function (c) { if (chosen.length < 4 && !used[c.u]) { used[c.u] = 1; chosen.push(c); } });
+    var got = [0, 0, 0, 0];
+    function total() { var g = got.reduce(function (a, b) { return a + b; }, 0); $('#sim-total').textContent = 'Puntaje: ' + g + ' de 10'; }
+    chosen.forEach(function (c, ci) {
+      var items = []; c.s.ex.forEach(function (x) { x.ref.forEach(function (id) { card(id).items.forEach(function (it) { items.push({ id: id, t: it }); }); }); });
+      var sec = h('section', { class: 'sec-card' });
+      sec.innerHTML = '<div><div class="eyebrow">Sección ' + (ci + 1) + ' · 2,5 pts · ' + esc(c.f.nombre) + '</div><h3>' + esc(c.s.t) + '</h3></div>' +
+        c.s.ex.map(function (x) { return '<p><b>' + (ci + 1) + '.' + String.fromCharCode(97 + c.s.ex.indexOf(x)) + '</b> ' + x.en + '</p>'; }).join('') +
+        '<textarea class="ta" rows="5" placeholder="Escribilo en papel o acá"></textarea><details><summary>Ver respuesta modelo</summary><div class="uc-ex">' + answerHtml(c.s.ex.reduce(function (a, x) { return a.concat(x.ref); }, []).filter(function (v, i, a) { return a.indexOf(v) === i; })) + '</div></details>' +
+        '<div><div class="eyebrow">Tildá lo que escribiste (todo o nada)</div><ul class="checklist">' + items.map(function (it) { return '<li><label><input type="checkbox"> ' + it.t + '</label></li>'; }).join('') + '</ul></div><div class="q-fb" data-fb hidden></div>';
+      box.appendChild(sec);
+      sec.addEventListener('change', function () {
+        var cs = $$('.checklist input', sec), all = cs.every(function (x) { return x.checked; });
+        got[ci] = all ? 2.5 : 0; total();
+        var fb = $('[data-fb]', sec); fb.hidden = false; fb.className = 'q-fb ' + (all ? 'ok' : 'bad');
+        fb.textContent = all ? 'Sección completa: suma 2,5.' : 'Faltan ' + cs.filter(function (x) { return !x.checked; }).length + ' puntos: la sección no suma.';
+      });
+    });
+    total();
+  }
+  $('#sim-new').addEventListener('click', build); build();
+};
+
+/* ============ INICIO ============ */
+document.addEventListener('DOMContentLoaded', function () {
+  countdown();
+  initTabs();
+});
+})();
+
+</script>
+</body></html>
