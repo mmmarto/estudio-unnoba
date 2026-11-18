@@ -43,8 +43,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,s
 @media (max-width:600px){.tab .n{display:none}.tab{padding:10px 10px;font-size:.88rem}}
 [hidden]{display:none!important}
 .wrap{max-width:1100px;margin:0 auto}
-main{padding-top:28px;display:grid;gap:64px;min-width:0}
-section{display:grid;gap:18px;scroll-margin-top:70px;min-width:0}
+main{padding-top:28px;display:grid;grid-template-columns:minmax(0,1fr);gap:64px;min-width:0}
+section{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;scroll-margin-top:70px;min-width:0}
 section>.lead,.lead{max-width:70ch;color:var(--muted)}
 .panel-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;margin-bottom:-32px}
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -182,6 +182,26 @@ footer{max-width:1100px;margin:64px auto 0;color:var(--muted);font-size:.85rem;b
 input.in{width:17ch}
 .prac td input.in{width:100%}
 
+/* Desde cero */
+.linkbtn{font:inherit;background:none;border:0;border-bottom:1px dashed var(--accent);color:var(--accent);padding:0;cursor:pointer}
+.les{border-radius:10px;padding:14px 16px;display:grid;gap:8px;min-width:0;background:var(--paper);border:1px solid var(--line)}
+.les ul,.les ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.les pre{margin:6px 0 0;overflow-x:auto;background:var(--code-bg);padding:10px 12px;border-radius:8px}
+.les pre code{background:none;padding:0}
+.les .dse-k{color:var(--muted)}
+.les-idea{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.les-idea .dse-k{color:var(--accent)}
+.les-idea p{font-size:1.05rem}
+.les-an{background:var(--media-soft);border-color:color-mix(in srgb,var(--media) 30%,transparent)}
+.les-an .dse-k{color:var(--media)}
+.les-ej{background:color-mix(in srgb,var(--ok) 7%,var(--surface));border-color:color-mix(in srgb,var(--ok) 30%,transparent)}
+.les-ej .dse-k{color:var(--ok)}
+.les-rec{border-style:dashed}
+.lesson.done{border-color:var(--ok)}
+.lesson.done .mark{color:var(--ok)}
+.les-try summary{padding:10px 14px}
+section>.jump{margin-left:0;width:100%;max-width:420px}
+
 </style></head><body>
 <div class="topbar">
   <header class="hero">
@@ -192,6 +212,7 @@ input.in{width:17ch}
   </header>
   <div class="tabs" role="tablist" aria-label="Secciones de la guía">
     <button class="tab" role="tab" id="tab-teoria" aria-controls="teoria" aria-selected="true">Teoría<span class="n">conceptos</span></button>
+    <button class="tab" role="tab" id="tab-cero" aria-controls="cero" aria-selected="false">Desde cero<span class="n">simple</span></button>
     <button class="tab" role="tab" id="tab-subneteo" aria-controls="subneteo" aria-selected="false">Subneteo<span class="n">generador</span></button>
     <button class="tab" role="tab" id="tab-ruteo" aria-controls="ruteo" aria-selected="false">Ruteo<span class="n">tablas</span></button>
     <button class="tab" role="tab" id="tab-tramas" aria-controls="tramas" aria-selected="false">Tramas<span class="n">hexa</span></button>
@@ -202,6 +223,7 @@ input.in{width:17ch}
   </div>
 </div>
 <div class="panel" id="teoria" role="tabpanel" aria-labelledby="tab-teoria"></div>
+<div class="panel" id="cero" role="tabpanel" aria-labelledby="tab-cero" hidden></div>
 <div class="panel" id="subneteo" role="tabpanel" aria-labelledby="tab-subneteo" hidden></div>
 <div class="panel" id="ruteo" role="tabpanel" aria-labelledby="tab-ruteo" hidden></div>
 <div class="panel" id="tramas" role="tabpanel" aria-labelledby="tab-tramas" hidden></div>
@@ -843,6 +865,137 @@ DATA.tps = [
 ]}
 ];
 
+/* content3.js — pestaña "Desde cero": la teoría explicada como si no la hubieras visto nunca.
+   Cada lección: idea (una frase), analogía, paso a paso, ejemplo con números, qué recordar, trampa y una mini prueba. */
+
+DATA.cero = [
+{ id:'z-ip', t:'Qué es una dirección IP',
+  idea:'Es el "domicilio" de cada equipo en la red. Son 32 bits que escribimos como cuatro números de 0 a 255.',
+  analogia:'Una dirección postal tiene <b>calle</b> y <b>altura</b>. Una IP también tiene dos partes: la <b>red</b> (la calle) y el <b>host</b> (el número de casa, o sea el equipo).',
+  pasos:'<ol><li>Cada número es un <b>octeto</b>: 8 bits, por eso va de 0 a 255 (con 8 bits hay 256 combinaciones).</li><li>Para pasar un octeto a binario usá los pesos <code>128 64 32 16 8 4 2 1</code> y marcá cuáles sumás.</li><li>Dos equipos de la <b>misma red</b> se hablan directo. Si están en redes distintas, necesitan un <b>router</b> en el medio.</li></ol>',
+  ej:'<b>192</b> = 128 + 64 → <code>11000000</code>. <b>10</b> = 8 + 2 → <code>00001010</code>. Entonces <code>192.168.10.10</code> son 4 octetos de 8 bits = 32 bits.',
+  rec:['Octeto = 8 bits = valores de 0 a 255.','Una IP tiene parte de red + parte de host. Cuál es cuál lo dice la máscara (lección siguiente).'],
+  trampa:'Una IP con un número mayor que 255 (como <code>172.256.125.71</code>) no existe: es inválida.',
+  prueba:{ q:'¿Cómo se escribe el 224 en binario?', a:'224 = 128 + 64 + 32 → <code>11100000</code>.' } },
+
+{ id:'z-mascara', t:'Máscara y prefijo (/24, /26…)',
+  idea:'La máscara le dice a la IP dónde cortar: los bits de la izquierda son "red" y los que sobran son "host".',
+  analogia:'Es como decir "las primeras 24 cifras de este domicilio son la calle". El <code>/24</code> es la cantidad de bits que pertenecen a la red.',
+  pasos:'<ol><li><b>/n</b> = n unos seguidos desde la izquierda. <code>/24</code> = 24 unos = <code>255.255.255.0</code>.</li><li>Cuando el corte cae en medio de un octeto, ese octeto vale: <code>/25 → 128</code>, <code>/26 → 192</code>, <code>/27 → 224</code>, <code>/28 → 240</code>, <code>/29 → 248</code>, <code>/30 → 252</code>.</li><li><b>Tamaño del bloque</b> = 256 − ese número. Con 224: 256 − 224 = 32. Ese bloque es el "salto" entre una subred y la siguiente.</li><li><b>Hosts por red</b> = 2<sup>bits de host</sup> − 2. Con /27 sobran 5 bits: 2<sup>5</sup> − 2 = 30.</li></ol>',
+  ej:'<code>192.168.10.77/26</code> → máscara 255.255.255.192, bloque de 64. 77 está entre 64 y 127 → red <code>192.168.10.64</code>, broadcast <code>192.168.10.127</code>.',
+  rec:['Aprendete la tira: /25=128 · /26=192 · /27=224 · /28=240 · /29=248 · /30=252.','Bloque = 256 − valor de la máscara. Hosts = 2<sup>bits de host</sup> − 2.'],
+  trampa:'<code>/24</code> y <code>255.255.255.0</code> son lo mismo escrito de dos maneras. Y en el parcial piden "cuántos dispositivos": se restan 2 (red y broadcast).',
+  prueba:{ q:'¿Cuántos dispositivos se pueden conectar con la máscara 255.255.255.248?', a:'248 es /29 → quedan 3 bits de host → 2³ − 2 = <b>6</b> (cayó en 2019 y 2022).' } },
+
+{ id:'z-subneteo', t:'Subneteo: partir una red en N subredes',
+  idea:'Te dan un bloque grande y te piden dividirlo en N pedazos iguales. Para eso le "robás" bits a la parte de host.',
+  analogia:'Es cortar una barra de chocolate en N porciones iguales: primero decidís cuántos cortes, y después sabés cuánto mide cada porción.',
+  pasos:'<ol class="steps"><li><b>¿Cuántos bits necesito?</b> El menor <i>k</i> tal que 2<sup>k</sup> ≥ N. (8 subredes → 3 · 10 → 4 · 12 → 4 · 5 → 3.)</li><li><b>Nuevo prefijo</b> = prefijo original + k.</li><li><b>Bloque</b> = 256 − el valor de la nueva máscara en ese octeto (o 2<sup>32 − prefijo</sup> direcciones).</li><li><b>Las subredes arrancan en la red original y suben de a un bloque</b>: la 1.ª es +0, la 2.ª es +1 bloque, la 3.ª es +2 bloques… o sea la <i>K</i>-ésima empieza en (K − 1) × bloque.</li></ol>',
+  ej:'<b>Parcial 2017:</b> <code>10.100.0.0/24</code> en 8 subredes. k = 3 → <b>/27</b> (255.255.255.224), bloque 32. Subredes: .0 · .32 · .64 · .96 · .128 · .160 · .192 · .224. La 3.ª es <code>10.100.0.64</code>. El broadcast de la 2.ª es la dirección anterior a la 3.ª: <code>10.100.0.63</code>. ¿Dónde cae el .80? Entre 64 y 95 → en la 3.ª subred.',
+  rec:['Receta: bits → prefijo nuevo → bloque → subredes de a bloque.','El <b>broadcast</b> de una subred es "la red siguiente − 1". El <b>gateway</b> (si dicen que es el primer host) es red + 1.'],
+  trampa:'La <b>1.ª subred es la que empieza en la red original</b> (la .0): no se saltea. Y si N no es potencia de 2 (por ejemplo 5), se usan los bits de la siguiente potencia (3 bits = 8 subredes) y sobran subredes.',
+  prueba:{ q:'<code>200.125.0.0/20</code> en 5 subredes: ¿qué prefijo y cuál es la 2.ª subred?', a:'5 → 3 bits → /23, bloque de 2 en el 3.er octeto. La 2.ª subred es <code>200.125.2.0/23</code>.' } },
+
+{ id:'z-red-bc', t:'Dirección de red, broadcast y host válido',
+  idea:'En cada subred, la primera dirección y la última están "reservadas". Solo las del medio se le pueden poner a un equipo.',
+  analogia:'En un edificio, el primer número es la "portería" (nombre de la red) y el último es el "timbre general" que suena en todos los departamentos (broadcast).',
+  pasos:'<ol><li><b>Dirección de red</b>: todos los bits de host en 0. Es el nombre de la subred.</li><li><b>Broadcast</b>: todos los bits de host en 1. Un mensaje enviado ahí lo reciben todos los de la subred.</li><li><b>Hosts válidos</b>: todo lo que está entre las dos (de red + 1 a broadcast − 1).</li><li>Para saber si una IP es válida: calculá el bloque y fijate si la IP es justo el primer o el último valor de su bloque.</li></ol>',
+  ej:'<b>Parcial 2024:</b> ¿es válida <code>200.30.63.255/18</code>? El /18 tiene bloque de 64 en el 3.er octeto, así que el bloque va de 0 a 63 y el último valor (63.255) es el <b>broadcast</b> → <b>Falso</b>, no se le puede asignar a un host.',
+  rec:['Hosts por subred = bloque − 2.','Primer host = red + 1 · último host = broadcast − 1.'],
+  trampa:'Que una dirección termine en .255 <b>no</b> significa que sea broadcast (en un /23 la 130.15.2.255 es válida), ni que termine en .0 sea red. Hay que ver el bloque.',
+  prueba:{ q:'En <code>192.168.5.0/26</code>, ¿es válida la 192.168.5.64 para un host?', a:'El bloque es de 64: la 1.ª subred va de .0 a .63 y la .64 es la <b>red de la 2.ª subred</b>. Es la dirección de red → no es válida para un host.' } },
+
+{ id:'z-ruteo', t:'Router y tabla de ruteo',
+  idea:'Un router conecta redes distintas. Para cada red de destino sabe "por qué puerta lo mando y a quién se lo paso".',
+  analogia:'Son los <b>carteles de una ruta</b>: "Junín → seguir por la ruta 7". El cartel no te lleva hasta la puerta, te dice hacia dónde ir en el próximo tramo.',
+  pasos:'<ol class="steps"><li>La tabla tiene tres columnas: <b>Red destino · Gateway (siguiente salto) · Interfaz de salida</b>.</li><li>Una red <b>pegada al router</b> (conectada) no necesita gateway: sale directo por esa interfaz.</li><li>Una red <b>lejana</b> se alcanza pasándosela al router vecino. El <b>gateway es la IP de ese vecino</b> en el enlace que comparten, y la interfaz es la que apunta hacia él.</li><li>Un router solo conoce a sus vecinos directos: para todo lo demás, se lo pasa al vecino que está en el camino.</li></ol>',
+  ej:'<b>Router Rojas</b> (Pergamino ← Rojas → Junín): la LAN 192.168.20.0/24 está pegada a su <code>f0/0</code> → sin gateway. Las LAN de Junín (192.168.30.0/25 y .128/25) están del otro lado → gateway <code>10.100.0.6</code> (la IP de Junín en el enlace con Rojas), por <code>s0/0/1</code>. La LAN de Pergamino 192.168.10.0/24 → gateway <code>10.100.0.1</code>, por <code>s0/0/0</code>.',
+  rec:['Conectada → sin gateway. Lejana → gateway = IP del vecino, no la tuya.','Los enlaces entre routers son redes /30 (dos IP útiles, una para cada extremo).'],
+  trampa:'El gateway <b>nunca es una IP del propio router</b>. Y la interfaz de salida de una red lejana es la <b>serial</b> (la que mira al vecino), no la FastEthernet de la LAN.',
+  prueba:{ q:'En la misma topología, ¿cuál es la fila de Junín para llegar a 192.168.20.0/24?', a:'Está lejos: gateway <code>10.100.0.5</code> (IP de Rojas en el enlace con Junín) por <code>s0/0/0</code>.' } },
+
+{ id:'z-iproute', t:'ip route y configurar una interfaz (Cisco)',
+  idea:'La tabla de ruteo se carga con comandos. Cada línea <code>ip route</code> es una fila de la tabla.',
+  analogia:'Es "dejar el cartel puesto" en el router: <i>para llegar a esta red, pasale el paquete a este vecino</i>.',
+  pasos:'<ol><li>Formato: <code>ip route &lt;red destino&gt; &lt;máscara&gt; &lt;IP del vecino&gt;</code>.</li><li>La <b>ruta por defecto</b> <code>ip route 0.0.0.0 0.0.0.0 &lt;vecino&gt;</code> significa "todo lo que no conozco, mandalo por acá". Sirve cuando el router tiene una sola salida.</li><li>Para poner IP a una interfaz: entrás al modo configuración, elegís la interfaz, le das IP y máscara y la encendés.</li></ol><pre><code>Router&gt;enable\nRouter#configure terminal\nRouter(config)#interface fastEthernet 0/0\nRouter(config-if)#ip address 192.168.10.1 255.255.255.0\nRouter(config-if)#no shutdown</code></pre>',
+  ej:'Pergamino solo se conecta con Rojas (<code>10.100.0.2</code>). Para alcanzar la LAN de Rojas: <code>ip route 192.168.20.0 255.255.255.0 10.100.0.2</code>. Con la ruta por defecto alcanza una sola línea: <code>ip route 0.0.0.0 0.0.0.0 10.100.0.2</code>.',
+  rec:['Se pone la <b>red</b> con su máscara (no un host) y como siguiente salto el <b>vecino</b>.','La primera dirección usable de 192.168.10.0/24 es 192.168.10.1.'],
+  trampa:'En las opciones de los parciales, las incorrectas fallan siempre por lo mismo: ponen <b>direcciones de host</b> (…20.1) en vez de red, usan como siguiente salto la <b>IP del propio router</b> (10.100.0.1), o se olvidan la máscara en <code>ip address</code>.',
+  prueba:{ q:'¿Cuál es el siguiente salto correcto en Pergamino para llegar a 192.168.30.0/25: 10.100.0.1, 10.100.0.2 o 10.100.0.6?', a:'<b>10.100.0.2</b>: es Rojas, el único vecino directo de Pergamino. El .1 es el propio Pergamino y el .6 no está en una red conectada a él.' } },
+
+{ id:'z-header', t:'Encabezado IPv4, TTL y fragmentación',
+  idea:'Cada paquete IP lleva una "etiqueta" (cabecera) con los datos para que llegue. Si el paquete es muy grande para una red, se parte en pedazos.',
+  analogia:'El TTL es un contador de "vidas": cada router que atraviesa le resta 1, y si llega a 0 el paquete se tira (así no da vueltas para siempre). La fragmentación es como partir una caja grande en cajas más chicas para que entre por una puerta angosta.',
+  pasos:'<ol class="steps"><li><b>Campos del encabezado IPv4</b>: versión, IHL, TOS, longitud total, identificación, flags, offset, <b>TTL</b>, protocolo, checksum, <b>IP origen</b> e <b>IP destino</b>. <i>No hay</i> "número de secuencia" (eso es de TCP) ni "dirección broadcast".</li><li><b>MTU</b> = tamaño máximo que admite la red (Ethernet: 1500 bytes).</li><li>Datos por fragmento = MTU − 20 (cabecera) = 1480, y siempre <b>múltiplo de 8</b>.</li><li>Cantidad de fragmentos = datos ÷ 1480, redondeado hacia arriba. Solo el <b>host destino</b> reensambla.</li></ol>',
+  ej:'40000 bytes de datos: 40000 ÷ 1480 = 27,03 → <b>28 fragmentos</b> (27 de 1480 y uno de 40).',
+  rec:['TTL: baja 1 por router; en 0 se descarta (y avisa ICMP). En IPv6 se llama <b>Hop-Limit</b>.','Fragmentan los routers, <b>reensambla solo el destino</b>.'],
+  trampa:'En el parcial 2019 preguntaron "¿qué campo de IPv6 equivale al TTL?" → <b>Hop-Limit</b> (no Traffic-Class ni Flow-Label).',
+  prueba:{ q:'4000 bytes de datos por una red con MTU 1500: ¿cuántos fragmentos?', a:'4000 ÷ 1480 = 2,7 → <b>3 fragmentos</b> (1480 + 1480 + 1040).' } },
+
+{ id:'z-especiales', t:'Direcciones especiales y privadas',
+  idea:'Algunos rangos de IPv4 no son "normales": están reservados para usos especiales o para redes internas.',
+  analogia:'Las privadas son como los números de interno de una empresa: sirven adentro, pero no se pueden marcar desde afuera.',
+  pasos:'<ul><li><b>Privadas (RFC 1918)</b>, no salen a Internet: <code>10.0.0.0/8</code>, <code>172.16.0.0/12</code> (172.16 a 172.31) y <code>192.168.0.0/16</code>.</li><li><b>Loopback</b> <code>127.0.0.0/8</code> (el clásico 127.0.0.1): "yo mismo", para probar la propia máquina.</li><li><b>Link-local</b> <code>169.254.0.0/16</code>: se la pone el equipo solo cuando no consigue IP por DHCP.</li><li><b>Multicast</b> <code>224.0.0.0/4</code>: un mensaje para un grupo (OSPF usa 224.0.0.5).</li><li><b>Broadcast limitado</b> <code>255.255.255.255</code>.</li></ul>',
+  ej:'¿Los tres bloques privados? <b>10</b> (toda), <b>172.16 a 172.31</b> y <b>192.168</b>. La 172.0.0.0 <b>no</b> es privada.',
+  rec:['Para memorizar: 10 · 172.16–31 · 192.168.','127.0.0.1 es la propia máquina; 169.254.x.x aparece cuando falló el DHCP.'],
+  trampa:'En las opciones del parcial aparecen 127.0.0.0/8, 169.254.0.0/16 y 224.0.0.0/24 como distractores: son especiales, pero <b>no</b> son privadas.',
+  prueba:{ q:'¿Es privada la dirección 172.32.5.1?', a:'No. El bloque privado es 172.16.0.0/12, que llega hasta 172.31.255.255. La 172.32.x.x es pública.' } },
+
+{ id:'z-arp', t:'ARP: cómo se pasa de IP a MAC',
+  idea:'Para mandar algo dentro de la red local hace falta la dirección física (MAC) del destino. ARP la descubre a partir de la IP.',
+  analogia:'Sabés el nombre de la persona (IP) pero no dónde está sentada (MAC). Gritás en la sala: "¿quién es 192.168.16.150?" y esa persona levanta la mano y te dice dónde está.',
+  pasos:'<ol class="steps"><li>El equipo manda un <b>ARP Request</b> por <b>broadcast</b> (MAC destino <code>ff:ff:ff:ff:ff:ff</code>): "¿quién tiene la IP X? decime tu MAC".</li><li>Solo el dueño de esa IP responde con un <b>ARP Reply</b> directo (unicast) con su MAC.</li><li>El resultado se guarda un rato en la <b>tabla ARP</b> (caché) para no volver a preguntar.</li><li>Si el destino está en <b>otra red</b>, la MAC que se busca es la del <b>gateway</b> (el router), no la del destino final.</li></ol>',
+  ej:'La trama del TP3: Ethernet destino ff:ff:ff:ff:ff:ff, tipo <code>0x0806</code> (ARP), operación 1 (Request), objetivo con MAC 00:00:00:00:00:00 (la que busca) e IP 192.168.16.150. Pegala en la pestaña <i>Tramas</i> para verla decodificada.',
+  rec:['ARP: dado una IP, obtiene la MAC dentro de la misma red local.','En IPv6 <b>no existe ARP</b>: lo hace Neighbor Discovery (NDP).'],
+  trampa:'Función de ARP en una oración (la que cayó en 2019): "permite averiguar la MAC de un dispositivo de la misma red a partir de su IP". No sirve entre redes distintas.',
+  prueba:{ q:'¿Qué MAC destino lleva un ARP Request?', a:'<code>ff:ff:ff:ff:ff:ff</code> (broadcast), porque todavía no sabe quién es el dueño de la IP.' } },
+
+{ id:'z-ipv6', t:'IPv6',
+  idea:'Es el reemplazo de IPv4: direcciones mucho más largas (128 bits) para que nunca falten.',
+  analogia:'IPv4 es un número de teléfono de 10 cifras que se quedó corto; IPv6 es un número con tantas cifras que alcanza para cada grano de arena.',
+  pasos:'<ol class="steps"><li><b>Formato</b>: 8 grupos de 16 bits, en hexadecimal, separados por <code>:</code>.</li><li><b>Cómo abreviar</b>: (1) en cada grupo se pueden sacar los ceros de la izquierda; (2) <b>una sola vez</b> se puede reemplazar una secuencia de grupos en cero por <code>::</code>.</li><li><b>Diferencias con IPv4 que toman</b>: <b>no hay broadcast</b> (se usa multicast); el loopback es <code>::1</code>; el TTL se llama <b>Hop-Limit</b>; ARP lo reemplaza <b>NDP</b>.</li></ol>',
+  ej:'<code>2001:0db8:0000:0000:0000:0000:0000:0001</code> → <code>2001:db8::1</code>. Una dirección <b>link-local</b> empieza con <code>fe80::</code> y solo vale dentro del enlace.',
+  rec:['IPv6: sin broadcast · loopback ::1 · Hop-Limit · NDP en vez de ARP.','El <code>::</code> se usa una sola vez por dirección.'],
+  trampa:'"El loopback de IPv6 es ::0" es <b>falso</b> (cayó en 2025): es <code>::1</code>. La <code>::</code> sola es la dirección "sin especificar".',
+  prueba:{ q:'Abreviá <code>fe80:0000:0000:0000:0202:b3ff:fe1e:8329</code>', a:'<code>fe80::202:b3ff:fe1e:8329</code>.' } },
+
+{ id:'z-tcpudp', t:'TCP vs UDP y puertos',
+  idea:'Las dos son formas de mandar datos entre aplicaciones. TCP prioriza que llegue todo y en orden; UDP prioriza la velocidad.',
+  analogia:'<b>TCP</b> es una llamada telefónica o una carta certificada: primero se establece la comunicación, todo se confirma y lo perdido se reenvía. <b>UDP</b> es tirar postales: las mandás y listo, sin garantía, pero es rápido y liviano.',
+  pasos:'<ul><li><b>TCP</b>: orientado a conexión, confiable (numera, confirma con ACK, retransmite, ordena en destino), flujo de bytes, con control de flujo y de congestión. Cabecera de 20 bytes o más.</li><li><b>UDP</b>: sin conexión, sin garantías, mensajes independientes, cabecera de 8 bytes. Se usa en DNS, voz, video y streaming.</li><li><b>Puerto</b>: número de 16 bits que identifica a la aplicación dentro del equipo. La IP es el edificio y el puerto es el departamento. Ej.: 80 HTTP, 443 HTTPS, 53 DNS, 22 SSH.</li></ul>',
+  ej:'Respuesta para "explique la diferencia": TCP es orientado a conexión y confiable (handshake, secuencia, ACK, retransmisión, control de flujo y congestión) a costa de más cabecera y demora; UDP es sin conexión ni garantías, con cabecera de 8 bytes, por eso se usa para voz, video y DNS.',
+  rec:['TCP numera segmentos en origen y los ordena en destino (la respuesta "e" del parcial).','Los puertos están en <b>los dos</b>: TCP y UDP.'],
+  trampa:'"Los puertos están en TCP pero no en UDP" es <b>falso</b>. Lo que solo existe en TCP es el número de secuencia.',
+  prueba:{ q:'¿Por qué una videollamada suele usar UDP y no TCP?', a:'Porque tolera perder algún paquete pero no la demora: retransmitir algo que ya venció solo agrega latencia, y el control de congestión de TCP además frena el envío.' } },
+
+{ id:'z-handshake', t:'TCP: conexión (handshake) y ACK',
+  idea:'Antes de mandar datos, TCP abre la conexión con tres mensajes. Después, cada ACK dice "recibí hasta acá".',
+  analogia:'Es como arrancar una llamada: "¿hola, me escuchás?" (SYN) → "sí, te escucho, ¿y vos?" (SYN-ACK) → "sí, te escucho" (ACK). Recién ahí empiezan a hablar.',
+  pasos:'<ol class="steps"><li><b>SYN</b>: el cliente propone su número de secuencia inicial.</li><li><b>SYN + ACK</b>: el servidor propone el suyo y confirma el del cliente (ACK = su número + 1).</li><li><b>ACK</b>: el cliente confirma el del servidor (ACK = su número + 1) y ya pueden mandar datos.</li><li><b>El número de ACK es el próximo byte que se espera recibir</b>. Es acumulativo: ACK = N significa "recibí bien todo hasta N − 1".</li></ol>',
+  ej:'<b>TP4:</b> ACK = 685968114 → recibió bien todos los bytes hasta el 685968113 y espera el 685968114.',
+  rec:['Tres pasos: SYN → SYN-ACK → ACK.','ACK = próximo byte esperado (último recibido + 1).'],
+  trampa:'En el SYN inicial el campo ACK <b>no</b> vale: está en 0 con el flag apagado.',
+  prueba:{ q:'Si llega un segmento con ACK = 1001, ¿hasta qué byte recibió bien el otro extremo?', a:'Hasta el <b>1000</b>; espera el 1001.' } },
+
+{ id:'z-flujo-cong', t:'Control de flujo vs control de congestión',
+  idea:'Son dos frenos distintos: uno protege al <b>receptor</b> y el otro protege a la <b>red</b>.',
+  analogia:'<b>Flujo</b>: no tirarle agua a un vaso más rápido de lo que se llena (el vaso avisa cuánto lugar le queda). <b>Congestión</b>: no abrir la canilla al máximo si la cañería se tapa (lo vas descubriendo vos, probando).',
+  pasos:'<ol class="steps"><li><b>Flujo</b>: el receptor anuncia en cada ACK el campo <b>Window</b> = cuántos bytes más puede recibir. Si es 0, el emisor frena. No puede mandar más que eso.</li><li><b>Congestión</b>: el emisor mantiene una ventana <b>cwnd</b> y manda como máximo min(cwnd, Window).</li><li><b>Slow start</b>: cwnd arranca en 1 MSS y se <b>duplica por RTT</b> hasta llegar a un umbral (ssthresh).</li><li><b>Congestion avoidance</b>: pasado el umbral, crece de a 1 MSS por RTT.</li><li><b>Si hay pérdida</b>: con <b>3 ACK duplicados</b> → ssthresh = cwnd ÷ 2 y cwnd = ssthresh (sigue creciendo de a poco). Con <b>timeout</b> (silencio total, más grave) → ssthresh = cwnd ÷ 2 y cwnd = 1 (vuelve a slow start).</li></ol>',
+  ej:'cwnd = 16 y ocurre un timeout: ssthresh = 8, cwnd = 1 → 1, 2, 4, 8 (slow start) → 9, 10, 11… Con 3 ACK duplicados en cambio: ssthresh = 8, cwnd = 8 → 9, 10, 11…',
+  rec:['Flujo = lo marca el receptor (Window). Congestión = lo estima el emisor (cwnd).','Timeout es peor que 3 ACK duplicados: vuelve a 1.'],
+  trampa:'Un segmento de 500 bytes con Window = 200 <b>no</b> se puede mandar: la ventana anunciada es de 200 (TP4, ej. 4).',
+  prueba:{ q:'cwnd = 20 y llegan 3 ACK duplicados: ¿ssthresh y cwnd?', a:'ssthresh = 10 y cwnd = 10. (Si hubiera sido un timeout: ssthresh = 10 y cwnd = 1.)' } },
+
+{ id:'z-wifi', t:'WiFi 802.11 (lo mínimo)',
+  idea:'WiFi es la familia de estándares 802.11. Solo cayó una vez en los parciales, así que alcanza con lo básico.',
+  analogia:'El Access Point es un "faro" que avisa que existe; el cliente lo ve, se presenta y pide entrar.',
+  pasos:'<ol><li><b>Descubrimiento</b>: el AP anuncia la red con <b>beacons</b> periódicos (el cliente también puede preguntar con <i>probe request</i>).</li><li><b>Autenticación</b>.</li><li><b>Asociación</b>: el cliente se une al AP y ahí empieza a mandar datos.</li></ol>',
+  ej:'Bandas: 802.11b/g/n usan <b>2,4 GHz</b>; 802.11a y <b>802.11ac usan 5 GHz</b> (n puede usar las dos).',
+  rec:['Los <b>beacons los emite el AP</b>, no el cliente.','802.11ac = 5 GHz.'],
+  trampa:'En 2019 las dos afirmaciones ("el cliente emite beacons" y "802.11ac opera en 2,4 GHz") eran <b>falsas</b>.',
+  prueba:{ q:'¿En qué orden se conecta un cliente a un AP?', a:'Descubrimiento → autenticación → asociación.' } }
+];
+
 </script>
 <script>
 /* app.js — interfaz de la guía de REDES */
@@ -866,7 +1019,7 @@ function store(k, v) {
 }
 
 /* ============ TABS ============ */
-var TABS = ['teoria', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro'];
+var TABS = ['teoria', 'cero', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro'];
 var rendered = {};
 var RENDER = {};
 function showTab(id) {
@@ -1017,6 +1170,7 @@ RENDER.teoria = function () {
     [['todas', 'Todas'], ['alta', 'Solo alta'], ['alta media', 'Alta + media'], ['pend', 'Sin dominar']].map(function (f, i) { return '<button class="chip" data-f="' + f[0] + '" aria-pressed="' + (i === 0) + '">' + f[1] + '</button>'; }).join('') +
     '</div><div class="jump"><label for="jump-t">Ir a</label><select id="jump-t"><option value="">Elegí un tema…</option>' +
     DATA.teoria.map(function (c, i) { return '<option value="c-' + c.id + '">' + (i < 9 ? '0' : '') + (i + 1) + ' · ' + esc(c.t) + '</option>'; }).join('') + '</select></div></div>';
+  html += '<div class="note"><b>¿Hay temas que todavía no viste?</b> Mirá la pestaña <button class="linkbtn" data-go="cero">Desde cero</button>: están explicados paso a paso, sin vueltas, y con la misma idea de esta pestaña pero más despacio.</div>';
   html += '<section id="que-toman"><div><div class="eyebrow">Qué toman</div><h2>El 2.º parcial, en cinco bloques</h2></div><p class="lead">Armado con los parciales 2017, 2019, 2022, 2024 y el recuperatorio 2025 (están en las pestañas de resueltos). La estructura se repite casi igual todos los años:</p>' +
     '<div class="tbl"><table><thead><tr><th>Bloque</th><th>Qué piden</th><th>Aparece en</th></tr></thead><tbody>' +
     '<tr><td><b>Subneteo</b> <span class="tag alta">alta</span></td><td>N subredes de un bloque: máscara, red de la subred K, rango de hosts, broadcast, gateway (primer host), a qué subred pertenece una IP</td><td>2017 · 2019 · 2022 · 2024 · 2025</td></tr>' +
@@ -1060,11 +1214,44 @@ RENDER.teoria = function () {
     if (t.id === 'jump-t' && t.value) { var el = document.getElementById(t.value); if (el) el.scrollIntoView({ behavior: 'smooth' }); t.value = ''; }
   });
   P.addEventListener('click', function (e) {
+    var lb = e.target.closest('.linkbtn'); if (lb) { showTab(lb.dataset.go); window.scrollTo(0, 0); return; }
     var b = e.target.closest('.chip'); if (!b) return;
     filter = b.dataset.f;
     $$('.chip', P).forEach(function (c) { c.setAttribute('aria-pressed', c === b ? 'true' : 'false'); });
     apply();
   });
+  apply();
+};
+
+/* ============ DESDE CERO ============ */
+RENDER.cero = function () {
+  var P = $('#cero');
+  var seen = store('cero') || [];
+  function blk(k, cls, body) { return '<div class="' + cls + '"><div class="dse-k">' + k + '</div>' + body + '</div>'; }
+  var html = '<section><div><div class="eyebrow">Para entender antes de memorizar</div><h2>Desde cero</h2></div>' +
+    '<p class="lead">Cada tema explicado como si no lo hubieras visto nunca, en orden: cada lección usa la anterior. Cada una tiene la idea en una frase, una comparación de la vida real, el paso a paso, un ejemplo con números, qué recordar y una mini prueba. Cuando la entiendas, marcala. Después pasá a <button class="linkbtn" data-go="teoria">Teoría</button> y a <button class="linkbtn" data-go="quizzes">Quizzes</button>.</p>' +
+    '<div class="jump"><label for="jump-z">Ir a</label><select id="jump-z"><option value="">Elegí una lección…</option>' +
+    DATA.cero.map(function (z, i) { return '<option value="' + z.id + '">' + (i < 9 ? '0' : '') + (i + 1) + ' · ' + esc(z.t) + '</option>'; }).join('') + '</select></div></section>' +
+    '<div class="concepts">' + DATA.cero.map(function (z, i) {
+      return '<article class="concept lesson" id="' + z.id + '"><div class="concept-head"><div><div class="eyebrow">Lección ' + (i < 9 ? '0' : '') + (i + 1) + ' de ' + DATA.cero.length + '</div><h3>' + z.t + '</h3></div>' +
+        '<label class="mark"><input type="checkbox" data-id="' + z.id + '"> La entendí</label></div><div class="body">' +
+        blk('La idea', 'les les-idea', '<p>' + z.idea + '</p>') +
+        blk('Como si fuera…', 'les les-an', '<p>' + z.analogia + '</p>') +
+        blk('Paso a paso', 'les les-steps', /^<(ul|ol|pre)/.test(z.pasos) ? z.pasos : '<p>' + z.pasos + '</p>') +
+        blk('Ejemplo con números', 'les les-ej', '<p>' + z.ej + '</p>') +
+        '<div class="les les-rec"><div class="dse-k">Lo único que tenés que acordarte</div><ul>' + z.rec.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul></div>' +
+        '<div class="warn"><b>Trampa típica.</b> ' + z.trampa + '</div>' +
+        '<details class="les-try"><summary>Probá vos: ' + z.prueba.q + '</summary><div class="uc-ex"><p>' + z.prueba.a + '</p></div></details>' +
+        '</div></article>';
+    }).join('') + '</div>';
+  P.innerHTML = '<div class="wrap"><main>' + html + '</main></div>';
+  function apply() { $$('.lesson', P).forEach(function (a) { var d = seen.indexOf(a.id) >= 0; a.classList.toggle('done', d); $('input', a).checked = d; }); }
+  P.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.matches('.mark input')) { var id = t.dataset.id, i = seen.indexOf(id); if (t.checked && i < 0) seen.push(id); if (!t.checked && i >= 0) seen.splice(i, 1); store('cero', seen); apply(); }
+    if (t.id === 'jump-z' && t.value) { var el = document.getElementById(t.value); if (el) el.scrollIntoView({ behavior: 'smooth' }); t.value = ''; }
+  });
+  P.addEventListener('click', function (e) { var b = e.target.closest('.linkbtn'); if (b) { showTab(b.dataset.go); window.scrollTo(0, 0); } });
   apply();
 };
 

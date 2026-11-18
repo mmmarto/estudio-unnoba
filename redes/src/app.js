@@ -19,7 +19,7 @@ function store(k, v) {
 }
 
 /* ============ TABS ============ */
-var TABS = ['teoria', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro'];
+var TABS = ['teoria', 'cero', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro'];
 var rendered = {};
 var RENDER = {};
 function showTab(id) {
@@ -170,6 +170,7 @@ RENDER.teoria = function () {
     [['todas', 'Todas'], ['alta', 'Solo alta'], ['alta media', 'Alta + media'], ['pend', 'Sin dominar']].map(function (f, i) { return '<button class="chip" data-f="' + f[0] + '" aria-pressed="' + (i === 0) + '">' + f[1] + '</button>'; }).join('') +
     '</div><div class="jump"><label for="jump-t">Ir a</label><select id="jump-t"><option value="">Elegí un tema…</option>' +
     DATA.teoria.map(function (c, i) { return '<option value="c-' + c.id + '">' + (i < 9 ? '0' : '') + (i + 1) + ' · ' + esc(c.t) + '</option>'; }).join('') + '</select></div></div>';
+  html += '<div class="note"><b>¿Hay temas que todavía no viste?</b> Mirá la pestaña <button class="linkbtn" data-go="cero">Desde cero</button>: están explicados paso a paso, sin vueltas, y con la misma idea de esta pestaña pero más despacio.</div>';
   html += '<section id="que-toman"><div><div class="eyebrow">Qué toman</div><h2>El 2.º parcial, en cinco bloques</h2></div><p class="lead">Armado con los parciales 2017, 2019, 2022, 2024 y el recuperatorio 2025 (están en las pestañas de resueltos). La estructura se repite casi igual todos los años:</p>' +
     '<div class="tbl"><table><thead><tr><th>Bloque</th><th>Qué piden</th><th>Aparece en</th></tr></thead><tbody>' +
     '<tr><td><b>Subneteo</b> <span class="tag alta">alta</span></td><td>N subredes de un bloque: máscara, red de la subred K, rango de hosts, broadcast, gateway (primer host), a qué subred pertenece una IP</td><td>2017 · 2019 · 2022 · 2024 · 2025</td></tr>' +
@@ -213,11 +214,44 @@ RENDER.teoria = function () {
     if (t.id === 'jump-t' && t.value) { var el = document.getElementById(t.value); if (el) el.scrollIntoView({ behavior: 'smooth' }); t.value = ''; }
   });
   P.addEventListener('click', function (e) {
+    var lb = e.target.closest('.linkbtn'); if (lb) { showTab(lb.dataset.go); window.scrollTo(0, 0); return; }
     var b = e.target.closest('.chip'); if (!b) return;
     filter = b.dataset.f;
     $$('.chip', P).forEach(function (c) { c.setAttribute('aria-pressed', c === b ? 'true' : 'false'); });
     apply();
   });
+  apply();
+};
+
+/* ============ DESDE CERO ============ */
+RENDER.cero = function () {
+  var P = $('#cero');
+  var seen = store('cero') || [];
+  function blk(k, cls, body) { return '<div class="' + cls + '"><div class="dse-k">' + k + '</div>' + body + '</div>'; }
+  var html = '<section><div><div class="eyebrow">Para entender antes de memorizar</div><h2>Desde cero</h2></div>' +
+    '<p class="lead">Cada tema explicado como si no lo hubieras visto nunca, en orden: cada lección usa la anterior. Cada una tiene la idea en una frase, una comparación de la vida real, el paso a paso, un ejemplo con números, qué recordar y una mini prueba. Cuando la entiendas, marcala. Después pasá a <button class="linkbtn" data-go="teoria">Teoría</button> y a <button class="linkbtn" data-go="quizzes">Quizzes</button>.</p>' +
+    '<div class="jump"><label for="jump-z">Ir a</label><select id="jump-z"><option value="">Elegí una lección…</option>' +
+    DATA.cero.map(function (z, i) { return '<option value="' + z.id + '">' + (i < 9 ? '0' : '') + (i + 1) + ' · ' + esc(z.t) + '</option>'; }).join('') + '</select></div></section>' +
+    '<div class="concepts">' + DATA.cero.map(function (z, i) {
+      return '<article class="concept lesson" id="' + z.id + '"><div class="concept-head"><div><div class="eyebrow">Lección ' + (i < 9 ? '0' : '') + (i + 1) + ' de ' + DATA.cero.length + '</div><h3>' + z.t + '</h3></div>' +
+        '<label class="mark"><input type="checkbox" data-id="' + z.id + '"> La entendí</label></div><div class="body">' +
+        blk('La idea', 'les les-idea', '<p>' + z.idea + '</p>') +
+        blk('Como si fuera…', 'les les-an', '<p>' + z.analogia + '</p>') +
+        blk('Paso a paso', 'les les-steps', /^<(ul|ol|pre)/.test(z.pasos) ? z.pasos : '<p>' + z.pasos + '</p>') +
+        blk('Ejemplo con números', 'les les-ej', '<p>' + z.ej + '</p>') +
+        '<div class="les les-rec"><div class="dse-k">Lo único que tenés que acordarte</div><ul>' + z.rec.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul></div>' +
+        '<div class="warn"><b>Trampa típica.</b> ' + z.trampa + '</div>' +
+        '<details class="les-try"><summary>Probá vos: ' + z.prueba.q + '</summary><div class="uc-ex"><p>' + z.prueba.a + '</p></div></details>' +
+        '</div></article>';
+    }).join('') + '</div>';
+  P.innerHTML = '<div class="wrap"><main>' + html + '</main></div>';
+  function apply() { $$('.lesson', P).forEach(function (a) { var d = seen.indexOf(a.id) >= 0; a.classList.toggle('done', d); $('input', a).checked = d; }); }
+  P.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.matches('.mark input')) { var id = t.dataset.id, i = seen.indexOf(id); if (t.checked && i < 0) seen.push(id); if (!t.checked && i >= 0) seen.splice(i, 1); store('cero', seen); apply(); }
+    if (t.id === 'jump-z' && t.value) { var el = document.getElementById(t.value); if (el) el.scrollIntoView({ behavior: 'smooth' }); t.value = ''; }
+  });
+  P.addEventListener('click', function (e) { var b = e.target.closest('.linkbtn'); if (b) { showTab(b.dataset.go); window.scrollTo(0, 0); } });
   apply();
 };
 
