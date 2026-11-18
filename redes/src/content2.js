@@ -43,13 +43,36 @@ DATA.parciales = [
     en:'1) IPv6 sin broadcast. 2) TCP. 3) Campos del header IPv4. 4) Bloques RFC 1918. 5) Dispositivos con 255.255.255.248. 6) ARP/NDP.',
     res:'<ul><li><b>1) Verdadero.</b></li><li><b>2) e</b>: a, b y c son correctas.</li><li><b>3) a, b, e</b>: Versión, Dirección Origen, TTL.</li><li><b>4) a, c, e</b>: 10/8, 172.16/12, 192.168/16.</li><li><b>5) c (6)</b>: /29 → 8 − 2.</li><li><b>6) Verdadero</b>: ARP no existe en IPv6, lo reemplaza Neighbor Discovery.</li></ul>' }
 ]},
+{ id:'p2019', nombre:'2do parcial · noviembre 2019 · Tema D', nota:'Misma estructura que 2017 (otro bloque: 190.10.0.0/24) y un teórico que incluye WiFi 802.11, tema que no aparece en los otros parciales.', ex:[
+  { t:'Punto 1 · Subneteo', pts:0,
+    en:'Dada la dirección IP <code>190.10.0.0/24</code> realice 8 subredes e indique: a) máscara de subred en decimal; b) dirección de red de la tercera subred; c) broadcast de la quinta subred; d) ¿a qué subred pertenece 190.10.0.193?',
+    res:'<ol class="steps"><li>8 subredes → 3 bits → <b>/27</b>. Bloque de 32: .0, .32, .64, .96, .128, .160, .192, .224.</li><li><b>a)</b> <code>255.255.255.224</code>.</li><li><b>b)</b> 3.ª subred = 2 × 32 = 64 → <code>190.10.0.64/27</code>.</li><li><b>c)</b> 5.ª subred = 4 × 32 = 128 → 190.10.0.128/27, broadcast = 128 + 31 = <code>190.10.0.159</code>.</li><li><b>d)</b> 193 está entre 192 y 223 → pertenece a <code>190.10.0.192/27</code>, la <b>7.ª subred</b> (192 ÷ 32 = 6, y se cuenta desde 0).</li></ol><p class="muted">En las hojas de ejemplo de la foto el alumno saltó de 2 en 2 y usó máscara 255.255.0.254: el error clásico es no pasar de "8 subredes" a "3 bits" y de ahí al bloque de 32.</p>' },
+  { t:'Punto 2 · a) Tabla de ruteo de Rojas', pts:0,
+    en:'Topología Pergamino–Rojas–Junín. Completar la tabla de Rojas (192.168.10.0, 192.168.30.0 y 192.168.30.128).',
+    res:'<div class="rt" data-topo="pergamino" data-router="Rojas" data-nets="192.168.10.0/24,192.168.30.0/25,192.168.30.128/25"></div><p class="muted">Es la misma tabla que 2017. Cuidado con la interfaz: las tres salen por seriales (s0/0/0 hacia Pergamino, s0/0/1 hacia Junín), no por f0/0 ni f0/1.</p>' },
+  { t:'Punto 2 · b) Comandos para fastEthernet 0/0 de Pergamino', pts:0,
+    en:'Ingrese los comandos para configurar la interfaz FastEthernet 0/0 del router Pergamino con la primera dirección disponible de 192.168.10.0/24.',
+    res:'<pre><code>Router&gt;enable\nRouter#configure terminal\nRouter(config)#interface fastEthernet 0/0\nRouter(config-if)#ip address 192.168.10.1 255.255.255.0\nRouter(config-if)#no shutdown</code></pre><p class="muted">En la foto el alumno olvidó la máscara en <code>ip address</code> y lo marcaron.</p>' },
+  { t:'Punto 2 · c) Opción correcta de ip route en Pergamino', pts:0,
+    en:'<b>1)</b> tres redes vía 10.100.0.2 · <b>2)</b> las mismas con direcciones de host · <b>3)</b> ruta por defecto vía 10.100.0.1 · <b>4)</b> tres redes vía 10.100.0.1.',
+    res:'<p><b>Opción 1.</b> Redes (no hosts) con máscara y siguiente salto <code>10.100.0.2</code>. Las opciones 3 y 4 usan 10.100.0.1, que es la IP del propio Pergamino: un router nunca es su propio siguiente salto.</p>' },
+  { t:'Punto 3 · Teórico (8 preguntas)', pts:0,
+    en:'1) El cliente WiFi emite beacons para descubrir los AP. 2) Componentes principales del proceso 802.11 para conectar un cliente a un AP. 3) Campos del header IPv4 (3). 4) ¿Qué campo de IPv6 equivale al TTL? 5) 802.11ac opera en 2,4 GHz. 6) Tres bloques privados de IANA. 7) Dispositivos con máscara 255.255.255.248. 8) Función de ARP.',
+    res:'<ul><li><b>1) Falso.</b> Los beacons los emite el AP; el cliente puede buscar activamente con <i>probe request</i>.</li><li><b>2)</b> Descubrimiento (beacons / probe request y response), <b>autenticación</b> y <b>asociación</b>.</li><li><b>3) a, b, f</b>: Versión, Dirección Origen y TTL (no hay "dirección broadcast" ni "número de secuencia" en IPv4).</li><li><b>4) Hop-Limit.</b></li><li><b>5) Falso.</b> 802.11ac opera en 5 GHz.</li><li><b>6)</b> 10.0.0.0/8, 172.16.0.0/12 y 192.168.0.0/16. Ojo con el bloque medio: es 172.16.0.0/12, no "172.0.0.0".</li><li><b>7) 6</b> (/29 → 8 direcciones − red − broadcast).</li><li><b>8)</b> Obtener la MAC de un dispositivo a partir de su IP dentro de la misma red local.</li></ul>' }
+]},
 { id:'p2017', nombre:'2do parcial · noviembre 2017 · Tema A', nota:'Mismo esquema de topología; el ruteo pide solo la tabla de Rojas.', ex:[
   { t:'Punto 1 · Subneteo', pts:0,
     en:'Dada la dirección IP <code>10.100.0.0/24</code> realice 8 subredes e indique: a) máscara de subred en decimal; b) dirección de red de la tercera subred; c) broadcast de la segunda subred; d) ¿a qué subred pertenece 10.100.0.80?',
     res:'<ol class="steps"><li>8 subredes → 3 bits → <b>/27</b>. Bloque de 32: .0, .32, .64, .96, .128, .160, .192, .224.</li><li><b>a)</b> <code>255.255.255.224</code>.</li><li><b>b)</b> 3.ª subred = 2 × 32 = 64 → <code>10.100.0.64/27</code>.</li><li><b>c)</b> 2.ª subred = 10.100.0.32/27 → broadcast <code>10.100.0.63</code>.</li><li><b>d)</b> 80 está entre 64 y 95 → pertenece a <code>10.100.0.64/27</code> (la 3.ª subred).</li></ol>' },
   { t:'Punto 2 · Tabla de ruteo de Rojas', pts:0,
     en:'Dada la topología Pergamino–Rojas–Junín, completar la tabla de Rojas (192.168.30.0, 192.168.30.128 y 192.168.10.0).',
-    res:'<div class="rt" data-topo="pergamino" data-router="Rojas" data-nets="192.168.30.0/25,192.168.30.128/25,192.168.10.0/24"></div><p class="muted">Máscaras: 255.255.255.128, 255.255.255.128 y 255.255.255.0.</p>' }
+    res:'<div class="rt" data-topo="pergamino" data-router="Rojas" data-nets="192.168.30.0/25,192.168.30.128/25,192.168.10.0/24"></div><p class="muted">Máscaras: 255.255.255.128, 255.255.255.128 y 255.255.255.0. En la foto el alumno puso F0/0 y F0/1 como interfaz de salida: está mal, Rojas sale por las seriales (s0/0/1 hacia Junín, s0/0/0 hacia Pergamino).</p>' },
+  { t:'Punto 2 · b) Configurar fastEthernet 0/0 de Pergamino (opción múltiple)', pts:0,
+    en:'¿Cuál es correcta para asignar a fastEthernet 0/0 de Pergamino la primera dirección de 192.168.10.0/24? <b>1)</b> máscara 255.255.255.128 · <b>2)</b> <code>sudo configure interface</code> · <b>3)</b> máscara 255.255.255.0.',
+    res:'<p><b>Opción 3.</b> Es la única con comandos de IOS (<code>enable</code>, <code>configure terminal</code>, <code>interface fastEthernet 0/0</code>) y con la máscara de un /24: <code>ip address 192.168.10.1 255.255.255.0</code>. La 1 usa un /25 (255.255.255.128) y la 2 es sintaxis de Linux.</p>' },
+  { t:'Punto 2 · c) Opciones correctas de ip route en Pergamino', pts:0,
+    en:'<b>1)</b> tres redes (192.168.20.0/24, 192.168.30.0/25, 192.168.30.128/25) vía 10.100.0.2 · <b>2)</b> las mismas pero con direcciones de host (192.168.20.1, 30.1, 30.129) · <b>3)</b> <code>ip route 0.0.0.0 0.0.0.0 10.100.0.5</code>.',
+    res:'<p><b>Opción 1.</b> Redes con su máscara y siguiente salto 10.100.0.2 (Rojas, el único vecino de Pergamino). La 2 pone direcciones de host en vez de direcciones de red. La 3 apunta a 10.100.0.5, que es la IP de Rojas del <i>otro</i> enlace: Pergamino no llega a esa dirección, el next hop correcto sería 10.100.0.2.</p>' }
 ]}
 ];
 

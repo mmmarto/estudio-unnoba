@@ -108,6 +108,11 @@ DATA.teoria = [
   simple:'En cada router: se descarta la trama vieja, se decrementa el TTL (y se recalcula el checksum IP), se consulta la tabla de ruteo y se arma una trama nueva con la MAC de la interfaz de salida como origen y la MAC del siguiente salto (se obtiene por ARP) como destino.',
   ej:'De R6 a R9 pasando por R4 y R5: la IP origen y la IP destino son las mismas todo el camino; la MAC origen/destino es distinta en cada tramo.',
   warn:'La excepción son los switches: no tocan ni IP ni MAC.' },
+{ id:'wifi-80211', prio:'baja', t:'WiFi 802.11: lo mínimo que tomaron (2019)',
+  def:'WiFi es la familia de estándares IEEE 802.11. Un cliente se conecta a un Access Point (AP) en tres fases: <b>descubrimiento</b> (el AP anuncia con <i>beacons</i> o el cliente pregunta con <i>probe request</i>), <b>autenticación</b> y <b>asociación</b>. 802.11b/g/n usan la banda de 2,4 GHz; <b>802.11a y 802.11ac usan 5 GHz</b> (el n puede usar ambas).',
+  simple:'El AP "grita" cada tanto "acá estoy, me llamo X" (beacon). El cliente escucha o pregunta, se identifica (autenticación) y pide entrar a esa red (asociación). Recién después puede mandar datos.',
+  ej:'Pregunta 2019: "802.11ac opera en 2,4 GHz" → <b>Falso</b> (5 GHz). "El cliente emite beacons" → <b>Falso</b> (los emite el AP).',
+  warn:'No se vio en los otros parciales (2017, 2022, 2024, 2025); está acá porque cayó una vez. Si tenés poco tiempo, que sea lo último que estudies.' },
 { id:'metodo-trama', prio:'baja', t:'Cómo leer una trama en hexadecimal',
   def:'Se avanza por capas contando bytes: Ethernet (14) → IP (20 o IHL × 4) → TCP (20 o más según offset) o UDP (8).',
   simple:'<ol><li>Bytes 0–5 MAC destino, 6–11 MAC origen, 12–13 EtherType (0800 = IPv4, 0806 = ARP).</li><li>Primer byte de IP: 45 = versión 4, 5 palabras (20 bytes). El byte 9 de IP es el protocolo (06 TCP, 11 UDP, 01 ICMP). Los bytes 12–19 son las IP origen y destino.</li><li>En TCP: puertos (2 + 2), secuencia (4), ACK (4), offset/flags (2) y ventana (2). Flags: 02 SYN, 12 SYN-ACK, 10 ACK, 18 PSH-ACK, 11 FIN-ACK.</li></ol>',
@@ -118,7 +123,7 @@ DATA.teoria = [
 /* ============ TOPOLOGÍAS DE RUTEO ============ */
 DATA.topos = {
   pergamino: {
-    nombre: 'Pergamino – Rojas – Junín (parciales 2017, 2022 y 2024)',
+    nombre: 'Pergamino – Rojas – Junín (parciales 2017, 2019, 2022 y 2024)',
     w: 880, h: 290,
     routers: {
       'Pergamino': { x: 110, y: 110, ifs: [ { n:'s0/0/0', net:'10.100.0.0/30', ip:'10.100.0.1' }, { n:'f0/0', net:'192.168.10.0/24', ip:'192.168.10.1' } ] },
@@ -206,7 +211,14 @@ DATA.quiz = [
 { t:'Transporte', q:'En slow start, ¿cómo crece cwnd?', o:['+1 MSS por RTT','Se duplica en cada RTT','Se mantiene constante','Se reduce a la mitad'], a:[1], e:'Crece +1 MSS por cada ACK, o sea se duplica por RTT, hasta llegar a ssthresh.' },
 { t:'Transporte', q:'El control de flujo de TCP lo determina:', o:['La red, con mensajes ICMP','El receptor, con el campo Window','El router más cercano','La capa de enlace'], a:[1], e:'El receptor anuncia cuántos bytes puede recibir (Window). La congestión, en cambio, la estima el emisor.' },
 { t:'Transporte', q:'¿Qué protocolo de transporte usa normalmente una consulta DNS?', o:['TCP puerto 53','UDP puerto 53','UDP puerto 80','TCP puerto 80'], a:[1], e:'Las consultas DNS comunes van por UDP/53 (trama 1 del zip). TCP/53 se usa para transferencias de zona o respuestas grandes.' },
-{ t:'Transporte', q:'¿Dónde y cuándo se negocia el MSS?', o:['En el handshake: cada extremo lo anuncia como opción del SYN','En cada ACK','En la capa de red','No se negocia'], a:[0], e:'El MSS viaja como opción en los segmentos SYN y SYN-ACK.' }
+{ t:'Transporte', q:'¿Dónde y cuándo se negocia el MSS?', o:['En el handshake: cada extremo lo anuncia como opción del SYN','En cada ACK','En la capa de red','No se negocia'], a:[0], e:'El MSS viaja como opción en los segmentos SYN y SYN-ACK.' },
+{ t:'IPv6 y ARP', q:'¿Qué campo de IPv6 cumple la función del TTL de IPv4?', o:['Hop-Limit','Traffic-Class','Flow-Label','Payload-Length'], a:[0], e:'Hop-Limit: se decrementa en cada router y, al llegar a 0, el paquete se descarta (cayó en 2019).' },
+{ t:'IPv4 y direcciones', q:'¿Cuáles son tres campos del encabezado IPv4?', o:['Versión','Dirección origen','Dirección broadcast','Número de secuencia','TTL'], a:[0,1,4], e:'IPv4 tiene versión, IHL, TOS, longitud, identificación, flags, offset, TTL, protocolo, checksum y direcciones origen y destino. "Número de secuencia" es de TCP y no existe un campo "dirección broadcast".' },
+{ t:'Ruteo', q:'Pergamino solo se conecta con Rojas (10.100.0.2). ¿Cuál es una línea válida para llegar a 192.168.20.0/24?', o:['ip route 192.168.20.0 255.255.255.0 10.100.0.2','ip route 192.168.20.1 255.255.255.0 10.100.0.2','ip route 192.168.20.0 255.255.255.0 10.100.0.1','ip route 192.168.20.0 255.255.255.0 10.100.0.5'], a:[0], e:'Se pone la red (no un host) y como siguiente salto el vecino directo (10.100.0.2). 10.100.0.1 es el propio Pergamino y 10.100.0.5 es la otra punta del enlace Rojas–Junín.' },
+{ t:'Ruteo', q:'Para asignar la primera dirección de 192.168.10.0/24 a fastEthernet 0/0, ¿qué línea de IOS corresponde?', o:['ip address 192.168.10.1 255.255.255.0','ip address 192.168.10.0 255.255.255.0','ip address 192.168.10.1 255.255.255.128','ip address 192.168.10.1 fastEthernet 0/0'], a:[0], e:'Primera dirección usable = .1 y máscara de un /24 = 255.255.255.0. Después falta <code>no shutdown</code> para levantarla.' },
+{ t:'WiFi 802.11', q:'¿Quién emite los beacons en una red WiFi?', o:['El cliente, para descubrir APs','El Access Point, para anunciar la red','El router de Internet','El servidor DHCP'], a:[1], e:'Los beacons los emite el AP periódicamente; el cliente, si quiere buscar activamente, manda probe requests.' },
+{ t:'WiFi 802.11', q:'¿En qué banda opera 802.11ac?', o:['2,4 GHz','5 GHz','900 MHz','60 GHz'], a:[1], e:'802.11ac opera en 5 GHz (b/g usan 2,4 GHz; n puede usar ambas).' },
+{ t:'WiFi 802.11', q:'Orden de las fases para que un cliente se conecte a un AP:', o:['Asociación → autenticación → descubrimiento','Descubrimiento → autenticación → asociación','Autenticación → descubrimiento → asociación','Descubrimiento → asociación → autenticación'], a:[1], e:'Primero encuentra la red (beacon o probe), luego se autentica y por último se asocia al AP.' }
 ];
 
 /* ============ PARCIALES RESUELTOS ============ */

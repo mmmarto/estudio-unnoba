@@ -188,7 +188,7 @@ input.in{width:17ch}
     <div class="eyebrow">UNNOBA · Redes de Datos</div>
     <h1>Guía para el 2.º parcial de Redes</h1>
     <div class="when"><span>Viernes 20/11 · 18:30 h</span><span class="count" id="countdown"></span></div>
-    <p class="prose muted">Subneteo, ruteo estático, direccionamiento IPv4 e IPv6, ARP y capa de transporte, ordenados por lo que más se repite en los parciales de 2017, 2022, 2024 y el recuperatorio 2025. Con generador de ejercicios, quizzes, decodificador de tramas, parciales y TPs resueltos y un simulacro. Lo que tildes como dominado queda guardado en este navegador.</p>
+    <p class="prose muted">Subneteo, ruteo estático, direccionamiento IPv4 e IPv6, ARP y capa de transporte, ordenados por lo que más se repite en los parciales de 2017, 2019, 2022, 2024 y el recuperatorio 2025. Con generador de ejercicios, quizzes, decodificador de tramas, parciales y TPs resueltos y un simulacro. Lo que tildes como dominado queda guardado en este navegador.</p>
   </header>
   <div class="tabs" role="tablist" aria-label="Secciones de la guía">
     <button class="tab" role="tab" id="tab-teoria" aria-controls="teoria" aria-selected="true">Teoría<span class="n">conceptos</span></button>
@@ -209,7 +209,7 @@ input.in{width:17ch}
 <div class="panel" id="parciales" role="tabpanel" aria-labelledby="tab-parciales" hidden></div>
 <div class="panel" id="tps" role="tabpanel" aria-labelledby="tab-tps" hidden></div>
 <div class="panel" id="simulacro" role="tabpanel" aria-labelledby="tab-simulacro" hidden></div>
-<footer>Armada con el material de la cátedra (filminas, TPs) y los parciales de 2017, 2022, 2024 y 2025. Las soluciones numéricas se calculan por programa; los resultados de los parciales viejos son los de esta guía, no los de la cátedra: ante una duda con la nomenclatura ("la última subred"), aclaralo en la hoja.</footer>
+<footer>Armada con el material de la cátedra (filminas, TPs) y los parciales de 2017, 2019, 2022, 2024 y 2025. Las soluciones numéricas se calculan por programa; los resultados de los parciales viejos son los de esta guía, no los de la cátedra: ante una duda con la nomenclatura ("la última subred"), aclaralo en la hoja.</footer>
 <script>
 /* lib.js — cálculo de redes (se usa en la página y en los tests de node) */
 (function (root) {
@@ -589,6 +589,11 @@ DATA.teoria = [
   simple:'En cada router: se descarta la trama vieja, se decrementa el TTL (y se recalcula el checksum IP), se consulta la tabla de ruteo y se arma una trama nueva con la MAC de la interfaz de salida como origen y la MAC del siguiente salto (se obtiene por ARP) como destino.',
   ej:'De R6 a R9 pasando por R4 y R5: la IP origen y la IP destino son las mismas todo el camino; la MAC origen/destino es distinta en cada tramo.',
   warn:'La excepción son los switches: no tocan ni IP ni MAC.' },
+{ id:'wifi-80211', prio:'baja', t:'WiFi 802.11: lo mínimo que tomaron (2019)',
+  def:'WiFi es la familia de estándares IEEE 802.11. Un cliente se conecta a un Access Point (AP) en tres fases: <b>descubrimiento</b> (el AP anuncia con <i>beacons</i> o el cliente pregunta con <i>probe request</i>), <b>autenticación</b> y <b>asociación</b>. 802.11b/g/n usan la banda de 2,4 GHz; <b>802.11a y 802.11ac usan 5 GHz</b> (el n puede usar ambas).',
+  simple:'El AP "grita" cada tanto "acá estoy, me llamo X" (beacon). El cliente escucha o pregunta, se identifica (autenticación) y pide entrar a esa red (asociación). Recién después puede mandar datos.',
+  ej:'Pregunta 2019: "802.11ac opera en 2,4 GHz" → <b>Falso</b> (5 GHz). "El cliente emite beacons" → <b>Falso</b> (los emite el AP).',
+  warn:'No se vio en los otros parciales (2017, 2022, 2024, 2025); está acá porque cayó una vez. Si tenés poco tiempo, que sea lo último que estudies.' },
 { id:'metodo-trama', prio:'baja', t:'Cómo leer una trama en hexadecimal',
   def:'Se avanza por capas contando bytes: Ethernet (14) → IP (20 o IHL × 4) → TCP (20 o más según offset) o UDP (8).',
   simple:'<ol><li>Bytes 0–5 MAC destino, 6–11 MAC origen, 12–13 EtherType (0800 = IPv4, 0806 = ARP).</li><li>Primer byte de IP: 45 = versión 4, 5 palabras (20 bytes). El byte 9 de IP es el protocolo (06 TCP, 11 UDP, 01 ICMP). Los bytes 12–19 son las IP origen y destino.</li><li>En TCP: puertos (2 + 2), secuencia (4), ACK (4), offset/flags (2) y ventana (2). Flags: 02 SYN, 12 SYN-ACK, 10 ACK, 18 PSH-ACK, 11 FIN-ACK.</li></ol>',
@@ -599,7 +604,7 @@ DATA.teoria = [
 /* ============ TOPOLOGÍAS DE RUTEO ============ */
 DATA.topos = {
   pergamino: {
-    nombre: 'Pergamino – Rojas – Junín (parciales 2017, 2022 y 2024)',
+    nombre: 'Pergamino – Rojas – Junín (parciales 2017, 2019, 2022 y 2024)',
     w: 880, h: 290,
     routers: {
       'Pergamino': { x: 110, y: 110, ifs: [ { n:'s0/0/0', net:'10.100.0.0/30', ip:'10.100.0.1' }, { n:'f0/0', net:'192.168.10.0/24', ip:'192.168.10.1' } ] },
@@ -687,7 +692,14 @@ DATA.quiz = [
 { t:'Transporte', q:'En slow start, ¿cómo crece cwnd?', o:['+1 MSS por RTT','Se duplica en cada RTT','Se mantiene constante','Se reduce a la mitad'], a:[1], e:'Crece +1 MSS por cada ACK, o sea se duplica por RTT, hasta llegar a ssthresh.' },
 { t:'Transporte', q:'El control de flujo de TCP lo determina:', o:['La red, con mensajes ICMP','El receptor, con el campo Window','El router más cercano','La capa de enlace'], a:[1], e:'El receptor anuncia cuántos bytes puede recibir (Window). La congestión, en cambio, la estima el emisor.' },
 { t:'Transporte', q:'¿Qué protocolo de transporte usa normalmente una consulta DNS?', o:['TCP puerto 53','UDP puerto 53','UDP puerto 80','TCP puerto 80'], a:[1], e:'Las consultas DNS comunes van por UDP/53 (trama 1 del zip). TCP/53 se usa para transferencias de zona o respuestas grandes.' },
-{ t:'Transporte', q:'¿Dónde y cuándo se negocia el MSS?', o:['En el handshake: cada extremo lo anuncia como opción del SYN','En cada ACK','En la capa de red','No se negocia'], a:[0], e:'El MSS viaja como opción en los segmentos SYN y SYN-ACK.' }
+{ t:'Transporte', q:'¿Dónde y cuándo se negocia el MSS?', o:['En el handshake: cada extremo lo anuncia como opción del SYN','En cada ACK','En la capa de red','No se negocia'], a:[0], e:'El MSS viaja como opción en los segmentos SYN y SYN-ACK.' },
+{ t:'IPv6 y ARP', q:'¿Qué campo de IPv6 cumple la función del TTL de IPv4?', o:['Hop-Limit','Traffic-Class','Flow-Label','Payload-Length'], a:[0], e:'Hop-Limit: se decrementa en cada router y, al llegar a 0, el paquete se descarta (cayó en 2019).' },
+{ t:'IPv4 y direcciones', q:'¿Cuáles son tres campos del encabezado IPv4?', o:['Versión','Dirección origen','Dirección broadcast','Número de secuencia','TTL'], a:[0,1,4], e:'IPv4 tiene versión, IHL, TOS, longitud, identificación, flags, offset, TTL, protocolo, checksum y direcciones origen y destino. "Número de secuencia" es de TCP y no existe un campo "dirección broadcast".' },
+{ t:'Ruteo', q:'Pergamino solo se conecta con Rojas (10.100.0.2). ¿Cuál es una línea válida para llegar a 192.168.20.0/24?', o:['ip route 192.168.20.0 255.255.255.0 10.100.0.2','ip route 192.168.20.1 255.255.255.0 10.100.0.2','ip route 192.168.20.0 255.255.255.0 10.100.0.1','ip route 192.168.20.0 255.255.255.0 10.100.0.5'], a:[0], e:'Se pone la red (no un host) y como siguiente salto el vecino directo (10.100.0.2). 10.100.0.1 es el propio Pergamino y 10.100.0.5 es la otra punta del enlace Rojas–Junín.' },
+{ t:'Ruteo', q:'Para asignar la primera dirección de 192.168.10.0/24 a fastEthernet 0/0, ¿qué línea de IOS corresponde?', o:['ip address 192.168.10.1 255.255.255.0','ip address 192.168.10.0 255.255.255.0','ip address 192.168.10.1 255.255.255.128','ip address 192.168.10.1 fastEthernet 0/0'], a:[0], e:'Primera dirección usable = .1 y máscara de un /24 = 255.255.255.0. Después falta <code>no shutdown</code> para levantarla.' },
+{ t:'WiFi 802.11', q:'¿Quién emite los beacons en una red WiFi?', o:['El cliente, para descubrir APs','El Access Point, para anunciar la red','El router de Internet','El servidor DHCP'], a:[1], e:'Los beacons los emite el AP periódicamente; el cliente, si quiere buscar activamente, manda probe requests.' },
+{ t:'WiFi 802.11', q:'¿En qué banda opera 802.11ac?', o:['2,4 GHz','5 GHz','900 MHz','60 GHz'], a:[1], e:'802.11ac opera en 5 GHz (b/g usan 2,4 GHz; n puede usar ambas).' },
+{ t:'WiFi 802.11', q:'Orden de las fases para que un cliente se conecte a un AP:', o:['Asociación → autenticación → descubrimiento','Descubrimiento → autenticación → asociación','Autenticación → descubrimiento → asociación','Descubrimiento → asociación → autenticación'], a:[1], e:'Primero encuentra la red (beacon o probe), luego se autentica y por último se asocia al AP.' }
 ];
 
 /* ============ PARCIALES RESUELTOS ============ */
@@ -739,13 +751,36 @@ DATA.parciales = [
     en:'1) IPv6 sin broadcast. 2) TCP. 3) Campos del header IPv4. 4) Bloques RFC 1918. 5) Dispositivos con 255.255.255.248. 6) ARP/NDP.',
     res:'<ul><li><b>1) Verdadero.</b></li><li><b>2) e</b>: a, b y c son correctas.</li><li><b>3) a, b, e</b>: Versión, Dirección Origen, TTL.</li><li><b>4) a, c, e</b>: 10/8, 172.16/12, 192.168/16.</li><li><b>5) c (6)</b>: /29 → 8 − 2.</li><li><b>6) Verdadero</b>: ARP no existe en IPv6, lo reemplaza Neighbor Discovery.</li></ul>' }
 ]},
+{ id:'p2019', nombre:'2do parcial · noviembre 2019 · Tema D', nota:'Misma estructura que 2017 (otro bloque: 190.10.0.0/24) y un teórico que incluye WiFi 802.11, tema que no aparece en los otros parciales.', ex:[
+  { t:'Punto 1 · Subneteo', pts:0,
+    en:'Dada la dirección IP <code>190.10.0.0/24</code> realice 8 subredes e indique: a) máscara de subred en decimal; b) dirección de red de la tercera subred; c) broadcast de la quinta subred; d) ¿a qué subred pertenece 190.10.0.193?',
+    res:'<ol class="steps"><li>8 subredes → 3 bits → <b>/27</b>. Bloque de 32: .0, .32, .64, .96, .128, .160, .192, .224.</li><li><b>a)</b> <code>255.255.255.224</code>.</li><li><b>b)</b> 3.ª subred = 2 × 32 = 64 → <code>190.10.0.64/27</code>.</li><li><b>c)</b> 5.ª subred = 4 × 32 = 128 → 190.10.0.128/27, broadcast = 128 + 31 = <code>190.10.0.159</code>.</li><li><b>d)</b> 193 está entre 192 y 223 → pertenece a <code>190.10.0.192/27</code>, la <b>7.ª subred</b> (192 ÷ 32 = 6, y se cuenta desde 0).</li></ol><p class="muted">En las hojas de ejemplo de la foto el alumno saltó de 2 en 2 y usó máscara 255.255.0.254: el error clásico es no pasar de "8 subredes" a "3 bits" y de ahí al bloque de 32.</p>' },
+  { t:'Punto 2 · a) Tabla de ruteo de Rojas', pts:0,
+    en:'Topología Pergamino–Rojas–Junín. Completar la tabla de Rojas (192.168.10.0, 192.168.30.0 y 192.168.30.128).',
+    res:'<div class="rt" data-topo="pergamino" data-router="Rojas" data-nets="192.168.10.0/24,192.168.30.0/25,192.168.30.128/25"></div><p class="muted">Es la misma tabla que 2017. Cuidado con la interfaz: las tres salen por seriales (s0/0/0 hacia Pergamino, s0/0/1 hacia Junín), no por f0/0 ni f0/1.</p>' },
+  { t:'Punto 2 · b) Comandos para fastEthernet 0/0 de Pergamino', pts:0,
+    en:'Ingrese los comandos para configurar la interfaz FastEthernet 0/0 del router Pergamino con la primera dirección disponible de 192.168.10.0/24.',
+    res:'<pre><code>Router&gt;enable\nRouter#configure terminal\nRouter(config)#interface fastEthernet 0/0\nRouter(config-if)#ip address 192.168.10.1 255.255.255.0\nRouter(config-if)#no shutdown</code></pre><p class="muted">En la foto el alumno olvidó la máscara en <code>ip address</code> y lo marcaron.</p>' },
+  { t:'Punto 2 · c) Opción correcta de ip route en Pergamino', pts:0,
+    en:'<b>1)</b> tres redes vía 10.100.0.2 · <b>2)</b> las mismas con direcciones de host · <b>3)</b> ruta por defecto vía 10.100.0.1 · <b>4)</b> tres redes vía 10.100.0.1.',
+    res:'<p><b>Opción 1.</b> Redes (no hosts) con máscara y siguiente salto <code>10.100.0.2</code>. Las opciones 3 y 4 usan 10.100.0.1, que es la IP del propio Pergamino: un router nunca es su propio siguiente salto.</p>' },
+  { t:'Punto 3 · Teórico (8 preguntas)', pts:0,
+    en:'1) El cliente WiFi emite beacons para descubrir los AP. 2) Componentes principales del proceso 802.11 para conectar un cliente a un AP. 3) Campos del header IPv4 (3). 4) ¿Qué campo de IPv6 equivale al TTL? 5) 802.11ac opera en 2,4 GHz. 6) Tres bloques privados de IANA. 7) Dispositivos con máscara 255.255.255.248. 8) Función de ARP.',
+    res:'<ul><li><b>1) Falso.</b> Los beacons los emite el AP; el cliente puede buscar activamente con <i>probe request</i>.</li><li><b>2)</b> Descubrimiento (beacons / probe request y response), <b>autenticación</b> y <b>asociación</b>.</li><li><b>3) a, b, f</b>: Versión, Dirección Origen y TTL (no hay "dirección broadcast" ni "número de secuencia" en IPv4).</li><li><b>4) Hop-Limit.</b></li><li><b>5) Falso.</b> 802.11ac opera en 5 GHz.</li><li><b>6)</b> 10.0.0.0/8, 172.16.0.0/12 y 192.168.0.0/16. Ojo con el bloque medio: es 172.16.0.0/12, no "172.0.0.0".</li><li><b>7) 6</b> (/29 → 8 direcciones − red − broadcast).</li><li><b>8)</b> Obtener la MAC de un dispositivo a partir de su IP dentro de la misma red local.</li></ul>' }
+]},
 { id:'p2017', nombre:'2do parcial · noviembre 2017 · Tema A', nota:'Mismo esquema de topología; el ruteo pide solo la tabla de Rojas.', ex:[
   { t:'Punto 1 · Subneteo', pts:0,
     en:'Dada la dirección IP <code>10.100.0.0/24</code> realice 8 subredes e indique: a) máscara de subred en decimal; b) dirección de red de la tercera subred; c) broadcast de la segunda subred; d) ¿a qué subred pertenece 10.100.0.80?',
     res:'<ol class="steps"><li>8 subredes → 3 bits → <b>/27</b>. Bloque de 32: .0, .32, .64, .96, .128, .160, .192, .224.</li><li><b>a)</b> <code>255.255.255.224</code>.</li><li><b>b)</b> 3.ª subred = 2 × 32 = 64 → <code>10.100.0.64/27</code>.</li><li><b>c)</b> 2.ª subred = 10.100.0.32/27 → broadcast <code>10.100.0.63</code>.</li><li><b>d)</b> 80 está entre 64 y 95 → pertenece a <code>10.100.0.64/27</code> (la 3.ª subred).</li></ol>' },
   { t:'Punto 2 · Tabla de ruteo de Rojas', pts:0,
     en:'Dada la topología Pergamino–Rojas–Junín, completar la tabla de Rojas (192.168.30.0, 192.168.30.128 y 192.168.10.0).',
-    res:'<div class="rt" data-topo="pergamino" data-router="Rojas" data-nets="192.168.30.0/25,192.168.30.128/25,192.168.10.0/24"></div><p class="muted">Máscaras: 255.255.255.128, 255.255.255.128 y 255.255.255.0.</p>' }
+    res:'<div class="rt" data-topo="pergamino" data-router="Rojas" data-nets="192.168.30.0/25,192.168.30.128/25,192.168.10.0/24"></div><p class="muted">Máscaras: 255.255.255.128, 255.255.255.128 y 255.255.255.0. En la foto el alumno puso F0/0 y F0/1 como interfaz de salida: está mal, Rojas sale por las seriales (s0/0/1 hacia Junín, s0/0/0 hacia Pergamino).</p>' },
+  { t:'Punto 2 · b) Configurar fastEthernet 0/0 de Pergamino (opción múltiple)', pts:0,
+    en:'¿Cuál es correcta para asignar a fastEthernet 0/0 de Pergamino la primera dirección de 192.168.10.0/24? <b>1)</b> máscara 255.255.255.128 · <b>2)</b> <code>sudo configure interface</code> · <b>3)</b> máscara 255.255.255.0.',
+    res:'<p><b>Opción 3.</b> Es la única con comandos de IOS (<code>enable</code>, <code>configure terminal</code>, <code>interface fastEthernet 0/0</code>) y con la máscara de un /24: <code>ip address 192.168.10.1 255.255.255.0</code>. La 1 usa un /25 (255.255.255.128) y la 2 es sintaxis de Linux.</p>' },
+  { t:'Punto 2 · c) Opciones correctas de ip route en Pergamino', pts:0,
+    en:'<b>1)</b> tres redes (192.168.20.0/24, 192.168.30.0/25, 192.168.30.128/25) vía 10.100.0.2 · <b>2)</b> las mismas pero con direcciones de host (192.168.20.1, 30.1, 30.129) · <b>3)</b> <code>ip route 0.0.0.0 0.0.0.0 10.100.0.5</code>.',
+    res:'<p><b>Opción 1.</b> Redes con su máscara y siguiente salto 10.100.0.2 (Rojas, el único vecino de Pergamino). La 2 pone direcciones de host en vez de direcciones de red. La 3 apunta a 10.100.0.5, que es la IP de Rojas del <i>otro</i> enlace: Pergamino no llega a esa dirección, el next hop correcto sería 10.100.0.2.</p>' }
 ]}
 ];
 
@@ -982,12 +1017,12 @@ RENDER.teoria = function () {
     [['todas', 'Todas'], ['alta', 'Solo alta'], ['alta media', 'Alta + media'], ['pend', 'Sin dominar']].map(function (f, i) { return '<button class="chip" data-f="' + f[0] + '" aria-pressed="' + (i === 0) + '">' + f[1] + '</button>'; }).join('') +
     '</div><div class="jump"><label for="jump-t">Ir a</label><select id="jump-t"><option value="">Elegí un tema…</option>' +
     DATA.teoria.map(function (c, i) { return '<option value="c-' + c.id + '">' + (i < 9 ? '0' : '') + (i + 1) + ' · ' + esc(c.t) + '</option>'; }).join('') + '</select></div></div>';
-  html += '<section id="que-toman"><div><div class="eyebrow">Qué toman</div><h2>El 2.º parcial, en cinco bloques</h2></div><p class="lead">Armado con los parciales 2017, 2022, 2024 y el recuperatorio 2025 (están en las pestañas de resueltos). La estructura se repite casi igual todos los años:</p>' +
+  html += '<section id="que-toman"><div><div class="eyebrow">Qué toman</div><h2>El 2.º parcial, en cinco bloques</h2></div><p class="lead">Armado con los parciales 2017, 2019, 2022, 2024 y el recuperatorio 2025 (están en las pestañas de resueltos). La estructura se repite casi igual todos los años:</p>' +
     '<div class="tbl"><table><thead><tr><th>Bloque</th><th>Qué piden</th><th>Aparece en</th></tr></thead><tbody>' +
-    '<tr><td><b>Subneteo</b> <span class="tag alta">alta</span></td><td>N subredes de un bloque: máscara, red de la subred K, rango de hosts, broadcast, gateway (primer host), a qué subred pertenece una IP</td><td>2017 · 2022 · 2024 · 2025</td></tr>' +
-    '<tr><td><b>Ruteo</b> <span class="tag alta">alta</span></td><td>Tablas de ruteo (destino, gateway, interfaz) en una topología de 3 routers; comandos IOS para una interfaz; elegir el bloque correcto de <code>ip route</code></td><td>2017 · 2022 · 2024 · 2025</td></tr>' +
+    '<tr><td><b>Subneteo</b> <span class="tag alta">alta</span></td><td>N subredes de un bloque: máscara, red de la subred K, rango de hosts, broadcast, gateway (primer host), a qué subred pertenece una IP</td><td>2017 · 2019 · 2022 · 2024 · 2025</td></tr>' +
+    '<tr><td><b>Ruteo</b> <span class="tag alta">alta</span></td><td>Tablas de ruteo (destino, gateway, interfaz) en una topología de 3 routers; comandos IOS para una interfaz; elegir el bloque correcto de <code>ip route</code></td><td>2017 · 2019 · 2022 · 2024 · 2025</td></tr>' +
     '<tr><td><b>Broadcast / host válido</b> <span class="tag alta">alta</span></td><td>Broadcast de redes /20, validez de 200.30.63.255/18</td><td>2024 · 2025</td></tr>' +
-    '<tr><td><b>Teórico (multiple choice)</b> <span class="tag media">media</span></td><td>IPv6 sin broadcast y loopback ::1, ARP/NDP, TCP/UDP, campos del header IPv4, RFC 1918, hosts por máscara</td><td>2022 · 2024 · 2025</td></tr>' +
+    '<tr><td><b>Teórico (multiple choice)</b> <span class="tag media">media</span></td><td>IPv6 sin broadcast y loopback ::1, Hop-Limit, ARP/NDP, TCP/UDP, campos del header IPv4, RFC 1918, hosts por máscara; una vez cayó WiFi 802.11 (beacons, 2,4 vs 5 GHz)</td><td>2019 · 2022 · 2024 · 2025</td></tr>' +
     '<tr><td><b>TCP vs UDP (desarrollo)</b> <span class="tag media">media</span></td><td>Explicar la diferencia</td><td>2025</td></tr></tbody></table></div></section>';
   html += '<section id="plan"><div><div class="eyebrow">Plan</div><h2>De hoy al viernes</h2></div><div class="plan">' +
     [['Mar 17/11', 'Subneteo', 'Tarjetas 1 a 4 de esta pestaña. Después, la pestaña <b>Subneteo</b>: hacé 10 ejercicios del generador sin mirar la resolución.'],
