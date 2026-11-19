@@ -270,6 +270,11 @@ section>.jump{margin-left:0;width:100%;max-width:420px}
 .mk-calc{font:500 .72rem var(--f-mono);color:var(--muted);text-align:center;overflow-wrap:anywhere;min-height:2.2em}
 @media (max-width:720px){.mk-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+.mk-step{border-left:3px solid var(--accent);background:var(--surface);border-radius:0 10px 10px 0;padding:10px 14px;margin:12px 0}
+.mk-sn{font:700 1rem var(--f-display);margin-bottom:4px}
+.mk-ej{background:var(--paper);border:1px dashed var(--line);border-radius:8px;padding:8px 10px;margin:8px 0 0}
+tr.mk-hit td{background:color-mix(in srgb,var(--accent) 22%,transparent)}
+
 </style></head><body>
 <div class="topbar">
   <header class="hero">
@@ -2436,6 +2441,71 @@ function mkExplainFrom(p) {
   return parts.map(function (v) { return v + ' = ' + mkBitsOfOct(v) + ' bit' + (mkBitsOfOct(v) === 1 ? '' : 's'); }).join(' · ') + ' → ' + parts.map(function (v) { return mkBitsOfOct(v); }).join(' + ') + ' = <b>/' + p + '</b>.';
 }
 
+
+/* ---------- Subneteo completo: todo se calcula con L.split / L.info, no hay números escritos a mano ---------- */
+var MK_ORD = ['1.er', '2.º', '3.er', '4.º'];
+function mkOctIdx(p) { return Math.ceil(p / 8) - 1; }               /* octeto que cambia (0..3) para un prefijo partido */
+function mkIpOct(ip, i) { return parseInt(ip.split('.')[i], 10); }
+function mkRowsHtml(sp, n, mark) {
+  var rows = sp.subs.slice(0, n).map(function (s) {
+    var hit = mark.indexOf(s.k) >= 0;
+    return '<tr' + (hit ? ' class="mk-hit"' : '') + '><td><b>' + s.k + '.ª</b></td><td><code>' + s.net + '</code></td><td><code>' + s.first + '</code> a <code>' + s.last + '</code></td><td><code>' + s.bc + '</code></td></tr>';
+  }).join('');
+  return '<div class="tbl"><table><thead><tr><th>Subred</th><th>Red</th><th>Hosts (rango)</th><th>Broadcast</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+}
+/* resolución completa en prosa corta, con los números reales de un ejercicio */
+function mkWorked(base, bp, N, k1, k2, ip) {
+  var sp = L.split(base, bp, N), blk = 256 - mkIpOct(sp.mask, mkOctIdx(sp.prefix)), oi = mkOctIdx(sp.prefix), on = MK_ORD[oi];
+  var mo = mkIpOct(sp.mask, oi), a = sp.subs[k1 - 1], b = sp.subs[k2 - 1];
+  var q = Math.floor(mkIpOct(ip, oi) / blk), c = sp.subs[q];
+  var h = '<ol class="steps">';
+  h += '<li><b>Bits:</b> 2<sup>' + (sp.bits - 1) + '</sup> = ' + Math.pow(2, sp.bits - 1) + ' no alcanza para ' + N + '; 2<sup>' + sp.bits + '</sup> = ' + sp.total + ' sí → <b>' + sp.bits + ' bits</b>.</li>';
+  h += '<li><b>Prefijo y máscara:</b> ' + bp + ' + ' + sp.bits + ' = <b>/' + sp.prefix + '</b> → <code>' + sp.mask + '</code>.</li>';
+  h += '<li><b>Octeto que cambia y bloque:</b> el ' + on + ' (' + mo + '). Bloque = 256 − ' + mo + ' = <b>' + blk + '</b>. Hosts por subred = 2<sup>' + (32 - sp.prefix) + '</sup> − 2 = <b>' + sp.hosts + '</b>.</li>';
+  h += '<li><b>Red de la ' + k1 + '.ª:</b> (' + k1 + ' − 1) × ' + blk + ' = ' + ((k1 - 1) * blk) + ' en el ' + on + ' octeto → <code>' + a.net + '</code>.</li>';
+  h += '<li><b>Rango de la ' + k2 + '.ª:</b> red = ' + (k2 - 1) + ' × ' + blk + ' = ' + ((k2 - 1) * blk) + ' → <code>' + b.net + '</code>. Broadcast = siguiente red − 1 = <code>' + b.bc + '</code>. Hosts: <code>' + b.first + '</code> a <code>' + b.last + '</code>.</li>';
+  h += '<li><b>Subred de ' + ip + ':</b> ' + mkIpOct(ip, oi) + ' ÷ ' + blk + ' = ' + q + ' (parte entera) → subred ' + q + ' + 1 = <b>' + (q + 1) + '.ª</b>. Su red es <code>' + c.net + '</code>.</li>';
+  h += '<li><b>Gateway:</b> primer host = red + 1 = <code>' + c.first + '</code>.</li>';
+  return h + '</ol>' + mkRowsHtml(sp, N, [k1, k2, q + 1]);
+}
+function mkSubHtml() {
+  var A = L.split('192.168.10.0', 24, 10), blkA = 256 - mkIpOct(A.mask, 3);
+  var a5 = A.subs[4], a7 = A.subs[6], ipA = '192.168.10.100', cA = A.subs[Math.floor(100 / blkA)];
+  var pref = [25, 26, 27, 28, 29, 30, 17, 18, 19, 20, 21, 22].map(function (p) {
+    var oi = mkOctIdx(p), mo = mkIpOct(mkMask(p), oi);
+    return '<tr><td><b>/' + p + '</b></td><td><code>' + mkMask(p) + '</code></td><td>' + MK_ORD[oi] + '</td><td><b>' + (256 - mo) + '</b></td><td>' + (Math.pow(2, 32 - p) - 2) + '</td></tr>';
+  }).join('');
+  var h = '';
+  h += '<p class="lead">Este es el ejercicio que cae en todos los parciales. Se hace siempre igual: 8 pasos, y los primeros 3 ya los sabés de arriba.</p>';
+  h += '<div class="warn"><b>Así lo piden:</b> «Dada la red <code>192.168.10.0/24</code>, cree <b>10</b> subredes». Averiguar:<ul class="steps"><li>La <b>red</b> de la <b>5.ª</b> subred</li><li>El <b>rango de hosts</b> de la <b>7.ª</b> subred</li><li>El <b>gateway</b> del host <code>' + ipA + '</code></li></ul>Lo vamos a resolver paso a paso con ese mismo ejemplo.</div>';
+
+  h += '<div class="mk-step"><div class="mk-sn">Paso 1 · ¿Cuántos bits?</div><p>Buscá el primer <b>n</b> con <b>2<sup>n</sup> ≥ cantidad de subredes</b>. Tabla para no calcular: 2¹=2 · 2²=4 · 2³=8 · 2⁴=16 · 2⁵=32 · 2⁶=64.</p><p class="mk-ej"><b>Ejemplo:</b> 10 subredes. 2³ = 8 no alcanza. 2⁴ = 16 sí → <b>n = ' + A.bits + '</b>.</p></div>';
+  h += '<div class="mk-step"><div class="mk-sn">Paso 2 · Prefijo nuevo</div><p><b>Prefijo original + n.</b> No es solo n: se suma a lo que ya tenías.</p><p class="mk-ej"><b>Ejemplo:</b> 24 + ' + A.bits + ' = <b>/' + A.prefix + '</b>.</p></div>';
+  h += '<div class="mk-step"><div class="mk-sn">Paso 3 · Máscara en decimal</div><p>Es lo que viste arriba: octetos completos 255, el partido sale de la tira, el resto 0.</p><p class="mk-ej"><b>Ejemplo:</b> /' + A.prefix + ' = 24 + 4 → 255.255.255 y el 4.º con 4 unos = 240 → <code>' + A.mask + '</code>.</p></div>';
+  h += '<div class="mk-step"><div class="mk-sn">Paso 4 · Octeto que cambia y bloque</div><ul class="steps"><li><b>Octeto que cambia</b> = el que no es 255 ni 0 en la máscara.</li><li><b>Bloque</b> = 256 − ese número. Es de a cuánto avanzan las subredes.</li><li><b>Hosts por subred</b> = 2<sup>32 − prefijo</sup> − 2.</li></ul><p class="mk-ej"><b>Ejemplo:</b> el 4.º octeto vale 240 → bloque = 256 − 240 = <b>' + blkA + '</b>. Hosts = 2<sup>' + (32 - A.prefix) + '</sup> − 2 = <b>' + A.hosts + '</b>.</p></div>';
+  h += '<div class="mk-step"><div class="mk-sn">Paso 5 · Red de la subred K</div><ul class="steps"><li>En el octeto que cambia: <b>(K − 1) × bloque</b>. La 1.ª subred es la 0, por eso se resta 1.</li><li>Los octetos de la <b>izquierda</b> se copian de la red original.</li><li>Los de la <b>derecha</b> van en 0.</li></ul><p class="mk-ej"><b>Ejemplo:</b> 5.ª → (5 − 1) × ' + blkA + ' = ' + (4 * blkA) + ' → <code>' + a5.net + '</code>.</p></div>';
+  h += '<div class="mk-step"><div class="mk-sn">Paso 6 · Broadcast y rango de hosts</div><ul class="steps"><li><b>Broadcast</b> = la red de la subred siguiente menos 1 (o: red + bloque − 1 en el octeto que cambia, y 255 a la derecha).</li><li><b>Primer host</b> = red + 1.</li><li><b>Último host</b> = broadcast − 1.</li></ul><p class="mk-ej"><b>Ejemplo:</b> 7.ª → red (7 − 1) × ' + blkA + ' = ' + (6 * blkA) + ' → <code>' + a7.net + '</code>. Broadcast = ' + a7.net + ' + ' + blkA + ' − 1 = <code>' + a7.bc + '</code>. Rango: <code>' + a7.first + '</code> a <code>' + a7.last + '</code>.</p></div>';
+  h += '<div class="mk-step"><div class="mk-sn">Paso 7 · ¿A qué subred pertenece una IP?</div><p>Dividí el octeto que cambia por el bloque y <b>quedate con la parte entera</b>. Sumale 1 para contar desde la 1.ª. Esa cuenta multiplicada por el bloque te da la red.</p><p class="mk-ej"><b>Ejemplo:</b> ' + ipA + ' → 100 ÷ ' + blkA + ' = 6,25 → parte entera 6 → es la <b>7.ª</b> subred. Su red es 6 × ' + blkA + ' = ' + (6 * blkA) + ' → <code>' + cA.net + '</code>.</p></div>';
+  h += '<div class="mk-step"><div class="mk-sn">Paso 8 · Gateway y host válido</div><ul class="steps"><li><b>Gateway</b> = primer host de la subred = red + 1.</li><li>Una IP es <b>host válido</b> si no es la red ni el broadcast de su subred.</li></ul><p class="mk-ej"><b>Ejemplo:</b> la red es <code>' + cA.net + '</code> → gateway <code>' + cA.first + '</code>.</p></div>';
+
+  h += '<h3>Todas las subredes del ejemplo</h3><p class="muted">Mirá cómo cada fila sale de sumar el bloque (' + blkA + '). Las filas marcadas son las 3 que pedía el enunciado.</p>' + mkRowsHtml(A, 10, [5, 7, Math.floor(100 / blkA) + 1]);
+  h += '<p class="muted">Con 10 subredes se pueden armar 16 (2<sup>4</sup>): las 6 últimas quedan libres. El bloque se calcula con la máscara, no con 10.</p>';
+
+  h += '<h3>Bloque de cada máscara (para no calcular)</h3><div class="tbl"><table><thead><tr><th>Prefijo</th><th>Máscara</th><th>Octeto que cambia</th><th>Bloque</th><th>Hosts</th></tr></thead><tbody>' + pref + '</tbody></table></div>';
+
+  h += '<h3>Otro ejemplo: cuando cambia el 3.er octeto</h3><p class="muted">Pasa si la red de partida es /16. La cuenta es la misma, pero el bloque se aplica al 3.er octeto, lo de la izquierda se copia y lo de la derecha queda en 0 (la red) o en 255 (el broadcast).</p>' +
+       '<div class="warn"><b>Enunciado:</b> <code>172.20.0.0/16</code>, <b>9</b> subredes. a) red de la <b>6.ª</b>. b) rango de la <b>3.ª</b>. c) gateway de <code>172.20.100.7</code>.</div>' + mkWorked('172.20.0.0', 16, 9, 6, 3, '172.20.100.7');
+
+  h += '<h3>Errores que se repiten</h3><ul class="steps">' +
+    '<li><b>Poner solo n como prefijo.</b> El prefijo nuevo es el original + n (24 + 4 = /28, no /4).</li>' +
+    '<li><b>Olvidar el − 1 en la K.</b> La 1.ª subred es la que empieza en la red original (0 × bloque).</li>' +
+    '<li><b>Usar el último host como broadcast.</b> El broadcast es una dirección más: último host + 1.</li>' +
+    '<li><b>Usar N en vez de 2<sup>n</sup>.</b> Con 10 subredes la máscara es /28 (16 subredes), no una de 10.</li>' +
+    '<li><b>No copiar los octetos de la izquierda.</b> En 172.20.0.0/16 con /20 la 6.ª es <code>172.20.80.0</code>, no <code>0.0.80.0</code>.</li>' +
+    '<li><b>Dar la red o el broadcast como host o gateway.</b> El gateway es red + 1.</li></ul>';
+  return h;
+}
+
 RENDER.mascara = function () {
   var P = $('#mascara');
   var exRows = [28, 20, 26, 18, 27, 29, 22, 25].map(function (p) {
@@ -2475,15 +2545,16 @@ RENDER.mascara = function () {
     '<li><b>Sumá</b> los bits de los 4 números.</li></ol>' +
     '<pre>255.255.240.0\n255 = 8 · 255 = 8 · 240 = 4 · 0 = 0\n8 + 8 + 4 + 0 = 20  →  /20</pre></section>' +
 
-    '<section><div><div class="eyebrow">4 · Para qué sirve</div><h2>De la máscara sale todo el subneteo</h2></div>' +
-    '<ol class="steps"><li><b>Octeto que cambia</b> = el octeto partido (el que no es 255 ni 0).</li>' +
-    '<li><b>Bloque</b> = 256 − el valor de ese octeto. En /28: 256 − 240 = 16.</li>' +
-    '<li><b>Hosts</b> = 2<sup>bits de host</sup> − 2. En /28: 4 bits de host → 16 − 2 = 14.</li></ol></section>' +
+    '<section><div><div class="eyebrow">4 · Subneteo completo</div><h2>De la máscara al ejercicio: los 8 pasos</h2></div>' + mkSubHtml() + '</section>' +
 
-    '<section><div><div class="eyebrow">5 · Practicá</div><h2>Ejercicios de máscara</h2></div>' +
+    '<section><div><div class="eyebrow">5 · Practicá la máscara</div><h2>Ejercicios de máscara</h2></div>' +
     '<p class="lead">Salen distintos cada vez. Se corrigen al instante y explican el paso.</p>' +
     '<div class="gen-bar"><button class="btn" id="mk-modo" type="button" aria-pressed="false">Cambiar a: de decimal a /n</button><span class="q-score" id="mk-score">0 de 0</span></div>' +
     '<div class="gstep cur" id="mk-q"></div></section>' +
+
+    '<section><div><div class="eyebrow">6 · Practicá el subneteo</div><h2>Ejercicio completo, guiado</h2></div>' +
+    '<p class="lead">Es el mismo tipo de ejercicio del parcial, con números nuevos cada vez. Te va pidiendo cada paso de arriba, en orden.</p>' +
+    '<div class="actions"><button class="btn primary" id="mk-sub-new" type="button">Otro ejercicio</button></div><div id="mk-sub"></div></section>' +
     '</main></div>';
 
   /* ----- visualizador ----- */
@@ -2547,6 +2618,10 @@ RENDER.mascara = function () {
     this.setAttribute('aria-pressed', String(modo === 'from')); nuevo();
   });
   nuevo();
+
+  function subNuevo() { runGuided($('#mk-sub'), gSubneteo(), null); }
+  $('#mk-sub-new').addEventListener('click', subNuevo);
+  subNuevo();
 };
 
 
