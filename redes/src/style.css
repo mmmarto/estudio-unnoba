@@ -242,3 +242,6 @@ section>.jump{margin-left:0;width:100%;max-width:420px}
 .sk-solved{display:grid;gap:10px;padding:14px 0;border-top:1px solid var(--line)}
 #sk-run{border-top:2px solid var(--accent);padding-top:18px}
 #sk-learn details>.uc-ex h4{margin-top:10px}
+.sk-more{background:var(--paper)}
+.sk-more summary{font-size:.92rem;color:var(--muted)}
+.sk-more-body{padding:2px 16px 16px;display:grid;gap:10px;min-width:0}
