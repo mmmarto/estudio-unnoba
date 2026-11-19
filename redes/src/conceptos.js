@@ -103,3 +103,88 @@ RENDER.conceptos = function () {
   apply();
 };
 
+
+/* ============ "No lo entiendo": ayuda en cada tarjeta de Teoría y Desde cero ============ */
+/* concept ids de CONCEPTOS que son la base de cada tema, y dónde practicarlo */
+var HELP_MAP = {
+  /* Teoría */
+  'ipv4-mascara': { c: ['ip', 'mascara', 'prefijo', 'red-host'], tab: 'skill', tl: 'Skill (subneteo y host válido)' },
+  'hosts-mascara': { c: ['prefijo', 'cant-hosts', 'bits-prestados'], tab: 'skill', tl: 'Skill (subneteo y host válido)' },
+  'subneteo': { c: ['subred', 'bits-prestados', 'bloque', 'gateway'], tab: 'skill', tl: 'Skill (subneteo)' },
+  'red-bc-valida': { c: ['dir-red', 'broadcast', 'host-valido'], tab: 'skill', tl: 'Skill (host válido)' },
+  'tabla-ruteo': { c: ['router', 'interfaz', 'tabla-ruteo', 'conectada', 'next-hop'], tab: 'skill', tl: 'Skill (tabla de ruteo)' },
+  'ip-route': { c: ['ruta-estatica', 'ruta-defecto', 'next-hop'], tab: 'skill', tl: 'Skill (ip route e IOS)' },
+  'ios-interfaz': { c: ['ios', 'interfaz'], tab: 'skill', tl: 'Skill (ip route e IOS)' },
+  'tcp-udp': { c: ['tcp', 'udp', 'puerto'], tab: 'skill', tl: 'Skill (TCP vs UDP)' },
+  'puertos': { c: ['puerto', 'socket'], tab: 'quizzes', tl: 'Quizzes' },
+  'ipv6': { c: ['ipv6', 'multicast', 'loopback', 'link-local'], tab: 'quizzes', tl: 'Quizzes' },
+  'especiales-privadas': { c: ['privadas', 'loopback', 'link-local', 'multicast'], tab: 'quizzes', tl: 'Quizzes' },
+  'header-ipv4': { c: ['datagrama', 'ttl'], tab: 'quizzes', tl: 'Quizzes' },
+  'fragmentacion': { c: ['mtu-frag', 'datagrama'], tab: 'guiada', tl: 'Práctica guiada (fragmentación)' },
+  'arp': { c: ['arp', 'mac'], tab: 'quizzes', tl: 'Quizzes' },
+  'tcp-handshake': { c: ['handshake', 'ack'], tab: 'guiada', tl: 'Práctica guiada (ACK y ventana)' },
+  'flujo-ventana': { c: ['flujo', 'ack'], tab: 'guiada', tl: 'Práctica guiada (ACK y ventana)' },
+  'congestion': { c: ['congestion', 'cwnd', 'slow-start', 'evitacion', 'timeout-dup'], tab: 'guiada', tl: 'Práctica guiada (congestión)' },
+  'rto-mss': { c: ['rtt-rto-mss'], tab: 'quizzes', tl: 'Quizzes' },
+  'icmp': { c: ['icmp'], tab: 'quizzes', tl: 'Quizzes' },
+  'tos-dscp': { c: ['datagrama'], tab: 'quizzes', tl: 'Quizzes' },
+  'mac-ip-salto': { c: ['mac', 'ip', 'router'], tab: 'quizzes', tl: 'Quizzes' },
+  'wifi-80211': { c: ['wifi'], tab: 'quizzes', tl: 'Quizzes' },
+  'metodo-trama': { c: ['bit-byte', 'mac', 'datagrama'], tab: 'tramas', tl: 'Tramas' },
+  /* Desde cero */
+  'z-ip': { c: ['bit-byte', 'ip', 'red-host'], tab: 'quizzes', tl: 'Quizzes' },
+  'z-mascara': { c: ['mascara', 'prefijo', 'red-host'], tab: 'skill', tl: 'Skill (subneteo y host válido)' },
+  'z-subneteo': { c: ['subred', 'bits-prestados', 'bloque', 'gateway'], tab: 'skill', tl: 'Skill (subneteo)' },
+  'z-red-bc': { c: ['dir-red', 'broadcast', 'host-valido'], tab: 'skill', tl: 'Skill (host válido)' },
+  'z-ruteo': { c: ['router', 'interfaz', 'tabla-ruteo', 'conectada', 'next-hop'], tab: 'skill', tl: 'Skill (tabla de ruteo)' },
+  'z-iproute': { c: ['ruta-estatica', 'ruta-defecto', 'ios', 'interfaz'], tab: 'skill', tl: 'Skill (ip route e IOS)' },
+  'z-header': { c: ['datagrama', 'ttl', 'mtu-frag'], tab: 'guiada', tl: 'Práctica guiada (fragmentación)' },
+  'z-especiales': { c: ['privadas', 'loopback', 'link-local'], tab: 'quizzes', tl: 'Quizzes' },
+  'z-arp': { c: ['mac', 'arp'], tab: 'quizzes', tl: 'Quizzes' },
+  'z-ipv6': { c: ['ipv6', 'multicast', 'loopback'], tab: 'quizzes', tl: 'Quizzes' },
+  'z-tcpudp': { c: ['puerto', 'tcp', 'udp'], tab: 'skill', tl: 'Skill (TCP vs UDP)' },
+  'z-handshake': { c: ['handshake', 'ack'], tab: 'guiada', tl: 'Práctica guiada (ACK y ventana)' },
+  'z-flujo-cong': { c: ['flujo', 'congestion', 'cwnd'], tab: 'guiada', tl: 'Práctica guiada (congestión)' },
+  'z-wifi': { c: ['wifi'], tab: 'quizzes', tl: 'Quizzes' }
+};
+
+function helpHtml(key) {
+  var m = HELP_MAP[key]; if (!m) return '';
+  var defs = m.c.map(function (id) {
+    var c = CONCEPTOS.filter(function (x) { return x.id === id; })[0];
+    return c ? '<p><b>' + c.t + ':</b> ' + c.q + ' <span class="muted">Ej.: ' + c.ej + '</span></p>' : '';
+  }).join('');
+  return '<div class="help" hidden><div class="dse-k">Si no lo entendés, probá en este orden</div><ol class="steps">' +
+    '<li><b>Arrancá por lo básico.</b> Esto es lo que ese tema da por sabido:<div class="help-defs">' + defs + '</div></li>' +
+    '<li><b>Practicalo con ejercicios.</b> Te los corrige paso a paso. <button class="btn help-go" type="button" data-go="' + m.tab + '">Ir a ' + m.tl + '</button></li>' +
+    '<li><b>Preguntale a Claude.</b> Copiá esta pregunta y pegala en el chat de Claude:<blockquote class="help-q"></blockquote>' +
+    '<div class="actions"><button class="btn primary help-copy" type="button">Copiar pregunta</button><span class="muted help-msg" role="status" aria-live="polite"></span></div></li></ol></div>';
+}
+
+function attachHelp(tabId) {
+  var P = $('#' + tabId);
+  $$('.concept', P).forEach(function (card) {
+    var key = card.id.replace(/^c-/, ''), head = $('.concept-head', card), body = $('.body', card);
+    if (!HELP_MAP[key] || !head || !body) return;
+    var title = $('h3', card).textContent;
+    var btn = h('button', { class: 'btn help-btn', type: 'button', 'aria-expanded': 'false' }, 'No lo entiendo');
+    var mark = $('.mark', head); head.insertBefore(btn, mark || null);
+    var box = h('div', { class: 'help-wrap' }, helpHtml(key));
+    body.appendChild(box);
+    $('.help-q', box).textContent = 'Estoy estudiando Redes de Datos (UNNOBA) para el 2.º parcial. No entiendo "' + title + '" de mi guía. Explicámelo simple, con un ejemplo corto con números, y después hacéme 2 preguntas para ver si lo entendí.';
+  });
+  P.addEventListener('click', function (e) {
+    var b = e.target.closest('.help-btn,.help-go,.help-copy'); if (!b || !P.contains(b)) return;
+    var card = b.closest('.concept');
+    if (b.classList.contains('help-btn')) {
+      var hp = $('.help', card), open = hp.hidden;
+      hp.hidden = !open; b.setAttribute('aria-expanded', String(open)); b.textContent = open ? 'Ocultar ayuda' : 'No lo entiendo';
+    } else if (b.classList.contains('help-go')) {
+      showTab(b.dataset.go); window.scrollTo(0, 0);
+    } else {
+      var txt = $('.help-q', card).textContent, msg = $('.help-msg', card);
+      try { navigator.clipboard.writeText(txt).then(function () { msg.textContent = 'Copiada. Pegala en el chat de Claude.'; }, function () { msg.textContent = 'No se pudo copiar: seleccioná el texto de arriba y copialo.'; }); }
+      catch (err) { msg.textContent = 'No se pudo copiar: seleccioná el texto de arriba y copialo.'; }
+    }
+  });
+}
