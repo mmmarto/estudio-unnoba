@@ -228,3 +228,17 @@ section>.jump{margin-left:0;width:100%;max-width:420px}
 .skill-track .mark{font-size:.95rem;color:var(--ink);padding:6px 0;border-bottom:1px solid var(--line)}
 .skill-track .mark:last-child{border-bottom:0}
 .skill-count{font:600 .85rem var(--f-mono);color:var(--ok)}
+
+/* skill interactiva */
+.sk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.sk-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:10px;align-content:start;min-width:0}
+.sk-card.done{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 7%,var(--surface))}
+.sk-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.82rem}
+.sk-st{display:flex;align-items:center;gap:10px;font-size:.9rem}
+.dots{display:inline-flex;gap:5px}
+.dots span{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--muted)}
+.dots span.on{background:var(--ok);border-color:var(--ok)}
+.sk-state{color:var(--muted)}
+.sk-solved{display:grid;gap:10px;padding:14px 0;border-top:1px solid var(--line)}
+#sk-run{border-top:2px solid var(--accent);padding-top:18px}
+#sk-learn details>.uc-ex h4{margin-top:10px}
