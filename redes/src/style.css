@@ -262,3 +262,8 @@ section>.jump{margin-left:0;width:100%;max-width:420px}
 .mk-val{font:700 1.5rem var(--f-mono);text-align:center}
 .mk-calc{font:500 .72rem var(--f-mono);color:var(--muted);text-align:center;overflow-wrap:anywhere;min-height:2.2em}
 @media (max-width:720px){.mk-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.mk-step{border-left:3px solid var(--accent);background:var(--surface);border-radius:0 10px 10px 0;padding:10px 14px;margin:12px 0}
+.mk-sn{font:700 1rem var(--f-display);margin-bottom:4px}
+.mk-ej{background:var(--paper);border:1px dashed var(--line);border-radius:8px;padding:8px 10px;margin:8px 0 0}
+tr.mk-hit td{background:color-mix(in srgb,var(--accent) 22%,transparent)}
