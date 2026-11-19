@@ -29,7 +29,7 @@ function showTab(id) {
     $('#tab-' + t).setAttribute('aria-selected', on ? 'true' : 'false');
     $('#' + t).hidden = !on;
   });
-  if (!rendered[id]) { rendered[id] = true; RENDER[id](); }
+  if (!rendered[id]) { rendered[id] = true; RENDER[id](); if (id === 'teoria' || id === 'cero') attachHelp(id); }
   try { if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id); } catch (e) { /* nada */ }
 }
 function initTabs() {
