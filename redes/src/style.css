@@ -218,3 +218,13 @@ section>.jump{margin-left:0;width:100%;max-width:420px}
 .ghint{color:var(--media)}
 .gfin{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 8%,var(--surface))}
 .gen-enun .topo-box{margin-top:8px}
+
+/* skill */
+.cmdrow{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.cmdrow pre{flex:1 1 280px}
+.skill-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.skill-box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:10px;align-content:start;min-width:0}
+.skill-track{display:grid;gap:6px}
+.skill-track .mark{font-size:.95rem;color:var(--ink);padding:6px 0;border-bottom:1px solid var(--line)}
+.skill-track .mark:last-child{border-bottom:0}
+.skill-count{font:600 .85rem var(--f-mono);color:var(--ok)}
