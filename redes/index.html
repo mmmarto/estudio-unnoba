@@ -1733,7 +1733,7 @@ function gSubneteo() {
   var oct = Math.floor((sp.prefix - 1) / 8), mo = parseInt(sp.mask.split('.')[oct], 10), blk = 256 - mo;
   var names = ['1.er', '2.º', '3.er', '4.º'];
   return {
-    enun: '<p>Dada la red <code>' + ex.base + '/' + ex.bp + '</code>, cree <b>' + ex.N + '</b> subredes. Vas a averiguar: la dirección de RED de la <b>' + ex.ord(ex.k1) + '</b> subred, el rango de hosts de la <b>' + ex.ord(ex.k2) + '</b> subred y el gateway del host <code>' + ex.host + '</code> (primera dirección válida de su subred).</p>',
+    enun: '<p>Dada la red <code>' + ex.base + '/' + ex.bp + '</code>, cree <b>' + ex.N + '</b> subredes.</p><p>Averiguar:</p><ul class="steps"><li>La dirección de <b>RED</b> de la <b>' + ex.ord(ex.k1) + '</b> subred</li><li>El <b>rango de hosts</b> de la <b>' + ex.ord(ex.k2) + '</b> subred</li><li>El <b>gateway</b> del host <code>' + ex.host + '</code> (primera dirección válida de su subred)</li></ul>',
     steps: [
       { q: '¿Cuántos <b>bits</b> hay que tomar de la parte de host para tener al menos ' + ex.N + ' subredes? (el menor n con 2<sup>n</sup> ≥ ' + ex.N + ')', type: 'num', ans: String(sp.bits), ph: 'Un número', hint: 'Probá 2¹, 2², 2³… y frená en el primero que sea mayor o igual que ' + ex.N + '.', expl: '2<sup>' + sp.bits + '</sup> = ' + sp.total + ' ≥ ' + ex.N + '. Con ' + (sp.bits - 1) + ' bits serían ' + Math.pow(2, sp.bits - 1) + ' y no alcanza.' },
       { q: '¿Cuál es el <b>prefijo nuevo</b>? (el original /' + ex.bp + ' más los bits que tomaste)', type: 'num', ans: String(sp.prefix), ph: 'Ej.: 27', hint: 'Sumá ' + ex.bp + ' + ' + sp.bits + '.', expl: ex.bp + ' + ' + sp.bits + ' = /' + sp.prefix + '.' },
@@ -1803,7 +1803,7 @@ function gIos() {
   var opts = shuffle([[good, true], [badMask, false], [badNet, false], [badSyn, false]]);
   var ans = 0; opts.forEach(function (o, k) { if (o[1]) ans = k; });
   return {
-    enun: '<p>En el router <b>' + rn + '</b>: <b>(a)</b> configurá la interfaz <code>' + lan.n + '</code> con la <b>primera dirección disponible</b> de la red <code>' + lan.net + '</code>, y <b>(b)</b> escribí la línea <code>ip route</code> para llegar a <code>' + tgt.net + '</code>.</p><div class="topo-box">' + drawTopo(topo) + '</div>',
+    enun: '<p>En el router <b>' + rn + '</b>:</p><ul class="steps"><li><b>(a)</b> Configurá la interfaz <code>' + lan.n + '</code> con la <b>primera dirección disponible</b> de la red <code>' + lan.net + '</code></li><li><b>(b)</b> Escribí la línea <code>ip route</code> para llegar a <code>' + tgt.net + '</code></li></ul><div class="topo-box">' + drawTopo(topo) + '</div>',
     steps: [
       { q: '(a) ¿Cuál es la <b>primera dirección disponible</b> de ' + lan.net + '?', type: 'ip', ans: first, ph: 'x.x.x.x', hint: 'Es la dirección de red + 1 (la red misma no se puede asignar).', expl: 'Red <code>' + li.net + '</code> + 1 = <code>' + first + '</code>.' },
       { q: '(a) ¿Qué <b>máscara</b> va en <code>ip address</code>?', type: 'ip', ans: li.mask, ph: '255.255.x.x', hint: 'Es la máscara de /' + li.prefix + '.', expl: '/' + li.prefix + ' = <code>' + li.mask + '</code>.' },
