@@ -249,6 +249,9 @@ section>.jump{margin-left:0;width:100%;max-width:420px}
 .sk-solved{display:grid;gap:10px;padding:14px 0;border-top:1px solid var(--line)}
 #sk-run{border-top:2px solid var(--accent);padding-top:18px}
 #sk-learn details>.uc-ex h4{margin-top:10px}
+.sk-more{background:var(--paper)}
+.sk-more summary{font-size:.92rem;color:var(--muted)}
+.sk-more-body{padding:2px 16px 16px;display:grid;gap:10px;min-width:0}
 
 </style></head><body>
 <div class="topbar">
@@ -259,7 +262,8 @@ section>.jump{margin-left:0;width:100%;max-width:420px}
     <p class="prose muted">Subneteo, ruteo estático, direccionamiento IPv4 e IPv6, ARP y capa de transporte, ordenados por lo que más se repite en los parciales de 2017, 2019, 2022, 2024 y el recuperatorio 2025. Con generador de ejercicios, quizzes, decodificador de tramas, parciales y TPs resueltos y un simulacro. Lo que tildes como dominado queda guardado en este navegador.</p>
   </header>
   <div class="tabs" role="tablist" aria-label="Secciones de la guía">
-    <button class="tab" role="tab" id="tab-teoria" aria-controls="teoria" aria-selected="true">Teoría<span class="n">conceptos</span></button>
+    <button class="tab" role="tab" id="tab-teoria" aria-controls="teoria" aria-selected="true">Teoría<span class="n">temas</span></button>
+    <button class="tab" role="tab" id="tab-conceptos" aria-controls="conceptos" aria-selected="false">Conceptos<span class="n">glosario</span></button>
     <button class="tab" role="tab" id="tab-cero" aria-controls="cero" aria-selected="false">Desde cero<span class="n">simple</span></button>
     <button class="tab" role="tab" id="tab-guiada" aria-controls="guiada" aria-selected="false">Práctica guiada<span class="n">paso a paso</span></button>
     <button class="tab" role="tab" id="tab-subneteo" aria-controls="subneteo" aria-selected="false">Subneteo<span class="n">generador</span></button>
@@ -273,6 +277,7 @@ section>.jump{margin-left:0;width:100%;max-width:420px}
   </div>
 </div>
 <div class="panel" id="teoria" role="tabpanel" aria-labelledby="tab-teoria"></div>
+<div class="panel" id="conceptos" role="tabpanel" aria-labelledby="tab-conceptos" hidden></div>
 <div class="panel" id="cero" role="tabpanel" aria-labelledby="tab-cero" hidden></div>
 <div class="panel" id="guiada" role="tabpanel" aria-labelledby="tab-guiada" hidden></div>
 <div class="panel" id="subneteo" role="tabpanel" aria-labelledby="tab-subneteo" hidden></div>
@@ -1071,7 +1076,7 @@ function store(k, v) {
 }
 
 /* ============ TABS ============ */
-var TABS = ['teoria', 'cero', 'guiada', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro', 'skill'];
+var TABS = ['teoria', 'conceptos', 'cero', 'guiada', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro', 'skill'];
 var rendered = {};
 var RENDER = {};
 function showTab(id) {
@@ -1952,148 +1957,131 @@ var SK_TYPES = [
   { id: 'tcp', n: 'TCP vs UDP', prio: 'media', ap: '1 de 5 (2025)', d: 'Las diferencias que se piden en la pregunta de desarrollo.', gen: gTcp }
 ];
 
-/* ---------- Explicaciones por tipo ---------- */
+/* ---------- Explicaciones por tipo (cortas; lo extra va plegado en "Más detalle") ---------- */
 var SK_LEARN = {};
 
 SK_LEARN.sub = `
-<p>Te dan un bloque (por ejemplo <code>172.30.0.0/16</code>) y una cantidad de subredes. Te piden la máscara, la red de una subred, su rango de hosts, su broadcast, el gateway de un host y a qué subred pertenece una IP. Se resuelve siempre con los mismos 7 pasos.</p>
+<p>Te dan un bloque y una cantidad de subredes. La receta es siempre la misma:</p>
 <ol class="steps">
-  <li><b>Bits a tomar (n):</b> el menor n con 2<sup>n</sup> ≥ cantidad de subredes. Si piden 9: 2³ = 8 no alcanza, 2⁴ = 16 sí, entonces n = 4.</li>
-  <li><b>Prefijo nuevo</b> = prefijo original + n.</li>
-  <li><b>Máscara decimal:</b> los octetos completos valen 255 y el octeto "partido" sale de la tira de abajo.</li>
-  <li><b>Bloque:</b> 256 − valor de la máscara en el octeto que cambia. Es de a cuánto avanzan las subredes.</li>
-  <li><b>Red de la subred K</b> (contando desde 1) = base + (K − 1) × bloque, sumado en el octeto que cambia.</li>
-  <li><b>Broadcast</b> = (red de la subred siguiente) − 1. <b>Hosts</b> = red + 1 hasta broadcast − 1. El gateway es el primer host, salvo que el enunciado diga otra cosa.</li>
-  <li><b>A qué subred pertenece una IP:</b> valor del octeto ÷ bloque, parte entera, más 1.</li>
+  <li><b>Bits:</b> el menor <code>n</code> con 2<sup>n</sup> ≥ subredes. Con 9 subredes, n = 4.</li>
+  <li><b>Prefijo nuevo:</b> el de antes + n.</li>
+  <li><b>Bloque:</b> cuántos bits quedan en el octeto que cambia → 1 bit: 128 · 2: 64 · 3: 32 · 4: 16 · 5: 8 · 6: 4 · 7: 2. La máscara en ese octeto es 256 − bloque.</li>
+  <li><b>Red de la subred K:</b> (K − 1) × bloque.</li>
+  <li><b>Broadcast:</b> la red siguiente − 1. <b>Hosts:</b> desde red + 1 hasta broadcast − 1.</li>
+  <li><b>¿A qué subred pertenece una IP?</b> valor del octeto ÷ bloque, parte entera, + 1.</li>
 </ol>
-<div class="tbl"><table><thead><tr><th>Bits tomados en el octeto</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr></thead><tbody>
-<tr><td><b>Valor de la máscara</b></td><td>128</td><td>192</td><td>224</td><td>240</td><td>248</td><td>252</td><td>254</td><td>255</td></tr>
-<tr><td><b>Bloque (256 − valor)</b></td><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr></tbody></table></div>
-<div class="tbl"><table><thead><tr><th>Prefijo</th><th>Octeto que cambia</th></tr></thead><tbody>
-<tr><td>/9 a /16</td><td>2.º</td></tr><tr><td>/17 a /24</td><td>3.º</td></tr><tr><td>/25 a /32</td><td>4.º</td></tr></tbody></table></div>
-<h4>Ejemplo 1: el corte cae en el 4.º octeto</h4>
-<p>Dividir <code>192.168.10.0/24</code> en 6 subredes.</p>
-<pre>1) n: 2^2 = 4 < 6, 2^3 = 8 ≥ 6          →  n = 3
-2) prefijo: 24 + 3                        →  /27
-3) máscara: 3 bits en el 4.º octeto = 224 →  255.255.255.224
-4) bloque: 256 − 224 = 32                 →  0, 32, 64, 96, 128, ...
-5) subred 4: (4 − 1) × 32 = 96            →  192.168.10.96/27
-6) la siguiente es .128                   →  broadcast 192.168.10.127
-   hosts: 192.168.10.97 a 192.168.10.126  →  gateway 192.168.10.97
-7) IP 192.168.10.150: 150 ÷ 32 = 4,68     →  4 + 1 = subred 5</pre>
-<h4>Ejemplo 2: el corte cae en el 3.er octeto</h4>
-<p>Dividir <code>10.30.0.0/16</code> en 12 subredes.</p>
-<pre>1) n: 2^3 = 8 < 12, 2^4 = 16 ≥ 12         →  n = 4
-2) prefijo: 16 + 4                        →  /20
-3) máscara: 4 bits en el 3.er octeto = 240 →  255.255.240.0
-4) bloque: 256 − 240 = 16 (en el 3.er)    →  0, 16, 32, 48, 64, ...
-5) subred 5: (5 − 1) × 16 = 64            →  10.30.64.0/20
-6) la siguiente es 10.30.80.0             →  broadcast 10.30.79.255
-   hosts: 10.30.64.1 a 10.30.79.254
-7) IP 10.30.200.9: 200 ÷ 16 = 12,5        →  12 + 1 = subred 13 (10.30.192.0/20)</pre>
-<div class="warn"><b>Errores típicos.</b> Contar las subredes desde 0 en vez de 1. Dar la red como si fuera el primer host (el primer host es red + 1). Aplicar el bloque en el octeto equivocado. Pensar que salen justo las que pedían: si piden 9 salen 16 y sobran. Olvidar restar 2 al contar hosts.</div>`;
+<h4>Ejemplo</h4>
+<pre>192.168.10.0/24 en 6 subredes
+n = 3 (2³ = 8 ≥ 6)    →  /27  →  255.255.255.224
+bloque 32             →  subredes en .0  .32  .64  .96  .128 ...
+subred 4              →  red 192.168.10.96, broadcast 192.168.10.127
+hosts                 →  192.168.10.97 a 192.168.10.126
+IP 192.168.10.150     →  150 ÷ 32 = 4  →  subred 5</pre>
+<details class="sk-more"><summary>Más detalle: otro ejemplo, octeto que cambia y errores típicos</summary><div class="sk-more-body">
+<p><b>Qué octeto cambia:</b> de /9 a /16 el 2.º · de /17 a /24 el 3.º · de /25 a /32 el 4.º.</p>
+<pre>10.30.0.0/16 en 12 subredes
+n = 4 (2⁴ = 16 ≥ 12)  →  /20  →  255.255.240.0
+bloque 16 (3.er octeto)  →  0, 16, 32, 48, 64 ...
+subred 5              →  red 10.30.64.0, broadcast 10.30.79.255
+IP 10.30.200.9        →  200 ÷ 16 = 12  →  subred 13</pre>
+<ul class="steps">
+  <li>Las subredes se cuentan desde 1, no desde 0.</li>
+  <li>El primer host es red + 1. La red no se asigna.</li>
+  <li>Si piden 9 salen 16: sobran, y está bien.</li>
+  <li>Hosts por subred: 2<sup>bits de host</sup> − 2.</li>
+</ul></div></details>`;
 
 SK_LEARN.host = `
-<p>Te dan una IP con su prefijo y preguntan si se puede asignar a un host. Una IP <b>no</b> es válida para un host si es la dirección de <b>red</b> (bits de host todos en 0) o el <b>broadcast</b> (bits de host todos en 1). Todo lo que está en el medio sí.</p>
+<p>Una IP <b>no sirve</b> para un host si es la <b>red</b> o el <b>broadcast</b>. Si está en el medio, sí sirve.</p>
 <ol class="steps">
-  <li>Escribí la <b>máscara</b> del prefijo y hallá el <b>bloque</b> en el octeto que cambia (256 − valor de la máscara).</li>
-  <li><b>Red:</b> el múltiplo del bloque que queda justo por debajo (o igual) al valor de la IP en ese octeto. Los octetos de la derecha van en 0.</li>
-  <li><b>Broadcast:</b> red + bloque − 1 en ese octeto, y 255 en los octetos de la derecha.</li>
-  <li><b>Comparar:</b> si la IP es igual a la red, no vale. Si es igual al broadcast, no vale. Si no, es un host válido.</li>
+  <li><b>Bloque:</b> 256 − máscara en el octeto que cambia.</li>
+  <li><b>Red:</b> el múltiplo del bloque justo por debajo (o igual) de la IP.</li>
+  <li><b>Broadcast:</b> red + bloque − 1.</li>
+  <li>IP = red o IP = broadcast → no vale. En el medio → vale.</li>
 </ol>
-<h4>Cuatro ejemplos resueltos</h4>
-<pre>192.168.5.130/25   bloque 128 en el 4.º octeto
-  red 192.168.5.128, broadcast 192.168.5.255
-  130 está en el medio                    →  HOST VÁLIDO
+<h4>Ejemplo</h4>
+<pre>192.168.5.130/25
+bloque 128  →  red 192.168.5.128, broadcast 192.168.5.255
+130 está en el medio  →  HOST VÁLIDO</pre>
+<details class="sk-more"><summary>Más detalle: tres ejemplos más y una trampa</summary><div class="sk-more-body">
+<pre>172.16.32.0/20    bloque 16  →  32 es múltiplo de 16
+                  → es la RED (broadcast 172.16.47.255)  →  NO
 
-172.16.32.0/20     bloque 16 en el 3.er octeto
-  32 es múltiplo de 16 → la IP ES la red
-  red 172.16.32.0, broadcast 172.16.47.255 →  NO: es la dirección de red
+10.1.15.255/20    bloque 16  →  red 10.1.0.0
+                  → es el BROADCAST  →  NO
 
-10.1.15.255/20     bloque 16 en el 3.er octeto
-  15 está en el tramo 0 a 15 → red 10.1.0.0
-  broadcast 10.1.15.255                    →  NO: es el broadcast
-
-200.30.63.255/18   máscara 255.255.192.0, bloque 64 en el 3.er octeto
-  63 está en el tramo 0 a 63 → red 200.30.0.0
-  broadcast 200.30.63.255                  →  NO: es el broadcast (cayó en 2024)</pre>
-<div class="warn"><b>Trampa.</b> Terminar en <code>.255</code> o en <code>.0</code> no alcanza para decidir. <code>10.0.1.255/16</code> es un host válido (la red es 10.0.0.0/16 y su broadcast es 10.0.255.255). Siempre calculá la red y el broadcast.</div>`;
+200.30.63.255/18  bloque 64  →  red 200.30.0.0
+                  → es el BROADCAST  →  NO (cayó en 2024)</pre>
+<p><b>Trampa:</b> terminar en .255 o en .0 no alcanza para decidir. <code>10.0.1.255/16</code> es un host válido. Siempre calculá la red y el broadcast.</p></div></details>`;
 
 SK_LEARN.rut = `
-<p>Te dibujan 3 routers con sus interfaces e IP y te piden la tabla de ruteo de uno o dos de ellos: <b>red destino, gateway e interfaz</b>. Para cada red destino te hacés dos preguntas.</p>
+<p>Para cada red destino te preguntás dos cosas:</p>
 <ol class="steps">
-  <li><b>¿Está conectada a mí?</b> Si el router tiene una interfaz con IP dentro de esa red, es una red <b>conectada</b>: sin gateway, y la interfaz es esa.</li>
-  <li><b>Si no, es lejana:</b> hay que pasarla a un router vecino. La <b>interfaz</b> es la que sale por el enlace hacia ese vecino (el enlace entre routers, no tu LAN).</li>
-  <li>El <b>gateway</b> es la IP del <b>otro extremo</b> de ese enlace: la del vecino, nunca la tuya.</li>
-  <li>Para saber por cuál vecino se llega, seguí el dibujo desde tu router hasta la red buscada.</li>
+  <li><b>¿El router tiene una interfaz en esa red?</b> Sí → es <b>conectada</b>: interfaz = esa, sin gateway.</li>
+  <li><b>No → es lejana:</b> interfaz = la del enlace hacia el router vecino que lleva a esa red.</li>
+  <li><b>Gateway</b> = la IP del <b>vecino</b> en ese enlace. Nunca la tuya.</li>
 </ol>
-<h4>Ejemplo resuelto</h4>
-<pre>R1: f0/0 192.168.1.1/24 (su LAN)     s0/0 10.0.0.1/30 (enlace con R2)
-R2: s0/0 10.0.0.2/30                 f0/0 192.168.2.1/24 (su LAN)
+<h4>Ejemplo</h4>
+<pre>R1: f0/0 192.168.1.1/24 (LAN)   s0/0 10.0.0.1/30 (enlace con R2)
+R2: s0/0 10.0.0.2/30            f0/0 192.168.2.1/24 (LAN)
 
 Tabla de R1:
-  192.168.1.0/24   conectada   interfaz f0/0   sin gateway
-  10.0.0.0/30      conectada   interfaz s0/0   sin gateway
-  192.168.2.0/24   LEJANA      interfaz s0/0   gateway 10.0.0.2
-                   (sale por el enlace con R2 y el gateway es la IP de R2 en ese enlace)</pre>
-<div class="warn"><b>Errores típicos.</b> Poner tu propia IP como gateway. Poner la interfaz de la LAN para una red lejana. Escribir gateway en una red conectada. Confundir los dos extremos del enlace /30: en 10.0.0.0/30 las IP válidas son .1 y .2, una es tuya y la otra es del vecino.</div>`;
+192.168.1.0/24   conectada   f0/0   sin gateway
+10.0.0.0/30      conectada   s0/0   sin gateway
+192.168.2.0/24   lejana      s0/0   gateway 10.0.0.2</pre>
+<details class="sk-more"><summary>Más detalle: errores típicos</summary><div class="sk-more-body"><ul class="steps">
+  <li>Poner tu propia IP como gateway.</li>
+  <li>Poner la interfaz de la LAN en una red lejana.</li>
+  <li>Poner gateway en una red conectada.</li>
+  <li>En un enlace /30 hay dos IP válidas: una es tuya y la otra es del vecino.</li>
+</ul></div></details>`;
 
 SK_LEARN.ios = `
-<p>Hay dos cosas: <b>configurar una interfaz</b> (comandos IOS) y <b>elegir la línea <code>ip route</code> correcta</b> entre varias opciones.</p>
-<h4>Configurar una interfaz, en orden</h4>
-<pre>Router>enable
-Router#configure terminal
-Router(config)#interface fastEthernet 0/0
-Router(config-if)#ip address 192.168.1.1 255.255.255.0
-Router(config-if)#no shutdown</pre>
-<ul class="steps">
-  <li>La IP es de <b>host</b> (por ejemplo el primer host), nunca la dirección de red.</li>
-  <li>La máscara va en <b>decimal</b> y es la del prefijo de esa LAN.</li>
-  <li>Sin <code>no shutdown</code> la interfaz queda apagada.</li>
-</ul>
-<h4>La línea ip route</h4>
-<pre>ip route &lt;red destino&gt; &lt;máscara de esa red&gt; &lt;siguiente salto&gt;
-ip route 192.168.2.0 255.255.255.0 10.0.0.2          (a una red)
-ip route 0.0.0.0 0.0.0.0 10.0.0.2                    (ruta por defecto)</pre>
-<ol class="steps">
-  <li><b>Red destino:</b> lleva la dirección de red, no una IP de host (<code>192.168.2.0</code>, no <code>192.168.2.5</code>). Solo con máscara /32 se apunta a un host.</li>
-  <li><b>Máscara:</b> la de la red destino, no la de tu interfaz.</li>
-  <li><b>Siguiente salto:</b> la IP del vecino, alcanzable desde una red que tengas conectada. No una IP propia ni una de la red destino.</li>
-</ol>
-<div class="warn"><b>Cómo descartar opciones.</b> Tachá primero las que no son sintaxis de IOS. Después las que usan la red como IP de la interfaz, las que tienen la máscara de otro prefijo (por ejemplo 255.255.255.128 en vez de 255.255.255.0) y las que ponen tu propia IP como siguiente salto.</div>`;
+<p><b>Configurar una interfaz</b>, siempre en este orden:</p>
+<pre>enable
+configure terminal
+interface fastEthernet 0/0
+ip address 192.168.1.1 255.255.255.0
+no shutdown</pre>
+<p>La IP es de <b>host</b> (no la red), la máscara va en decimal, y sin <code>no shutdown</code> queda apagada.</p>
+<p><b>La línea ip route:</b></p>
+<pre>ip route  &lt;red destino&gt;  &lt;máscara de esa red&gt;  &lt;siguiente salto&gt;
+ip route 192.168.2.0 255.255.255.0 10.0.0.2
+ip route 0.0.0.0 0.0.0.0 10.0.0.2      (ruta por defecto)</pre>
+<details class="sk-more"><summary>Más detalle: cómo descartar opciones</summary><div class="sk-more-body"><ul class="steps">
+  <li>Tachá las que no son comandos de IOS.</li>
+  <li>Tachá las que ponen una IP de host como red destino (<code>192.168.2.5</code> en vez de <code>192.168.2.0</code>).</li>
+  <li>Tachá las que tienen la máscara de otro prefijo.</li>
+  <li>Tachá las que usan tu propia IP como siguiente salto.</li>
+</ul></div></details>`;
 
 SK_LEARN.mc = `
-<p>Son afirmaciones con 3 o 4 opciones. En los parciales se repiten casi las mismas y suelen cambiar <b>una palabra o un número</b>, así que hay que leer la afirmación completa. Esto es lo que más se repite:</p>
-<div class="tbl"><table><thead><tr><th>Tema</th><th>Lo que tenés que saber</th></tr></thead><tbody>
-<tr><td><b>IPv6</b></td><td>No tiene broadcast (usa multicast). El loopback es <code>::1</code>. El Hop Limit equivale al TTL. Neighbor Discovery reemplaza a ARP.</td></tr>
-<tr><td><b>ARP</b></td><td>Resuelve la MAC de una IP dentro de la red local. El request va por broadcast y el reply por unicast.</td></tr>
-<tr><td><b>Header IPv4</b></td><td>Tiene Versión, TTL, Protocolo, Checksum, Dirección origen y destino. Cada router resta 1 al TTL.</td></tr>
-<tr><td><b>RFC 1918</b></td><td><code>10.0.0.0/8</code> · <code>172.16.0.0/12</code> (de 172.16.0.0 a 172.31.255.255) · <code>192.168.0.0/16</code></td></tr>
-<tr><td><b>Hosts por máscara</b></td><td>2<sup>(32 − prefijo)</sup> − 2: /27 = 30 · /28 = 14 · /29 = 6 · /30 = 2.</td></tr>
-<tr><td><b>TCP</b></td><td>Orientado a conexión, flujo de bytes, numera segmentos y los ordena en destino. Confiable, con control de flujo y de congestión.</td></tr>
-<tr><td><b>UDP</b></td><td>Sin conexión, sin garantía de entrega ni de orden, header de 8 bytes.</td></tr></tbody></table></div>
-<div class="warn"><b>Trampas que ya cayeron.</b> En 2025 la afirmación decía que el loopback de IPv6 es <code>::0</code>: es falsa, es <code>::1</code>. Ese año preguntaron las características de UDP en vez de las de TCP. La cantidad de dispositivos cambia de año en año: /29 en 2019 y 2022, /28 en 2024, /27 en 2025.</div>
-<p>Los ejemplos de abajo salen de preguntas armadas con lo que se repite en los parciales, con la explicación de cada opción.</p>`;
+<p>En los parciales se repiten casi las mismas preguntas y cambian <b>una palabra o un número</b>. Esto es lo que más cae:</p>
+<div class="tbl"><table><thead><tr><th>Tema</th><th>Recordá</th></tr></thead><tbody>
+<tr><td><b>IPv6</b></td><td>No tiene broadcast. Loopback <code>::1</code>. Hop Limit = TTL. Reemplaza ARP por Neighbor Discovery.</td></tr>
+<tr><td><b>ARP</b></td><td>Averigua la MAC de una IP de la misma red.</td></tr>
+<tr><td><b>Header IPv4</b></td><td>Tiene Versión, TTL, Dirección origen y destino. El TTL baja 1 por router.</td></tr>
+<tr><td><b>RFC 1918</b></td><td><code>10.0.0.0/8</code> · <code>172.16.0.0/12</code> · <code>192.168.0.0/16</code></td></tr>
+<tr><td><b>Hosts por máscara</b></td><td>/27 = 30 · /28 = 14 · /29 = 6 · /30 = 2</td></tr>
+<tr><td><b>TCP</b></td><td>Con conexión, numera segmentos, ordena, confiable, controla flujo y congestión.</td></tr>
+<tr><td><b>UDP</b></td><td>Sin conexión, sin garantías, header de 8 bytes.</td></tr></tbody></table></div>
+<div class="warn"><b>Ya cayó:</b> en 2025 decían que el loopback de IPv6 es <code>::0</code> (falso, es <code>::1</code>) y preguntaron las características de UDP en vez de TCP.</div>`;
 
 SK_LEARN.tcp = `
-<p>Es una pregunta abierta. Para sacar el puntaje completo conviene responder con orden: una frase para cada protocolo, la comparación en puntos y para qué se usa cada uno.</p>
+<p>Es una pregunta abierta. Respondé con orden: qué es cada uno, las diferencias en puntos y para qué se usa.</p>
 <div class="tbl"><table><thead><tr><th></th><th>TCP</th><th>UDP</th></tr></thead><tbody>
-<tr><td><b>Conexión</b></td><td>Orientado a conexión (handshake: SYN, SYN-ACK, ACK)</td><td>Sin conexión</td></tr>
-<tr><td><b>Confiabilidad</b></td><td>Confirma con ACK y retransmite lo perdido</td><td>No garantiza la entrega</td></tr>
-<tr><td><b>Orden</b></td><td>Numera segmentos y los ordena en destino</td><td>No ordena</td></tr>
-<tr><td><b>Control</b></td><td>Control de flujo (Window) y de congestión</td><td>Ninguno</td></tr>
-<tr><td><b>Header</b></td><td>Mínimo 20 bytes</td><td>8 bytes</td></tr>
-<tr><td><b>Se usa en</b></td><td>Web, correo, transferencia de archivos</td><td>Voz, video en tiempo real, DNS</td></tr></tbody></table></div>
-<h4>Respuesta modelo</h4>
-<pre>TCP y UDP son protocolos de la capa de transporte y ambos usan puertos para
-identificar la aplicación.
-TCP está orientado a conexión (handshake de 3 pasos), es confiable (numera los
-segmentos, usa ACK, retransmite y ordena en destino) y hace control de flujo y de
-congestión. A cambio tiene más demora y un header más grande.
-UDP no tiene conexión ni garantiza entrega ni orden, pero tiene un header de 8
-bytes y menos demora. Se usa en aplicaciones en tiempo real (voz, video) y DNS.
-TCP se usa donde no puede faltar nada: web, correo y archivos.</pre>
-<p>Abajo practicás los puntos de a uno. Si los respondés sin ayuda, la respuesta de desarrollo te sale sola.</p>`;
+<tr><td><b>Conexión</b></td><td>Sí (handshake)</td><td>No</td></tr>
+<tr><td><b>Entrega</b></td><td>Garantizada (ACK y retransmisión)</td><td>Sin garantía</td></tr>
+<tr><td><b>Orden</b></td><td>Numera y ordena</td><td>No ordena</td></tr>
+<tr><td><b>Control</b></td><td>De flujo y de congestión</td><td>Ninguno</td></tr>
+<tr><td><b>Header</b></td><td>20 bytes o más</td><td>8 bytes</td></tr>
+<tr><td><b>Se usa en</b></td><td>Web, correo, archivos</td><td>Voz, video, DNS</td></tr></tbody></table></div>
+<details class="sk-more"><summary>Ver una respuesta modelo</summary><div class="sk-more-body"><pre>TCP y UDP son protocolos de la capa de transporte y los dos usan
+puertos. TCP tiene conexión (handshake de 3 pasos), es confiable
+(numera, usa ACK, retransmite y ordena) y controla el flujo y la
+congestión. UDP no tiene conexión ni garantiza entrega ni orden, pero
+su header es de 8 bytes y tiene menos demora. TCP se usa en web,
+correo y archivos; UDP en voz, video y DNS.</pre></div></details>`;
 
 /* ---------- Ejemplo resuelto ---------- */
 function skSolved(ex) {
@@ -2110,21 +2098,21 @@ RENDER.skill = function () {
   var queue = [], diag = false;
 
   var learn = SK_TYPES.map(function (t) {
-    return '<details id="learn-' + t.id + '" data-t="' + t.id + '"><summary>' + t.n + ': cómo se resuelve y ejemplos</summary><div class="uc-ex">' + SK_LEARN[t.id] +
-      '<h4>Ejemplos resueltos paso a paso</h4><p class="muted">Se generan con números distintos cada vez. Cada paso trae su explicación.</p><div class="sk-ex" data-t="' + t.id + '"></div>' +
+    return '<details id="learn-' + t.id + '" data-t="' + t.id + '"><summary>' + t.n + '</summary><div class="uc-ex">' + SK_LEARN[t.id] +
+      '<h4>Más ejemplos resueltos</h4><p class="muted">Salen con números distintos cada vez.</p><div class="sk-ex" data-t="' + t.id + '"></div>' +
       '<div class="actions"><button class="btn" data-more="' + t.id + '">Ver otro ejemplo</button><button class="btn primary" data-sk="go" data-t="' + t.id + '">Practicar este tipo</button></div></div></details>';
   }).join('');
 
   P.innerHTML = '<div class="wrap"><main>' +
     '<section><div><div class="eyebrow">Skill</div><h2>Práctica del parcial</h2></div>' +
-    '<p class="lead">Practicás solo lo que se repite en los parciales (2017, 2019, 2022, 2024 y recuperatorio 2025), con ejercicios nuevos que se arman acá con números distintos y se corrigen paso a paso.</p>' +
+    '<p class="lead">Ejercicios nuevos de lo que más se repite en los parciales. Se corrigen paso a paso, con pista y explicación.</p>' +
     '<ol class="steps"><li><b>Diagnóstico:</b> un ejercicio de cada tipo, para ver dónde estás parado.</li>' +
     '<li><b>Insistís donde fallás:</b> "Seguir donde fallo" te da el próximo tipo que te falta.</li>' +
     '<li><b>Regla de salida:</b> si resolvés un tipo <b>dos veces seguidas</b> con a lo sumo un paso con ayuda, ese tipo queda listo y no se repite más.</li></ol>' +
     '<div class="actions"><button class="btn primary" id="sk-diag">Empezar diagnóstico</button><button class="btn" id="sk-next">Seguir donde fallo</button><button class="btn" id="sk-reset">Reiniciar avance</button><span class="skill-count" id="sk-total"></span></div></section>' +
     '<section id="sk-board"><div><div class="eyebrow">Tus tipos de ejercicio</div><h2>Del que más cae al que menos</h2></div><div class="sk-grid" id="sk-grid"></div></section>' +
     '<section id="sk-run" hidden><div id="sk-head"></div><div id="sk-area"></div><div id="sk-after"></div></section>' +
-    '<section id="sk-learn"><div><div class="eyebrow">Para entender cada tipo</div><h2>Cómo se resuelve, con ejemplos</h2></div><p class="lead">Abrí el tipo que no te sale. Tiene el método, ejemplos resueltos y, abajo de todo, ejemplos nuevos generados al momento.</p><div>' + learn + '</div></section>' +
+    '<section id="sk-learn"><div><div class="eyebrow">Para entender cada tipo</div><h2>Cómo se resuelve, con ejemplos</h2></div><p class="lead">Abrí solo el tipo que no te sale. Cada uno tiene la receta corta, un ejemplo y más ejemplos nuevos abajo.</p><div>' + learn + '</div></section>' +
     '</main></div>';
 
   function board() {
@@ -2214,6 +2202,113 @@ RENDER.skill = function () {
     store('skill2', prog); diag = false; queue = []; $('#sk-run').hidden = true; board();
   });
   board();
+};
+
+
+
+/* ============ CONCEPTOS: glosario corto ============ */
+/* Cada concepto: qué es en una o dos frases y un ejemplo. prio: alta = cae seguro, media = cae seguido, baja = cayó poco. */
+var CONCEPTOS = [
+  /* Direcciones */
+  { id: 'bit-byte', cat: 'Direcciones', prio: 'media', t: 'Bit y byte', q: 'Un bit es un 0 o un 1. Un byte son 8 bits y va de 0 a 255.', ej: '<code>11000000</code> = 128 + 64 = 192' },
+  { id: 'ip', cat: 'Direcciones', prio: 'alta', t: 'Dirección IPv4', q: 'Es el número que identifica a un equipo en una red. Son 4 números de 0 a 255 separados por puntos (32 bits en total).', ej: '<code>192.168.10.5</code>' },
+  { id: 'mascara', cat: 'Direcciones', prio: 'alta', t: 'Máscara de subred', q: 'Dice qué parte de la IP es la <b>red</b> y cuál es el <b>host</b>. Los bits en 1 son la red y los bits en 0 son el host.', ej: '<code>255.255.255.0</code> = 24 unos seguidos' },
+  { id: 'prefijo', cat: 'Direcciones', prio: 'alta', t: 'Prefijo (/n)', q: 'Es la máscara escrita corta: cuenta cuántos bits valen 1.', ej: '<code>/24</code> = 255.255.255.0 · <code>/26</code> = 255.255.255.192' },
+  { id: 'red-host', cat: 'Direcciones', prio: 'alta', t: 'Parte de red y parte de host', q: 'La parte de red es igual para todos los equipos de una misma red. La parte de host es la que distingue a cada equipo.', ej: 'En <code>192.168.10.5/24</code> la red es 192.168.10 y el host es .5' },
+  { id: 'dir-red', cat: 'Direcciones', prio: 'alta', t: 'Dirección de red', q: 'Es la <b>primera</b> dirección de la red (bits de host todos en 0). Nombra a la red y no se le asigna a ningún equipo.', ej: '<code>192.168.10.0/24</code>' },
+  { id: 'broadcast', cat: 'Direcciones', prio: 'alta', t: 'Broadcast', q: 'Es la <b>última</b> dirección de la red (bits de host todos en 1). Un mensaje enviado ahí llega a todos los equipos de esa red. Tampoco se asigna.', ej: '<code>192.168.10.255</code> en una /24' },
+  { id: 'host-valido', cat: 'Direcciones', prio: 'alta', t: 'Host válido', q: 'Cualquier dirección que esté <b>entre</b> la red y el broadcast. Esas sí se pueden asignar a equipos.', ej: 'En 192.168.10.0/24: de <code>192.168.10.1</code> a <code>192.168.10.254</code>' },
+  { id: 'privadas', cat: 'Direcciones', prio: 'alta', t: 'Direcciones privadas (RFC 1918)', q: 'Rangos para usar dentro de una red local. No se enrutan en Internet.', ej: '<code>10.0.0.0/8</code> · <code>172.16.0.0/12</code> (172.16 a 172.31) · <code>192.168.0.0/16</code>' },
+  { id: 'loopback', cat: 'Direcciones', prio: 'alta', t: 'Loopback', q: 'Dirección para que un equipo se hable a sí mismo, por ejemplo para hacer pruebas.', ej: 'IPv4: <code>127.0.0.1</code> (todo 127.0.0.0/8) · IPv6: <code>::1</code>', ojo: 'En IPv6 es <code>::1</code>, no <code>::0</code>.' },
+  { id: 'link-local', cat: 'Direcciones', prio: 'media', t: 'Link-local', q: 'Dirección que un equipo se arma solo cuando no tiene otra. Solo vale dentro de su propio enlace.', ej: 'IPv4: <code>169.254.x.x</code> · IPv6: empieza con <code>fe80</code>' },
+  { id: 'multicast', cat: 'Direcciones', prio: 'media', t: 'Multicast', q: 'Un mensaje para un <b>grupo</b> de equipos. En IPv6 reemplaza al broadcast.', ej: 'Lo reciben solo los equipos que se anotaron en el grupo' },
+  { id: 'ipv6', cat: 'Direcciones', prio: 'alta', t: 'IPv6', q: 'Versión nueva de IP: direcciones de 128 bits escritas en hexadecimal. <b>No tiene broadcast</b> (usa multicast) y reemplaza ARP por Neighbor Discovery.', ej: '<code>2001:db8::1</code>' },
+
+  /* Subneteo */
+  { id: 'subred', cat: 'Subneteo', prio: 'alta', t: 'Subred', q: 'Una red más chica que sale de partir una red grande.', ej: 'Una /24 partida en 4 da cuatro subredes /26' },
+  { id: 'bits-prestados', cat: 'Subneteo', prio: 'alta', t: 'Bits prestados', q: 'Son los bits de host que se pasan a la parte de red para crear subredes. Con <code>n</code> bits salen 2<sup>n</sup> subredes.', ej: '3 bits → 8 subredes. Por eso para 6 subredes se piden 3 bits' },
+  { id: 'bloque', cat: 'Subneteo', prio: 'alta', t: 'Bloque (el salto)', q: 'De a cuánto avanzan las subredes en el octeto que cambia. Es 256 menos el valor de la máscara en ese octeto.', ej: 'Máscara 224 → bloque 32 → subredes en 0, 32, 64, 96…' },
+  { id: 'cant-hosts', cat: 'Subneteo', prio: 'alta', t: 'Cantidad de hosts', q: 'Hosts = 2<sup>bits de host</sup> − 2. Se restan la dirección de red y el broadcast.', ej: '/27 → 5 bits de host → 32 − 2 = <b>30</b> hosts' },
+  { id: 'gateway', cat: 'Subneteo', prio: 'alta', t: 'Gateway (puerta de enlace)', q: 'Es la dirección del router en tu red. Los equipos le mandan todo lo que va a otras redes. En los ejercicios suele ser el primer host de la subred.', ej: 'Subred 192.168.10.96/27 → gateway <code>192.168.10.97</code>' },
+
+  /* Ruteo */
+  { id: 'router', cat: 'Ruteo', prio: 'alta', t: 'Router', q: 'Equipo que conecta redes distintas y decide por dónde mandar cada paquete.', ej: 'Une tu LAN con otra LAN o con Internet' },
+  { id: 'interfaz', cat: 'Ruteo', prio: 'alta', t: 'Interfaz', q: 'Cada conexión del router a una red. Tiene un nombre y una IP propia, dentro de la red a la que está conectada.', ej: '<code>f0/0</code> con 192.168.1.1 · <code>s0/0</code> con 10.0.0.1' },
+  { id: 'tabla-ruteo', cat: 'Ruteo', prio: 'alta', t: 'Tabla de ruteo', q: 'La lista que consulta el router. Para cada red destino dice por qué interfaz salir y a qué vecino pasárselo (gateway).', ej: '192.168.2.0/24 → interfaz s0/0, gateway 10.0.0.2' },
+  { id: 'conectada', cat: 'Ruteo', prio: 'alta', t: 'Red conectada', q: 'Una red en la que el router tiene una interfaz. La entrega directo, así que <b>no lleva gateway</b>.', ej: 'La LAN del propio router' },
+  { id: 'next-hop', cat: 'Ruteo', prio: 'alta', t: 'Siguiente salto (next hop)', q: 'La IP del router vecino al que le pasás el paquete para llegar a una red lejana. Es la IP del <b>otro extremo</b> del enlace, nunca la tuya.', ej: 'Enlace 10.0.0.0/30: yo soy .1, el siguiente salto es <code>10.0.0.2</code>' },
+  { id: 'ruta-estatica', cat: 'Ruteo', prio: 'alta', t: 'Ruta estática (ip route)', q: 'Una ruta que escribís a mano en el router.', ej: '<code>ip route 192.168.2.0 255.255.255.0 10.0.0.2</code>' },
+  { id: 'ruta-defecto', cat: 'Ruteo', prio: 'alta', t: 'Ruta por defecto', q: 'La ruta para todo lo que no está en la tabla. Usa red y máscara en cero.', ej: '<code>ip route 0.0.0.0 0.0.0.0 10.0.0.2</code>' },
+  { id: 'ios', cat: 'Ruteo', prio: 'alta', t: 'Cisco IOS', q: 'El sistema de los routers Cisco. Para configurar una interfaz se usa siempre este orden.', ej: '<code>enable</code> → <code>configure terminal</code> → <code>interface f0/0</code> → <code>ip address IP máscara</code> → <code>no shutdown</code>' },
+
+  /* Capa de red */
+  { id: 'datagrama', cat: 'Capa de red', prio: 'media', t: 'Datagrama IP', q: 'La unidad de datos de la capa de red: un encabezado con las direcciones más los datos.', ej: 'Lleva IP origen, IP destino y TTL en el encabezado' },
+  { id: 'ttl', cat: 'Capa de red', prio: 'media', t: 'TTL', q: 'Número del encabezado IPv4 que <b>baja 1 en cada router</b>. Si llega a 0 el paquete se descarta. Evita que un paquete dé vueltas para siempre.', ej: 'En IPv6 se llama <b>Hop Limit</b>' },
+  { id: 'mtu-frag', cat: 'Capa de red', prio: 'media', t: 'MTU y fragmentación', q: 'La MTU es el tamaño máximo de datagrama que entra en una red. Si el datagrama es más grande, el router lo parte en fragmentos y el <b>destino</b> los vuelve a armar.', ej: 'En Ethernet la MTU es 1500 bytes' },
+  { id: 'mac', cat: 'Capa de red', prio: 'media', t: 'Dirección MAC', q: 'La dirección física de la placa de red (48 bits). Sirve dentro de la red local. La IP sirve para ir de una red a otra.', ej: '<code>00:1A:2B:3C:4D:5E</code>' },
+  { id: 'arp', cat: 'Capa de red', prio: 'media', t: 'ARP', q: 'Protocolo que averigua la MAC de una IP de la misma red. Pregunta por broadcast ("¿quién tiene esta IP?") y el dueño responde directo. En IPv6 lo reemplaza Neighbor Discovery.', ej: '"¿Quién tiene 192.168.10.1?" → "Yo, mi MAC es…"' },
+  { id: 'icmp', cat: 'Capa de red', prio: 'baja', t: 'ICMP', q: 'Protocolo de avisos y diagnóstico de IP.', ej: '<code>ping</code> y el mensaje "destino inalcanzable"' },
+
+  /* Transporte */
+  { id: 'puerto', cat: 'Transporte', prio: 'alta', t: 'Puerto', q: 'Número que dice a qué aplicación de un equipo va cada dato (de 0 a 65535). TCP y UDP los usan los dos.', ej: 'Web: 80 (HTTP) y 443 (HTTPS) · DNS: 53' },
+  { id: 'socket', cat: 'Transporte', prio: 'media', t: 'Socket', q: 'IP + puerto. Identifica un extremo de la comunicación.', ej: '<code>192.168.10.5:443</code>' },
+  { id: 'tcp', cat: 'Transporte', prio: 'alta', t: 'TCP', q: 'Protocolo de transporte <b>confiable</b> y con conexión: numera los segmentos, los confirma (ACK), retransmite lo perdido, los ordena en destino y controla el flujo y la congestión.', ej: 'Web, correo y transferencia de archivos' },
+  { id: 'udp', cat: 'Transporte', prio: 'alta', t: 'UDP', q: 'Protocolo de transporte simple: <b>sin conexión y sin garantías</b>. Su header es de 8 bytes y tiene poca demora.', ej: 'Voz, video en tiempo real y DNS' },
+  { id: 'handshake', cat: 'Transporte', prio: 'media', t: 'Handshake de 3 pasos', q: 'Así se abre una conexión TCP: el cliente manda SYN, el servidor responde SYN-ACK y el cliente cierra con ACK.', ej: 'SYN → SYN-ACK → ACK' },
+  { id: 'ack', cat: 'Transporte', prio: 'media', t: 'ACK', q: 'Confirmación de que llegaron datos. El número de ACK es el <b>próximo byte que espera</b> el receptor.', ej: 'ACK = 1001 significa "recibí hasta el byte 1000"' },
+  { id: 'flujo', cat: 'Transporte', prio: 'media', t: 'Control de flujo (Window)', q: 'El receptor avisa cuánto puede recibir (Window) y el emisor no manda más que eso. <b>Protege al receptor.</b>', ej: 'Window = 4000 → el emisor puede mandar hasta 4000 bytes sin esperar' },
+  { id: 'congestion', cat: 'Transporte', prio: 'media', t: 'Control de congestión', q: 'TCP ajusta cuánto manda para no saturar la red. <b>Protege a la red.</b>', ej: 'No es lo mismo que el control de flujo' },
+  { id: 'cwnd', cat: 'Transporte', prio: 'media', t: 'cwnd y ssthresh', q: '<code>cwnd</code> es la ventana de congestión: cuánto manda el emisor por vez. <code>ssthresh</code> es el umbral donde cambia la forma de crecer.', ej: 'cwnd < ssthresh → slow start · cwnd ≥ ssthresh → evitación de congestión' },
+  { id: 'slow-start', cat: 'Transporte', prio: 'media', t: 'Slow start', q: 'Al arrancar, cwnd vale 1 MSS y <b>se duplica en cada RTT</b> hasta llegar a ssthresh.', ej: '1 → 2 → 4 → 8 …' },
+  { id: 'evitacion', cat: 'Transporte', prio: 'media', t: 'Evitación de congestión', q: 'Pasado ssthresh, cwnd crece de a <b>1 MSS por RTT</b>. Es un crecimiento lento y parejo.', ej: '8 → 9 → 10 …' },
+  { id: 'timeout-dup', cat: 'Transporte', prio: 'media', t: 'Timeout vs 3 ACK duplicados', q: 'En los dos casos ssthresh = cwnd ÷ 2. Con <b>timeout</b> (la red anda muy mal) cwnd vuelve a 1 y arranca slow start. Con <b>3 ACK duplicados</b> (pérdida leve) cwnd = ssthresh y sigue en evitación de congestión.', ej: 'cwnd = 16 → ssthresh = 8. Timeout: cwnd = 1. Tres ACK duplicados: cwnd = 8' },
+  { id: 'rtt-rto-mss', cat: 'Transporte', prio: 'baja', t: 'RTT, RTO y MSS', q: 'RTT es el tiempo de ida y vuelta. RTO es cuánto espera TCP antes de retransmitir. MSS es el tamaño máximo de datos de un segmento.', ej: 'Si el ACK no llega antes del RTO, se retransmite' },
+
+  /* Otros */
+  { id: 'wifi', cat: 'Otros', prio: 'baja', t: 'WiFi 802.11 (lo mínimo)', q: 'El punto de acceso (AP) emite <b>beacons</b> para anunciarse. El estándar 802.11ac trabaja en <b>5 GHz</b>.', ej: 'Cayó una sola vez, en 2019' }
+];
+var CONC_CATS = ['Direcciones', 'Subneteo', 'Ruteo', 'Capa de red', 'Transporte', 'Otros'];
+
+RENDER.conceptos = function () {
+  var P = $('#conceptos'), done = store('conceptos') || [], filter = 'Todos', q = '';
+  function norm(s) { return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+  var chips = ['Todos', 'Lo más importante'].concat(CONC_CATS);
+  function chipsHtml() { return chips.map(function (c) { return '<button class="chip" data-f="' + c + '" aria-pressed="' + (c === filter) + '">' + c + '</button>'; }).join(''); }
+  P.innerHTML = '<div class="wrap"><main><section><div><div class="eyebrow">Conceptos</div><h2>Todo lo que tenés que entender, en corto</h2></div>' +
+    '<p class="lead">' + CONCEPTOS.length + ' conceptos con una explicación simple y un ejemplo. Si tenés poco tiempo, tocá "Lo más importante". Tildá los que ya dominás.</p>' +
+    '<div class="filters" id="c-chips" role="group" aria-label="Filtrar conceptos">' + chipsHtml() + '</div>' +
+    '<div class="jump"><label for="c-search">Buscar</label><input class="in" id="c-search" type="search" placeholder="Ej.: broadcast, TTL, ACK" autocomplete="off" style="width:100%"></div>' +
+    '<div class="q-score" id="c-count"></div></section>' +
+    '<div class="concepts" id="c-list">' + CONCEPTOS.map(function (c) {
+      return '<article class="concept" id="k-' + c.id + '"><div class="concept-head"><div><div class="eyebrow">' + c.cat + '</div><h3>' + c.t + '</h3></div><span class="tag ' + c.prio + '">' + c.prio + '</span>' +
+        '<label class="mark"><input type="checkbox" data-id="' + c.id + '"> Lo domino</label></div>' +
+        '<div class="body"><p>' + c.q + '</p><p class="muted"><b>Ejemplo:</b> ' + c.ej + '</p>' + (c.ojo ? '<div class="warn"><b>Ojo.</b> ' + c.ojo + '</div>' : '') + '</div></article>';
+    }).join('') + '</div></main></div>';
+  function apply() {
+    var shown = 0, nq = norm(q);
+    CONCEPTOS.forEach(function (c) {
+      var el = document.getElementById('k-' + c.id), d = done.indexOf(c.id) >= 0;
+      var okF = filter === 'Todos' || (filter === 'Lo más importante' ? c.prio === 'alta' : c.cat === filter);
+      var okQ = !nq || norm(c.t + ' ' + c.q + ' ' + c.ej).indexOf(nq) >= 0;
+      var show = okF && okQ; if (show) shown++;
+      el.classList.toggle('hidden-by-filter', !show); el.classList.toggle('done', d); $('input', el).checked = d;
+    });
+    $('#c-count').textContent = shown + ' de ' + CONCEPTOS.length + ' conceptos · ' + done.length + ' dominados';
+  }
+  P.addEventListener('click', function (e) {
+    var b = e.target.closest('#c-chips .chip'); if (!b) return;
+    filter = b.dataset.f; $('#c-chips').innerHTML = chipsHtml(); apply();
+  });
+  P.addEventListener('input', function (e) { if (e.target.id === 'c-search') { q = e.target.value; apply(); } });
+  P.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.matches('.mark input')) {
+      var id = t.dataset.id, i = done.indexOf(id);
+      if (t.checked && i < 0) done.push(id); if (!t.checked && i >= 0) done.splice(i, 1);
+      store('conceptos', done); apply();
+    }
+  });
+  apply();
 };
 
 
