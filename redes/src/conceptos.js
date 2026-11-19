@@ -108,7 +108,7 @@ RENDER.conceptos = function () {
 /* concept ids de CONCEPTOS que son la base de cada tema, y dónde practicarlo */
 var HELP_MAP = {
   /* Teoría */
-  'ipv4-mascara': { c: ['ip', 'mascara', 'prefijo', 'red-host'], tab: 'skill', tl: 'Skill (subneteo y host válido)' },
+  'ipv4-mascara': { c: ['ip', 'mascara', 'prefijo', 'red-host'], tab: 'mascara', tl: 'la guía de Máscara' },
   'hosts-mascara': { c: ['prefijo', 'cant-hosts', 'bits-prestados'], tab: 'skill', tl: 'Skill (subneteo y host válido)' },
   'subneteo': { c: ['subred', 'bits-prestados', 'bloque', 'gateway'], tab: 'skill', tl: 'Skill (subneteo)' },
   'red-bc-valida': { c: ['dir-red', 'broadcast', 'host-valido'], tab: 'skill', tl: 'Skill (host válido)' },
@@ -133,7 +133,7 @@ var HELP_MAP = {
   'metodo-trama': { c: ['bit-byte', 'mac', 'datagrama'], tab: 'tramas', tl: 'Tramas' },
   /* Desde cero */
   'z-ip': { c: ['bit-byte', 'ip', 'red-host'], tab: 'quizzes', tl: 'Quizzes' },
-  'z-mascara': { c: ['mascara', 'prefijo', 'red-host'], tab: 'skill', tl: 'Skill (subneteo y host válido)' },
+  'z-mascara': { c: ['mascara', 'prefijo', 'red-host'], tab: 'mascara', tl: 'la guía de Máscara' },
   'z-subneteo': { c: ['subred', 'bits-prestados', 'bloque', 'gateway'], tab: 'skill', tl: 'Skill (subneteo)' },
   'z-red-bc': { c: ['dir-red', 'broadcast', 'host-valido'], tab: 'skill', tl: 'Skill (host válido)' },
   'z-ruteo': { c: ['router', 'interfaz', 'tabla-ruteo', 'conectada', 'next-hop'], tab: 'skill', tl: 'Skill (tabla de ruteo)' },

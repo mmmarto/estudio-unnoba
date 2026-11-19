@@ -250,3 +250,15 @@ section>.jump{margin-left:0;width:100%;max-width:420px}
 .help[hidden]{display:none}
 .help-defs{display:grid;gap:8px;margin:8px 0 4px}
 .help-q{margin:8px 0;padding:8px 12px;background:var(--paper);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;font-size:.92rem;color:var(--muted)}
+/* máscara */
+.mk-ctl{display:grid;gap:10px}
+.mk-lab{font:600 1rem var(--f-display)}
+#mk-range{width:100%;accent-color:var(--accent)}
+.mk-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.mk-oct{display:grid;gap:6px;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px}
+.mk-bits{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:3px}
+.mk-bit{height:28px;display:flex;align-items:center;justify-content:center;font:600 .8rem var(--f-mono);border-radius:5px;border:1px solid var(--line);color:var(--muted);background:var(--paper)}
+.mk-bit.on{background:var(--accent);color:#000;border-color:var(--accent)}
+.mk-val{font:700 1.5rem var(--f-mono);text-align:center}
+.mk-calc{font:500 .72rem var(--f-mono);color:var(--muted);text-align:center;overflow-wrap:anywhere;min-height:2.2em}
+@media (max-width:720px){.mk-row{grid-template-columns:repeat(2,minmax(0,1fr))}}

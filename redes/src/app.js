@@ -19,7 +19,7 @@ function store(k, v) {
 }
 
 /* ============ TABS ============ */
-var TABS = ['teoria', 'conceptos', 'cero', 'guiada', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro', 'skill'];
+var TABS = ['teoria', 'conceptos', 'mascara', 'cero', 'guiada', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro', 'skill'];
 var rendered = {};
 var RENDER = {};
 function showTab(id) {
@@ -609,6 +609,8 @@ RENDER.simulacro = function () {
 /*SKILL*/
 
 /*CONCEPTOS*/
+
+/*MASCARA*/
 
 /* ============ INICIO ============ */
 document.addEventListener('DOMContentLoaded', function () {
