@@ -19,7 +19,7 @@ function store(k, v) {
 }
 
 /* ============ TABS ============ */
-var TABS = ['teoria', 'cero', 'guiada', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro'];
+var TABS = ['teoria', 'cero', 'guiada', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro', 'skill'];
 var rendered = {};
 var RENDER = {};
 function showTab(id) {
@@ -605,6 +605,8 @@ RENDER.simulacro = function () {
 };
 
 /*GUIADA*/
+
+/*SKILL*/
 
 /* ============ INICIO ============ */
 document.addEventListener('DOMContentLoaded', function () {
