@@ -22,11 +22,16 @@ function store(k, v) {
 var TABS = ['teoria', 'conceptos', 'mascara', 'cero', 'guiada', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro', 'skill'];
 var rendered = {};
 var RENDER = {};
+var lastTab = {};
 function showTab(id) {
   if (TABS.indexOf(id) < 0) id = 'teoria';
+  var grp = $('#tab-' + id).dataset.g;
+  lastTab[grp] = id;
+  $$('.grp').forEach(function (g) { g.setAttribute('aria-pressed', g.dataset.g === grp ? 'true' : 'false'); });
   TABS.forEach(function (t) {
-    var on = t === id;
-    $('#tab-' + t).setAttribute('aria-selected', on ? 'true' : 'false');
+    var on = t === id, btn = $('#tab-' + t);
+    btn.setAttribute('aria-selected', on ? 'true' : 'false');
+    btn.hidden = btn.dataset.g !== grp;
     $('#' + t).hidden = !on;
   });
   if (!rendered[id]) { rendered[id] = true; RENDER[id](); if (id === 'teoria' || id === 'cero') attachHelp(id); }
@@ -35,6 +40,12 @@ function showTab(id) {
 function initTabs() {
   TABS.forEach(function (t) {
     $('#tab-' + t).addEventListener('click', function () { showTab(t); window.scrollTo(0, 0); });
+  });
+  $$('.grp').forEach(function (g) {
+    g.addEventListener('click', function () {
+      var first = g.dataset.g === 'teoria' ? 'teoria' : 'skill';
+      showTab(lastTab[g.dataset.g] || first); window.scrollTo(0, 0);
+    });
   });
   window.addEventListener('hashchange', function () { showTab(location.hash.replace('#', '')); });
   showTab(location.hash.replace('#', '') || 'teoria');
