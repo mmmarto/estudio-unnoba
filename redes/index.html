@@ -292,7 +292,7 @@ tr.mk-hit td{background:color-mix(in srgb,var(--accent) 22%,transparent)}
   <div class="nav">
     <div class="groups" role="group" aria-label="Áreas de la guía">
       <button class="grp" type="button" id="grp-teoria" data-g="teoria" aria-pressed="true">Teoría</button>
-      <button class="grp" type="button" id="grp-skills" data-g="skills" aria-pressed="false">Skills</button>
+      <button class="grp" type="button" id="grp-skills" data-g="skills" aria-pressed="false">Ejercicios</button>
     </div>
     <div class="tabs" role="tablist" aria-label="Secciones de la guía">
     <button class="tab" data-g="teoria" role="tab" id="tab-teoria" aria-controls="teoria" aria-selected="true">Teoría<span class="n">temas</span></button>
@@ -300,7 +300,7 @@ tr.mk-hit td{background:color-mix(in srgb,var(--accent) 22%,transparent)}
     <button class="tab" data-g="teoria" role="tab" id="tab-mascara" aria-controls="mascara" aria-selected="false">Máscara<span class="n">guía</span></button>
     <button class="tab" data-g="teoria" role="tab" id="tab-cero" aria-controls="cero" aria-selected="false">Desde cero<span class="n">simple</span></button>
     <button class="tab" data-g="teoria" role="tab" id="tab-tramas" aria-controls="tramas" aria-selected="false">Tramas<span class="n">hexa</span></button>
-    <button class="tab" data-g="skills" role="tab" id="tab-skill" aria-controls="skill" aria-selected="false">Skill<span class="n">práctica</span></button>
+    <button class="tab" data-g="skills" role="tab" id="tab-skill" aria-controls="skill" aria-selected="false">Diagnóstico<span class="n">por tipo</span></button>
     <button class="tab" data-g="skills" role="tab" id="tab-guiada" aria-controls="guiada" aria-selected="false">Práctica guiada<span class="n">paso a paso</span></button>
     <button class="tab" data-g="skills" role="tab" id="tab-subneteo" aria-controls="subneteo" aria-selected="false">Subneteo<span class="n">generador</span></button>
     <button class="tab" data-g="skills" role="tab" id="tab-ruteo" aria-controls="ruteo" aria-selected="false">Ruteo<span class="n">tablas</span></button>
@@ -2151,7 +2151,7 @@ RENDER.skill = function () {
   }).join('');
 
   P.innerHTML = '<div class="wrap"><main>' +
-    '<section><div><div class="eyebrow">Skill</div><h2>Práctica del parcial</h2></div>' +
+    '<section><div><div class="eyebrow">Diagnóstico</div><h2>Práctica del parcial</h2></div>' +
     '<p class="lead">Ejercicios nuevos de lo que más se repite en los parciales. Se corrigen paso a paso, con pista y explicación.</p>' +
     '<ol class="steps"><li><b>Diagnóstico:</b> un ejercicio de cada tipo, para ver dónde estás parado.</li>' +
     '<li><b>Insistís donde fallás:</b> "Seguir donde fallo" te da el próximo tipo que te falta.</li>' +
@@ -2364,13 +2364,13 @@ RENDER.conceptos = function () {
 var HELP_MAP = {
   /* Teoría */
   'ipv4-mascara': { c: ['ip', 'mascara', 'prefijo', 'red-host'], tab: 'mascara', tl: 'la guía de Máscara' },
-  'hosts-mascara': { c: ['prefijo', 'cant-hosts', 'bits-prestados'], tab: 'skill', tl: 'Skill (subneteo y host válido)' },
-  'subneteo': { c: ['subred', 'bits-prestados', 'bloque', 'gateway'], tab: 'skill', tl: 'Skill (subneteo)' },
-  'red-bc-valida': { c: ['dir-red', 'broadcast', 'host-valido'], tab: 'skill', tl: 'Skill (host válido)' },
-  'tabla-ruteo': { c: ['router', 'interfaz', 'tabla-ruteo', 'conectada', 'next-hop'], tab: 'skill', tl: 'Skill (tabla de ruteo)' },
-  'ip-route': { c: ['ruta-estatica', 'ruta-defecto', 'next-hop'], tab: 'skill', tl: 'Skill (ip route e IOS)' },
-  'ios-interfaz': { c: ['ios', 'interfaz'], tab: 'skill', tl: 'Skill (ip route e IOS)' },
-  'tcp-udp': { c: ['tcp', 'udp', 'puerto'], tab: 'skill', tl: 'Skill (TCP vs UDP)' },
+  'hosts-mascara': { c: ['prefijo', 'cant-hosts', 'bits-prestados'], tab: 'skill', tl: 'Diagnóstico (subneteo y host válido)' },
+  'subneteo': { c: ['subred', 'bits-prestados', 'bloque', 'gateway'], tab: 'skill', tl: 'Diagnóstico (subneteo)' },
+  'red-bc-valida': { c: ['dir-red', 'broadcast', 'host-valido'], tab: 'skill', tl: 'Diagnóstico (host válido)' },
+  'tabla-ruteo': { c: ['router', 'interfaz', 'tabla-ruteo', 'conectada', 'next-hop'], tab: 'skill', tl: 'Diagnóstico (tabla de ruteo)' },
+  'ip-route': { c: ['ruta-estatica', 'ruta-defecto', 'next-hop'], tab: 'skill', tl: 'Diagnóstico (ip route e IOS)' },
+  'ios-interfaz': { c: ['ios', 'interfaz'], tab: 'skill', tl: 'Diagnóstico (ip route e IOS)' },
+  'tcp-udp': { c: ['tcp', 'udp', 'puerto'], tab: 'skill', tl: 'Diagnóstico (TCP vs UDP)' },
   'puertos': { c: ['puerto', 'socket'], tab: 'quizzes', tl: 'Quizzes' },
   'ipv6': { c: ['ipv6', 'multicast', 'loopback', 'link-local'], tab: 'quizzes', tl: 'Quizzes' },
   'especiales-privadas': { c: ['privadas', 'loopback', 'link-local', 'multicast'], tab: 'quizzes', tl: 'Quizzes' },
@@ -2389,15 +2389,15 @@ var HELP_MAP = {
   /* Desde cero */
   'z-ip': { c: ['bit-byte', 'ip', 'red-host'], tab: 'quizzes', tl: 'Quizzes' },
   'z-mascara': { c: ['mascara', 'prefijo', 'red-host'], tab: 'mascara', tl: 'la guía de Máscara' },
-  'z-subneteo': { c: ['subred', 'bits-prestados', 'bloque', 'gateway'], tab: 'skill', tl: 'Skill (subneteo)' },
-  'z-red-bc': { c: ['dir-red', 'broadcast', 'host-valido'], tab: 'skill', tl: 'Skill (host válido)' },
-  'z-ruteo': { c: ['router', 'interfaz', 'tabla-ruteo', 'conectada', 'next-hop'], tab: 'skill', tl: 'Skill (tabla de ruteo)' },
-  'z-iproute': { c: ['ruta-estatica', 'ruta-defecto', 'ios', 'interfaz'], tab: 'skill', tl: 'Skill (ip route e IOS)' },
+  'z-subneteo': { c: ['subred', 'bits-prestados', 'bloque', 'gateway'], tab: 'skill', tl: 'Diagnóstico (subneteo)' },
+  'z-red-bc': { c: ['dir-red', 'broadcast', 'host-valido'], tab: 'skill', tl: 'Diagnóstico (host válido)' },
+  'z-ruteo': { c: ['router', 'interfaz', 'tabla-ruteo', 'conectada', 'next-hop'], tab: 'skill', tl: 'Diagnóstico (tabla de ruteo)' },
+  'z-iproute': { c: ['ruta-estatica', 'ruta-defecto', 'ios', 'interfaz'], tab: 'skill', tl: 'Diagnóstico (ip route e IOS)' },
   'z-header': { c: ['datagrama', 'ttl', 'mtu-frag'], tab: 'guiada', tl: 'Práctica guiada (fragmentación)' },
   'z-especiales': { c: ['privadas', 'loopback', 'link-local'], tab: 'quizzes', tl: 'Quizzes' },
   'z-arp': { c: ['mac', 'arp'], tab: 'quizzes', tl: 'Quizzes' },
   'z-ipv6': { c: ['ipv6', 'multicast', 'loopback'], tab: 'quizzes', tl: 'Quizzes' },
-  'z-tcpudp': { c: ['puerto', 'tcp', 'udp'], tab: 'skill', tl: 'Skill (TCP vs UDP)' },
+  'z-tcpudp': { c: ['puerto', 'tcp', 'udp'], tab: 'skill', tl: 'Diagnóstico (TCP vs UDP)' },
   'z-handshake': { c: ['handshake', 'ack'], tab: 'guiada', tl: 'Práctica guiada (ACK y ventana)' },
   'z-flujo-cong': { c: ['flujo', 'congestion', 'cwnd'], tab: 'guiada', tl: 'Práctica guiada (congestión)' },
   'z-wifi': { c: ['wifi'], tab: 'quizzes', tl: 'Quizzes' }
