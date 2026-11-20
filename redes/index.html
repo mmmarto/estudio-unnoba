@@ -35,7 +35,13 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,s
 .hero .when{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:baseline;font-family:var(--f-mono);font-size:.95rem}
 .hero .count{font-family:var(--f-display);font-weight:800;font-size:1.3rem;color:var(--alta)}
 .prose{max-width:72ch}
-.tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);z-index:5;padding-top:8px}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);z-index:5;border-bottom:1px solid var(--line)}
+.groups{display:flex;gap:8px;padding:8px 0 4px}
+.grp{font:700 .8rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:6px 16px;cursor:pointer}
+.grp:hover{color:var(--ink)}
+.grp[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#000}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab[hidden]{display:none}
 .tab{font:600 .95rem var(--f-display);background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:10px 14px;cursor:pointer;margin-bottom:-1px}
 .tab:hover{color:var(--ink)}
 .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
@@ -283,20 +289,26 @@ tr.mk-hit td{background:color-mix(in srgb,var(--accent) 22%,transparent)}
     <div class="when"><span>Viernes 20/11 · 18:30 h</span><span class="count" id="countdown"></span></div>
     <p class="prose muted">Subneteo, ruteo estático, direccionamiento IPv4 e IPv6, ARP y capa de transporte, ordenados por lo que más se repite en los parciales de 2017, 2019, 2022, 2024 y el recuperatorio 2025. Con generador de ejercicios, quizzes, decodificador de tramas, parciales y TPs resueltos y un simulacro. Lo que tildes como dominado queda guardado en este navegador.</p>
   </header>
-  <div class="tabs" role="tablist" aria-label="Secciones de la guía">
-    <button class="tab" role="tab" id="tab-teoria" aria-controls="teoria" aria-selected="true">Teoría<span class="n">temas</span></button>
-    <button class="tab" role="tab" id="tab-conceptos" aria-controls="conceptos" aria-selected="false">Conceptos<span class="n">glosario</span></button>
-    <button class="tab" role="tab" id="tab-mascara" aria-controls="mascara" aria-selected="false">Máscara<span class="n">guía</span></button>
-    <button class="tab" role="tab" id="tab-cero" aria-controls="cero" aria-selected="false">Desde cero<span class="n">simple</span></button>
-    <button class="tab" role="tab" id="tab-guiada" aria-controls="guiada" aria-selected="false">Práctica guiada<span class="n">paso a paso</span></button>
-    <button class="tab" role="tab" id="tab-subneteo" aria-controls="subneteo" aria-selected="false">Subneteo<span class="n">generador</span></button>
-    <button class="tab" role="tab" id="tab-ruteo" aria-controls="ruteo" aria-selected="false">Ruteo<span class="n">tablas</span></button>
-    <button class="tab" role="tab" id="tab-tramas" aria-controls="tramas" aria-selected="false">Tramas<span class="n">hexa</span></button>
-    <button class="tab" role="tab" id="tab-quizzes" aria-controls="quizzes" aria-selected="false">Quizzes<span class="n">preguntas</span></button>
-    <button class="tab" role="tab" id="tab-parciales" aria-controls="parciales" aria-selected="false">Parciales<span class="n">resueltos</span></button>
-    <button class="tab" role="tab" id="tab-tps" aria-controls="tps" aria-selected="false">TPs<span class="n">resueltos</span></button>
-    <button class="tab" role="tab" id="tab-simulacro" aria-controls="simulacro" aria-selected="false">Simulacro<span class="n">nuevo</span></button>
-    <button class="tab" role="tab" id="tab-skill" aria-controls="skill" aria-selected="false">Skill<span class="n">práctica</span></button>
+  <div class="nav">
+    <div class="groups" role="group" aria-label="Áreas de la guía">
+      <button class="grp" type="button" id="grp-teoria" data-g="teoria" aria-pressed="true">Teoría</button>
+      <button class="grp" type="button" id="grp-skills" data-g="skills" aria-pressed="false">Skills</button>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Secciones de la guía">
+    <button class="tab" data-g="teoria" role="tab" id="tab-teoria" aria-controls="teoria" aria-selected="true">Teoría<span class="n">temas</span></button>
+    <button class="tab" data-g="teoria" role="tab" id="tab-conceptos" aria-controls="conceptos" aria-selected="false">Conceptos<span class="n">glosario</span></button>
+    <button class="tab" data-g="teoria" role="tab" id="tab-mascara" aria-controls="mascara" aria-selected="false">Máscara<span class="n">guía</span></button>
+    <button class="tab" data-g="teoria" role="tab" id="tab-cero" aria-controls="cero" aria-selected="false">Desde cero<span class="n">simple</span></button>
+    <button class="tab" data-g="teoria" role="tab" id="tab-tramas" aria-controls="tramas" aria-selected="false">Tramas<span class="n">hexa</span></button>
+    <button class="tab" data-g="skills" role="tab" id="tab-skill" aria-controls="skill" aria-selected="false">Skill<span class="n">práctica</span></button>
+    <button class="tab" data-g="skills" role="tab" id="tab-guiada" aria-controls="guiada" aria-selected="false">Práctica guiada<span class="n">paso a paso</span></button>
+    <button class="tab" data-g="skills" role="tab" id="tab-subneteo" aria-controls="subneteo" aria-selected="false">Subneteo<span class="n">generador</span></button>
+    <button class="tab" data-g="skills" role="tab" id="tab-ruteo" aria-controls="ruteo" aria-selected="false">Ruteo<span class="n">tablas</span></button>
+    <button class="tab" data-g="skills" role="tab" id="tab-quizzes" aria-controls="quizzes" aria-selected="false">Quizzes<span class="n">preguntas</span></button>
+    <button class="tab" data-g="skills" role="tab" id="tab-simulacro" aria-controls="simulacro" aria-selected="false">Simulacro<span class="n">nuevo</span></button>
+    <button class="tab" data-g="skills" role="tab" id="tab-parciales" aria-controls="parciales" aria-selected="false">Parciales<span class="n">resueltos</span></button>
+    <button class="tab" data-g="skills" role="tab" id="tab-tps" aria-controls="tps" aria-selected="false">TPs<span class="n">resueltos</span></button>
+    </div>
   </div>
 </div>
 <div class="panel" id="teoria" role="tabpanel" aria-labelledby="tab-teoria"></div>
@@ -1103,11 +1115,16 @@ function store(k, v) {
 var TABS = ['teoria', 'conceptos', 'mascara', 'cero', 'guiada', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro', 'skill'];
 var rendered = {};
 var RENDER = {};
+var lastTab = {};
 function showTab(id) {
   if (TABS.indexOf(id) < 0) id = 'teoria';
+  var grp = $('#tab-' + id).dataset.g;
+  lastTab[grp] = id;
+  $$('.grp').forEach(function (g) { g.setAttribute('aria-pressed', g.dataset.g === grp ? 'true' : 'false'); });
   TABS.forEach(function (t) {
-    var on = t === id;
-    $('#tab-' + t).setAttribute('aria-selected', on ? 'true' : 'false');
+    var on = t === id, btn = $('#tab-' + t);
+    btn.setAttribute('aria-selected', on ? 'true' : 'false');
+    btn.hidden = btn.dataset.g !== grp;
     $('#' + t).hidden = !on;
   });
   if (!rendered[id]) { rendered[id] = true; RENDER[id](); if (id === 'teoria' || id === 'cero') attachHelp(id); }
@@ -1116,6 +1133,12 @@ function showTab(id) {
 function initTabs() {
   TABS.forEach(function (t) {
     $('#tab-' + t).addEventListener('click', function () { showTab(t); window.scrollTo(0, 0); });
+  });
+  $$('.grp').forEach(function (g) {
+    g.addEventListener('click', function () {
+      var first = g.dataset.g === 'teoria' ? 'teoria' : 'skill';
+      showTab(lastTab[g.dataset.g] || first); window.scrollTo(0, 0);
+    });
   });
   window.addEventListener('hashchange', function () { showTab(location.hash.replace('#', '')); });
   showTab(location.hash.replace('#', '') || 'teoria');
