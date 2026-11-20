@@ -200,7 +200,7 @@ RENDER.skill = function () {
   }).join('');
 
   P.innerHTML = '<div class="wrap"><main>' +
-    '<section><div><div class="eyebrow">Skill</div><h2>Práctica del parcial</h2></div>' +
+    '<section><div><div class="eyebrow">Diagnóstico</div><h2>Práctica del parcial</h2></div>' +
     '<p class="lead">Ejercicios nuevos de lo que más se repite en los parciales. Se corrigen paso a paso, con pista y explicación.</p>' +
     '<ol class="steps"><li><b>Diagnóstico:</b> un ejercicio de cada tipo, para ver dónde estás parado.</li>' +
     '<li><b>Insistís donde fallás:</b> "Seguir donde fallo" te da el próximo tipo que te falta.</li>' +
