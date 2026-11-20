@@ -287,7 +287,7 @@ section{grid-template-columns:minmax(0,1fr)}
 .uc-sub{display:grid;gap:8px;min-width:0;border-top:1px dashed var(--line);padding-top:12px}
 .uc-note{color:var(--muted);font-size:.93rem;max-width:80ch}
 .uc-step details .uc-ex{padding:0 12px 12px}
-#uc-ejemplos-list summary,#uc-adicionales-list summary{font-family:var(--f-display);font-weight:700}
+#uc-ejemplos-list summary,#uc-adicionales-list summary,#uc-basecalc-list summary{font-family:var(--f-display);font-weight:700}
 .gen-chk{display:flex;gap:8px;align-items:center;font-size:.9rem;cursor:pointer}
 .gen-chk input{width:16px;height:16px;accent-color:var(--accent)}
 .gen-num{margin-left:auto;font:500 .8rem var(--f-mono);color:var(--muted)}
@@ -5614,7 +5614,7 @@ public class Renglon {
 </div>
 <div class="panel" id="uml-codigo" role="tabpanel" aria-labelledby="tab-uml-codigo" hidden>
 <div class="wrap">
-<main><div class="panel-head"><div class="jump"><label for="jump-uml-codigo">Ir a</label><select id="jump-uml-codigo" class="jump-sel"><option value="">Elegí una sección…</option><option value="uc-regla">La regla del profe</option><option value="uc-tabla">Qué se convierte en qué</option><option value="uc-ejemplo">El diagrama del ejemplo</option><option value="uc-pasos">Los seis pasos</option><option value="uc-hoja">Lo que queda en la hoja</option><option value="uc-nombres">Cómo nombrar lo que no escribiste</option><option value="uc-errores">Errores que restan puntos</option><option value="uc-adicionales">Dos ejercicios con adicionales</option><option value="uc-ejemplos">Diez ejemplos completos</option></select></div></div>
+<main><div class="panel-head"><div class="jump"><label for="jump-uml-codigo">Ir a</label><select id="jump-uml-codigo" class="jump-sel"><option value="">Elegí una sección…</option><option value="uc-regla">La regla del profe</option><option value="uc-tabla">Qué se convierte en qué</option><option value="uc-ejemplo">El diagrama del ejemplo</option><option value="uc-pasos">Los seis pasos</option><option value="uc-hoja">Lo que queda en la hoja</option><option value="uc-nombres">Cómo nombrar lo que no escribiste</option><option value="uc-errores">Errores que restan puntos</option><option value="uc-adicionales">Dos ejercicios con adicionales</option><option value="uc-basecalc">Cuando el precio base se calcula</option><option value="uc-ejemplos">Diez ejemplos completos</option></select></div></div>
 <section id="uc-regla">
   <div><div class="eyebrow">Del diagrama a la hoja</div><h2>Cómo pasar del UML al código</h2></div>
   <p class="lead">Una vez que el diagrama está hecho, el código no se piensa de nuevo: se copia del diagrama lo que da forma a las clases y se escribe solo lo que falta, que es el cuerpo de los métodos.</p>
@@ -6466,6 +6466,308 @@ public class Renglon {
             }
         }
         <span class="k">return</span> cantidad;
+    }
+}</code></pre></div></details></div></div></div></details></div>
+</section>
+<section id="uc-basecalc">
+  <div><h2>Cuando el precio base se calcula</h2></div>
+  <p class="lead">A veces el enunciado no da un precio base. Da una cantidad en una clase (las horas del lavado) y una tarifa en otra (el precio por hora del vehículo). El precio base es la cuenta entre las dos.</p>
+  <div class="prose"><h3>Cómo pensarlo</h3><ul>
+    <li>Si el UML no tiene el atributo <code>precioBase</code>, <b>se calcula</b>. No lo busques en ningún getter: no existe.</li>
+    <li>Antes de escribir cada línea preguntate de dónde sale el dato: ¿es un atributo de <b>esta</b> clase? Se usa directo. Si no, ¿llegó por parámetro, o tengo un objeto al que pedírselo con un getter?</li>
+    <li>El cálculo va en la clase que ve los dos datos. Acá, <code>Lavado</code>.</li>
+    <li>Lo que sigue es igual que siempre: recargo y descuento reciben el precio base y devuelven lo suyo; el lavado combina los tres.</li>
+    <li>Lo que dice el enunciado manda: si pide el descuento sobre otro monto, o que <code>aplicarDescuento</code> devuelva el monto ya descontado, la cuenta final cambia.</li>
+  </ul></div>
+  <div id="uc-basecalc-list"><details open><summary>Lavadero: el precio base se calcula</summary><div class="uc-ex"><div class="blk enunciado gen-enun"><p>Un lavadero quiere un sistema para registrar los lavados que realiza. Del lavadero se conoce el nombre, la dirección y todos los lavados realizados. De cada lavado se conoce el vehículo, el cliente, la cantidad de horas que duró y la fecha.</p><p>De cada vehículo se conoce la patente y el <b>precio por hora</b>. Según el tipo de vehículo se agrega un recargo:</p><div class="tbl"><table><thead><tr><th>Tipo de vehículo</th><th>Recargo</th></tr></thead><tbody><tr><td>Auto</td><td>Sin recargo</td></tr><tr><td>Camioneta</td><td>20 % del precio base</td></tr><tr><td>Camión</td><td>50 % del precio base</td></tr></tbody></table></div><p>De cada cliente se conoce el nombre y el DNI. Según el tipo de cliente se aplica un descuento:</p><div class="tbl"><table><thead><tr><th>Tipo de cliente</th><th>Descuento</th></tr></thead><tbody><tr><td>Particular</td><td>Sin descuento</td></tr><tr><td>Abonado</td><td>10 % del precio base</td></tr><tr><td>Flota</td><td>25 % del precio base</td></tr></tbody></table></div><p>El <b>precio base</b> de un lavado es la cantidad de horas por el precio por hora del vehículo. El precio final es el precio base, más el recargo, menos el descuento. <b>El recargo y el descuento se calculan sobre el precio base.</b></p><h3>Se pide</h3><ol><li>Diseñe una solución en UML: clases, atributos y relaciones. <span class="gen-pts">25 pts</span></li><li>En Java-Like, implemente todas las clases y estos métodos del sistema:<ul><li><code>public void addLavado(Vehiculo vehiculo, Cliente cliente, int horas)</code> — Registra un lavado de un vehículo para un cliente, con la cantidad de horas. <span class="gen-pts">6 pts</span></li><li><code>public float precioDe(Lavado lavado)</code> — Calcula el precio final de un lavado. <span class="gen-pts">10 pts</span></li><li><code>public float montoTotalLavados()</code> — Retorna el monto total de todos los lavados. <span class="gen-pts">15 pts</span></li><li><code>public Lavado lavadoMasCaro()</code> — Retorna el lavado de mayor precio final. <span class="gen-pts">20 pts</span></li></ul></li></ol><p class="muted">El recargo y el descuento se resuelven con polimorfismo: cada tipo define el suyo.</p></div><div class="blk"><h3>Diagrama de clases</h3><div class="uml-svg"><svg viewBox="-24 -24 883 780" width="883" height="780" role="img" aria-label="Diagrama de clases"><rect class="u-box" x="247.0" y="0" width="341" height="138" rx="2"/>
+<text class="u-t u-name" x="417.5" y="18" text-anchor="middle">Lavadero</text>
+<line class="u-sep" x1="247.0" y1="26" x2="588.0" y2="26"/>
+<text class="u-t" x="257.0" y="42">- nombre : String</text>
+<text class="u-t" x="257.0" y="58">- direccion : String</text>
+<line class="u-sep" x1="247.0" y1="66" x2="588.0" y2="66"/>
+<text class="u-t" x="257.0" y="82">+ addLavado(vehiculo, cliente, horas) : void</text>
+<text class="u-t" x="257.0" y="98">+ precioDe(lavado : Lavado) : float</text>
+<text class="u-t" x="257.0" y="114">+ montoTotalLavados() : float</text>
+<text class="u-t" x="257.0" y="130">+ lavadoMasCaro() : Lavado</text>
+<rect class="u-box" x="312.5" y="208" width="210" height="106" rx="2"/>
+<text class="u-t u-name" x="417.5" y="226" text-anchor="middle">Lavado</text>
+<line class="u-sep" x1="312.5" y1="234" x2="522.5" y2="234"/>
+<text class="u-t" x="322.5" y="250">- horas : int</text>
+<text class="u-t" x="322.5" y="266">- fecha : Date</text>
+<line class="u-sep" x1="312.5" y1="274" x2="522.5" y2="274"/>
+<text class="u-t" x="322.5" y="290">+ getPrecioBase() : float</text>
+<text class="u-t" x="322.5" y="306">+ getPrecioFinal() : float</text>
+<rect class="u-box" x="0.0" y="394" width="341" height="98" rx="2"/>
+<text class="u-t u-st" x="170.5" y="409" text-anchor="middle">«abstract»</text>
+<text class="u-t u-name u-it" x="170.5" y="426" text-anchor="middle">Vehiculo</text>
+<line class="u-sep" x1="0.0" y1="434" x2="341.0" y2="434"/>
+<text class="u-t" x="10.0" y="450">- patente : String</text>
+<text class="u-t" x="10.0" y="466">- precioPorHora : float</text>
+<line class="u-sep" x1="0.0" y1="474" x2="341.0" y2="474"/>
+<text class="u-t u-it" x="10.0" y="490">+ aplicarRecargo(precioBase : float) : float</text>
+<rect class="u-box" x="445.0" y="394" width="356" height="98" rx="2"/>
+<text class="u-t u-st" x="623.0" y="409" text-anchor="middle">«abstract»</text>
+<text class="u-t u-name u-it" x="623.0" y="426" text-anchor="middle">Cliente</text>
+<line class="u-sep" x1="445.0" y1="434" x2="801.0" y2="434"/>
+<text class="u-t" x="455.0" y="450">- nombre : String</text>
+<text class="u-t" x="455.0" y="466">- dni : String</text>
+<line class="u-sep" x1="445.0" y1="474" x2="801.0" y2="474"/>
+<text class="u-t u-it" x="455.0" y="490">+ aplicarDescuento(precioBase : float) : float</text>
+<rect class="u-box" x="34.0" y="526" width="341" height="58" rx="2"/>
+<text class="u-t u-name" x="204.5" y="544" text-anchor="middle">Auto</text>
+<line class="u-sep" x1="34.0" y1="552" x2="375.0" y2="552"/>
+<line class="u-sep" x1="34.0" y1="560" x2="375.0" y2="560"/>
+<text class="u-t" x="44.0" y="576">+ aplicarRecargo(precioBase : float) : float</text>
+<rect class="u-box" x="34.0" y="600" width="341" height="58" rx="2"/>
+<text class="u-t u-name" x="204.5" y="618" text-anchor="middle">Camioneta</text>
+<line class="u-sep" x1="34.0" y1="626" x2="375.0" y2="626"/>
+<line class="u-sep" x1="34.0" y1="634" x2="375.0" y2="634"/>
+<text class="u-t" x="44.0" y="650">+ aplicarRecargo(precioBase : float) : float</text>
+<rect class="u-box" x="34.0" y="674" width="341" height="58" rx="2"/>
+<text class="u-t u-name" x="204.5" y="692" text-anchor="middle">Camion</text>
+<line class="u-sep" x1="34.0" y1="700" x2="375.0" y2="700"/>
+<line class="u-sep" x1="34.0" y1="708" x2="375.0" y2="708"/>
+<text class="u-t" x="44.0" y="724">+ aplicarRecargo(precioBase : float) : float</text>
+<rect class="u-box" x="479.0" y="526" width="356" height="58" rx="2"/>
+<text class="u-t u-name" x="657.0" y="544" text-anchor="middle">ClienteParticular</text>
+<line class="u-sep" x1="479.0" y1="552" x2="835.0" y2="552"/>
+<line class="u-sep" x1="479.0" y1="560" x2="835.0" y2="560"/>
+<text class="u-t" x="489.0" y="576">+ aplicarDescuento(precioBase : float) : float</text>
+<rect class="u-box" x="479.0" y="600" width="356" height="58" rx="2"/>
+<text class="u-t u-name" x="657.0" y="618" text-anchor="middle">ClienteAbonado</text>
+<line class="u-sep" x1="479.0" y1="626" x2="835.0" y2="626"/>
+<line class="u-sep" x1="479.0" y1="634" x2="835.0" y2="634"/>
+<text class="u-t" x="489.0" y="650">+ aplicarDescuento(precioBase : float) : float</text>
+<rect class="u-box" x="479.0" y="674" width="356" height="58" rx="2"/>
+<text class="u-t u-name" x="657.0" y="692" text-anchor="middle">ClienteFlota</text>
+<line class="u-sep" x1="479.0" y1="700" x2="835.0" y2="700"/>
+<line class="u-sep" x1="479.0" y1="708" x2="835.0" y2="708"/>
+<text class="u-t" x="489.0" y="724">+ aplicarDescuento(precioBase : float) : float</text>
+<path class="u-ln" d="M 417.5 160.0 L 417.5 208.0"/>
+<polygon class="u-fill" points="417.5,138.0 424.0,149.0 417.5,160.0 411.0,149.0"/>
+<text class="u-lbl" x="427.5" y="182.0">lavados</text>
+<text class="u-lbl" x="427.5" y="200.0">*</text>
+<path class="u-ln" d="M 357.5 314.0 L 357.5 350.0 L 170.5 350.0 L 170.5 394.0"/>
+<path class="u-ln" d="M 164.5 384.0 L 170.5 394.0 L 176.5 384.0"/>
+<text class="u-lbl" x="160.5" y="380.0" text-anchor="end">1 vehiculo</text>
+<path class="u-ln" d="M 477.5 314.0 L 477.5 350.0 L 623.0 350.0 L 623.0 394.0"/>
+<path class="u-ln" d="M 617.0 384.0 L 623.0 394.0 L 629.0 384.0"/>
+<text class="u-lbl" x="633.0" y="380.0" text-anchor="start">1 cliente</text>
+<path class="u-ln" d="M 16.0 506.0 L 16.0 703.0"/>
+<path class="u-ln" d="M 16.0 555.0 L 34.0 555.0"/>
+<path class="u-ln" d="M 16.0 629.0 L 34.0 629.0"/>
+<path class="u-ln" d="M 16.0 703.0 L 34.0 703.0"/>
+<polygon class="u-hollow" points="16.0,492.0 24.0,506.0 8.0,506.0"/>
+<path class="u-ln" d="M 461.0 506.0 L 461.0 703.0"/>
+<path class="u-ln" d="M 461.0 555.0 L 479.0 555.0"/>
+<path class="u-ln" d="M 461.0 629.0 L 479.0 629.0"/>
+<path class="u-ln" d="M 461.0 703.0 L 479.0 703.0"/>
+<polygon class="u-hollow" points="461.0,492.0 469.0,506.0 453.0,506.0"/></svg></div></div><div class="blk"><h3>Cómo lo vas escribiendo</h3><div class="uc-step"><div class="eyebrow">Paso 1</div><h4>Una caja, un encabezado</h4><p>Un encabezado por cada caja del diagrama, todavía vacías.</p><pre><code><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> Vehiculo {
+}
+
+<span class="k">public</span> <span class="k">class</span> Auto <span class="k">extends</span> Vehiculo {
+}
+
+<span class="k">public</span> <span class="k">class</span> Camioneta <span class="k">extends</span> Vehiculo {
+}
+
+<span class="k">public</span> <span class="k">class</span> Camion <span class="k">extends</span> Vehiculo {
+}
+
+<span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> Cliente {
+}
+
+<span class="k">public</span> <span class="k">class</span> ClienteParticular <span class="k">extends</span> Cliente {
+}
+
+<span class="k">public</span> <span class="k">class</span> ClienteAbonado <span class="k">extends</span> Cliente {
+}
+
+<span class="k">public</span> <span class="k">class</span> ClienteFlota <span class="k">extends</span> Cliente {
+}
+
+<span class="k">public</span> <span class="k">class</span> Lavado {
+}
+
+<span class="k">public</span> <span class="k">class</span> Lavadero {
+}</code></pre><p class="uc-note">Son 10 cajas. Las dos abstractas llevan <code>abstract</code>; cada triángulo es un <code>extends</code>.</p></div><div class="uc-step"><div class="eyebrow">Paso 2</div><h4>Tachá lo que no se escribe</h4><p>Ya está en el diagrama. No lo declares: usalo por su nombre.</p><ul><li><code>Lavadero</code>: <code>nombre</code>, <code>direccion</code>, <code>lavados</code> (línea)</li><li><code>Lavado</code>: <code>horas</code>, <code>fecha</code>, <code>vehiculo</code> (línea), <code>cliente</code> (línea)</li><li><code>Vehiculo</code>: <code>patente</code>, <code>precioPorHora</code></li><li><code>Cliente</code>: <code>nombre</code>, <code>dni</code></li><li>Los getters y setters de todos ellos.</li></ul><p class="uc-note">Fijate que <b>no existe un atributo <code>precioBase</code></b>: el diagrama tiene <code>horas</code> y <code>precioPorHora</code>. El precio base se calcula, no se guarda.</p></div><div class="uc-step"><div class="eyebrow">Paso 3</div><h4>Un método en cursiva en cada padre</h4><p>Cada superclase tiene su método abstracto. Los dos reciben el precio base, porque el recargo y el descuento se calculan sobre él.</p><pre><code><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> Vehiculo {
+
+    <span class="k">public</span> <span class="k">abstract</span> <span class="k">float</span> aplicarRecargo(<span class="k">float</span> precioBase);
+}
+
+<span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> Cliente {
+
+    <span class="k">public</span> <span class="k">abstract</span> <span class="k">float</span> aplicarDescuento(<span class="k">float</span> precioBase);
+}</code></pre></div><div class="uc-step"><div class="eyebrow">Paso 4</div><h4>Cada tipo de vehículo dice su recargo</h4><p>Mirá la primera tabla. Cada clase devuelve <b>solo el recargo</b>, no el precio completo.</p><pre><code><span class="k">public</span> <span class="k">class</span> Auto <span class="k">extends</span> Vehiculo {
+
+    @Override
+    <span class="k">public</span> <span class="k">float</span> aplicarRecargo(<span class="k">float</span> precioBase) {
+        <span class="k">return</span> 0;
+    }
+}</code></pre><p class="uc-note">Sin recargo también se programa: la clase existe y devuelve 0.</p><pre><code><span class="k">public</span> <span class="k">class</span> Camioneta <span class="k">extends</span> Vehiculo {
+
+    @Override
+    <span class="k">public</span> <span class="k">float</span> aplicarRecargo(<span class="k">float</span> precioBase) {
+        <span class="k">return</span> precioBase * 0.20f;
+    }
+}</code></pre><p class="uc-note">Devuelve solo el 20 %, no el precio con el 20 % sumado. La suma la hace el lavado.</p><pre><code><span class="k">public</span> <span class="k">class</span> Camion <span class="k">extends</span> Vehiculo {
+
+    @Override
+    <span class="k">public</span> <span class="k">float</span> aplicarRecargo(<span class="k">float</span> precioBase) {
+        <span class="k">return</span> precioBase * 0.50f;
+    }
+}</code></pre><p class="uc-note">Mismo método que las otras: cambia solo el porcentaje.</p></div><div class="uc-step"><div class="eyebrow">Paso 5</div><h4>Cada tipo de cliente dice su descuento</h4><p>Lo mismo con la segunda tabla. Cada clase devuelve <b>cuánto se descuenta</b>.</p><pre><code><span class="k">public</span> <span class="k">class</span> ClienteParticular <span class="k">extends</span> Cliente {
+
+    @Override
+    <span class="k">public</span> <span class="k">float</span> aplicarDescuento(<span class="k">float</span> precioBase) {
+        <span class="k">return</span> 0;
+    }
+}</code></pre><p class="uc-note">Sin descuento: devuelve 0.</p><pre><code><span class="k">public</span> <span class="k">class</span> ClienteAbonado <span class="k">extends</span> Cliente {
+
+    @Override
+    <span class="k">public</span> <span class="k">float</span> aplicarDescuento(<span class="k">float</span> precioBase) {
+        <span class="k">return</span> precioBase * 0.10f;
+    }
+}</code></pre><p class="uc-note">Devuelve cuánto se descuenta (el 10 %), no el precio ya descontado. Por eso el lavado lo resta.</p><pre><code><span class="k">public</span> <span class="k">class</span> ClienteFlota <span class="k">extends</span> Cliente {
+
+    @Override
+    <span class="k">public</span> <span class="k">float</span> aplicarDescuento(<span class="k">float</span> precioBase) {
+        <span class="k">return</span> precioBase * 0.25f;
+    }
+}</code></pre><p class="uc-note">Mismo método: cambia solo el porcentaje.</p></div><div class="uc-step"><div class="eyebrow">Paso 6</div><h4>El lavado calcula el precio base y el precio final</h4><p><code>Lavado</code> es la única clase que ve las dos cosas: tiene las <code>horas</code> y conoce al vehículo, que sabe su precio por hora. Por eso el precio base se calcula acá.</p><pre><code><span class="k">public</span> <span class="k">class</span> Lavado {
+
+    <span class="k">public</span> <span class="k">float</span> getPrecioBase() {
+        <span class="k">return</span> horas * vehiculo.getPrecioPorHora();
+    }
+
+    <span class="k">public</span> <span class="k">float</span> getPrecioFinal() {
+        <span class="k">float</span> precioBase = getPrecioBase();
+        <span class="k">return</span> precioBase + vehiculo.aplicarRecargo(precioBase) - cliente.aplicarDescuento(precioBase);
+    }
+}</code></pre><p class="uc-note"><code>horas</code> es un atributo de <code>Lavado</code>: se usa directo. El precio por hora es de <code>Vehiculo</code>: se pide con <code>vehiculo.getPrecioPorHora()</code>.</p><p class="uc-note">Al vehículo y al cliente se les pasa el mismo <code>precioBase</code>, así ninguno se calcula sobre el otro. El recargo se <b>suma</b> y el descuento se <b>resta</b>.</p><div class="def"><p><b>El error clásico:</b> escribir <code>horas * precioPorHora</code> dentro de <code>Vehiculo</code>, o llamar a <code>getHoras()</code> ahí. <code>Vehiculo</code> no conoce al lavado, así que no ve <code>horas</code> y no compila. Si el cálculo tiene que ir en <code>Vehiculo</code>, las horas llegan por parámetro: <code>getPrecioBase(int horas)</code> y desde el lavado <code>vehiculo.getPrecioBase(horas)</code>.</p></div></div><div class="uc-step"><div class="eyebrow">Paso 7</div><h4>La clase del sistema, un método por vez</h4><p>Encabezado y después un método por vez. <code>lavados</code> es la línea con <code>*</code>: se usa directo.</p><pre><code><span class="k">public</span> <span class="k">class</span> Lavadero {</code></pre><div class="uc-sub"><div class="eyebrow">Paso 7.1 · 6 pts</div><p>Registra un lavado de un vehículo para un cliente, con la cantidad de horas.</p><pre><code>    <span class="k">public</span> <span class="k">void</span> addLavado(Vehiculo vehiculo, Cliente cliente, <span class="k">int</span> horas) {
+        Lavado lavado = <span class="k">new</span> Lavado();
+        lavado.setVehiculo(vehiculo);
+        lavado.setCliente(cliente);
+        lavado.setHoras(horas);
+        lavado.setFecha(<span class="k">new</span> Date());
+        lavados.add(lavado);
+    }</code></pre><p class="uc-note">Crear vacío, cargar con setters, agregar. Las horas llegan por parámetro; el precio base no se guarda en ningún lado.</p></div><div class="uc-sub"><div class="eyebrow">Paso 7.2 · 10 pts</div><p>Calcula el precio final de un lavado.</p><pre><code>    <span class="k">public</span> <span class="k">float</span> precioDe(Lavado lavado) {
+        <span class="k">return</span> lavado.getPrecioFinal();
+    }</code></pre><p class="uc-note">Una línea que delega. La cuenta la sabe hacer el lavado.</p></div><div class="uc-sub"><div class="eyebrow">Paso 7.3 · 15 pts</div><p>Retorna el monto total de todos los lavados.</p><pre><code>    <span class="k">public</span> <span class="k">float</span> montoTotalLavados() {
+        <span class="k">float</span> total = 0;
+        <span class="k">for</span> (Lavado lavado : lavados) {
+            total += precioDe(lavado);
+        }
+        <span class="k">return</span> total;
+    }</code></pre><p class="uc-note">Acumulador: arranca en 0, suma con <code>+=</code> y devuelve afuera del <code>for</code>.</p></div><div class="uc-sub"><div class="eyebrow">Paso 7.4 · 20 pts</div><p>Retorna el lavado de mayor precio final.</p><pre><code>    <span class="k">public</span> Lavado lavadoMasCaro() {
+        Lavado masCaro = <span class="k">null</span>;
+        <span class="k">for</span> (Lavado lavado : lavados) {
+            <span class="k">if</span> (masCaro == <span class="k">null</span> || precioDe(lavado) &gt; precioDe(masCaro)) {
+                masCaro = lavado;
+            }
+        }
+        <span class="k">return</span> masCaro;
+    }</code></pre><p class="uc-note">Máximo: guardás el lavado, no el precio. Empieza en <code>null</code>.</p></div><pre><code>}</code></pre><p class="uc-note">No te olvides de la llave que cierra la clase.</p></div><div class="uc-step"><div class="eyebrow">Paso 8</div><h4>Probalo con números</h4><ul><li>Lavado de 4 horas, vehículo de $1.000 por hora: el precio base es 4 × 1.000 = <b>$4.000</b>.</li><li>Ese mismo lavado con una camioneta y un cliente abonado: 4.000 + 800 (20 %) − 400 (10 %) = <b>$4.400</b>.</li><li>Con un camión y un cliente de flota: 4.000 + 2.000 (50 %) − 1.000 (25 %) = <b>$5.000</b>.</li><li>Con un auto y un cliente particular: 4.000 + 0 − 0 = <b>$4.000</b>.</li></ul><details><summary>Ver cómo queda la hoja completa</summary><div class="uc-ex"><pre><code><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> Vehiculo {
+
+    <span class="k">public</span> <span class="k">abstract</span> <span class="k">float</span> aplicarRecargo(<span class="k">float</span> precioBase);
+}
+
+<span class="k">public</span> <span class="k">class</span> Auto <span class="k">extends</span> Vehiculo {
+
+    @Override
+    <span class="k">public</span> <span class="k">float</span> aplicarRecargo(<span class="k">float</span> precioBase) {
+        <span class="k">return</span> 0;
+    }
+}
+
+<span class="k">public</span> <span class="k">class</span> Camioneta <span class="k">extends</span> Vehiculo {
+
+    @Override
+    <span class="k">public</span> <span class="k">float</span> aplicarRecargo(<span class="k">float</span> precioBase) {
+        <span class="k">return</span> precioBase * 0.20f;
+    }
+}
+
+<span class="k">public</span> <span class="k">class</span> Camion <span class="k">extends</span> Vehiculo {
+
+    @Override
+    <span class="k">public</span> <span class="k">float</span> aplicarRecargo(<span class="k">float</span> precioBase) {
+        <span class="k">return</span> precioBase * 0.50f;
+    }
+}
+
+<span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> Cliente {
+
+    <span class="k">public</span> <span class="k">abstract</span> <span class="k">float</span> aplicarDescuento(<span class="k">float</span> precioBase);
+}
+
+<span class="k">public</span> <span class="k">class</span> ClienteParticular <span class="k">extends</span> Cliente {
+
+    @Override
+    <span class="k">public</span> <span class="k">float</span> aplicarDescuento(<span class="k">float</span> precioBase) {
+        <span class="k">return</span> 0;
+    }
+}
+
+<span class="k">public</span> <span class="k">class</span> ClienteAbonado <span class="k">extends</span> Cliente {
+
+    @Override
+    <span class="k">public</span> <span class="k">float</span> aplicarDescuento(<span class="k">float</span> precioBase) {
+        <span class="k">return</span> precioBase * 0.10f;
+    }
+}
+
+<span class="k">public</span> <span class="k">class</span> ClienteFlota <span class="k">extends</span> Cliente {
+
+    @Override
+    <span class="k">public</span> <span class="k">float</span> aplicarDescuento(<span class="k">float</span> precioBase) {
+        <span class="k">return</span> precioBase * 0.25f;
+    }
+}
+
+<span class="k">public</span> <span class="k">class</span> Lavado {
+
+    <span class="k">public</span> <span class="k">float</span> getPrecioBase() {
+        <span class="k">return</span> horas * vehiculo.getPrecioPorHora();
+    }
+
+    <span class="k">public</span> <span class="k">float</span> getPrecioFinal() {
+        <span class="k">float</span> precioBase = getPrecioBase();
+        <span class="k">return</span> precioBase + vehiculo.aplicarRecargo(precioBase) - cliente.aplicarDescuento(precioBase);
+    }
+}
+
+<span class="k">public</span> <span class="k">class</span> Lavadero {
+
+    <span class="k">public</span> <span class="k">void</span> addLavado(Vehiculo vehiculo, Cliente cliente, <span class="k">int</span> horas) {
+        Lavado lavado = <span class="k">new</span> Lavado();
+        lavado.setVehiculo(vehiculo);
+        lavado.setCliente(cliente);
+        lavado.setHoras(horas);
+        lavado.setFecha(<span class="k">new</span> Date());
+        lavados.add(lavado);
+    }
+
+    <span class="k">public</span> <span class="k">float</span> precioDe(Lavado lavado) {
+        <span class="k">return</span> lavado.getPrecioFinal();
+    }
+
+    <span class="k">public</span> <span class="k">float</span> montoTotalLavados() {
+        <span class="k">float</span> total = 0;
+        <span class="k">for</span> (Lavado lavado : lavados) {
+            total += precioDe(lavado);
+        }
+        <span class="k">return</span> total;
+    }
+
+    <span class="k">public</span> Lavado lavadoMasCaro() {
+        Lavado masCaro = <span class="k">null</span>;
+        <span class="k">for</span> (Lavado lavado : lavados) {
+            <span class="k">if</span> (masCaro == <span class="k">null</span> || precioDe(lavado) &gt; precioDe(masCaro)) {
+                masCaro = lavado;
+            }
+        }
+        <span class="k">return</span> masCaro;
     }
 }</code></pre></div></details></div></div></div></details></div>
 </section>
@@ -16071,7 +16373,6 @@ Promise.all([claude.use("db"),claude.use("user"),claude.use("sample")]).then(fun
 }).then(function(){subscribe();done();},function(){done();});
 })();
 </script>
-
 <!--claude-mermaid-runtime-begin:3477-->
 <style>.mermaid-diagram{margin-block:4px}.mermaid-diagram svg{display:block;margin:0 auto;max-width:100%;height:auto}</style>
 <script src="/_runtime/mermaid-11.16.1.min.js"></script>
