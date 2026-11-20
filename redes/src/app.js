@@ -19,7 +19,7 @@ function store(k, v) {
 }
 
 /* ============ TABS ============ */
-var TABS = ['teoria', 'conceptos', 'mascara', 'cero', 'guiada', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro', 'skill'];
+var TABS = ['teoria', 'conceptos', 'mascara', 'cero', 'guiada', 'subneteo', 'ruteo', 'tramas', 'quizzes', 'parciales', 'tps', 'simulacro', 'skill', 'cuest'];
 var rendered = {};
 var RENDER = {};
 var lastTab = {};
@@ -622,6 +622,8 @@ RENDER.simulacro = function () {
 /*CONCEPTOS*/
 
 /*MASCARA*/
+
+/*CUEST*/
 
 /* ============ INICIO ============ */
 document.addEventListener('DOMContentLoaded', function () {
