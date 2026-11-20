@@ -459,6 +459,7 @@ a.rp-tile:hover{border-color:var(--accent)}
     <button class="tab" role="tab" id="tab-repaso" aria-controls="repaso" aria-selected="false">Repaso exigente<span class="n">corregí y sumá</span></button>
     <button class="tab" role="tab" id="tab-ejemplos-uml" aria-controls="ejemplos-uml" aria-selected="false">UML<span class="n">10 ejemplos</span></button>
     <button class="tab" role="tab" id="tab-uml-codigo" aria-controls="uml-codigo" aria-selected="false">UML a código<span class="n">paso a paso</span></button>
+    <button class="tab" role="tab" id="tab-precio-base" aria-controls="precio-base" aria-selected="false">Precio base calculado<span class="n">lavadero</span></button>
     <button class="tab" role="tab" id="tab-megastore" aria-controls="megastore" aria-selected="false">Parcial MegaStore<span class="n">resuelto</span></button>
     <button class="tab" role="tab" id="tab-generador" aria-controls="generador" aria-selected="false">Generador<span class="n">UML paso a paso</span></button>
     <button class="tab" role="tab" id="tab-editor-uml" aria-controls="editor-uml" aria-selected="false">Editor UML<span class="n">dibujá</span></button>
@@ -5614,7 +5615,7 @@ public class Renglon {
 </div>
 <div class="panel" id="uml-codigo" role="tabpanel" aria-labelledby="tab-uml-codigo" hidden>
 <div class="wrap">
-<main><div class="panel-head"><div class="jump"><label for="jump-uml-codigo">Ir a</label><select id="jump-uml-codigo" class="jump-sel"><option value="">Elegí una sección…</option><option value="uc-regla">La regla del profe</option><option value="uc-tabla">Qué se convierte en qué</option><option value="uc-ejemplo">El diagrama del ejemplo</option><option value="uc-pasos">Los seis pasos</option><option value="uc-hoja">Lo que queda en la hoja</option><option value="uc-nombres">Cómo nombrar lo que no escribiste</option><option value="uc-errores">Errores que restan puntos</option><option value="uc-adicionales">Dos ejercicios con adicionales</option><option value="uc-basecalc">Cuando el precio base se calcula</option><option value="uc-ejemplos">Diez ejemplos completos</option></select></div></div>
+<main><div class="panel-head"><div class="jump"><label for="jump-uml-codigo">Ir a</label><select id="jump-uml-codigo" class="jump-sel"><option value="">Elegí una sección…</option><option value="uc-regla">La regla del profe</option><option value="uc-tabla">Qué se convierte en qué</option><option value="uc-ejemplo">El diagrama del ejemplo</option><option value="uc-pasos">Los seis pasos</option><option value="uc-hoja">Lo que queda en la hoja</option><option value="uc-nombres">Cómo nombrar lo que no escribiste</option><option value="uc-errores">Errores que restan puntos</option><option value="uc-adicionales">Dos ejercicios con adicionales</option><option value="uc-ejemplos">Diez ejemplos completos</option></select></div></div>
 <section id="uc-regla">
   <div><div class="eyebrow">Del diagrama a la hoja</div><h2>Cómo pasar del UML al código</h2></div>
   <p class="lead">Una vez que el diagrama está hecho, el código no se piensa de nuevo: se copia del diagrama lo que da forma a las clases y se escribe solo lo que falta, que es el cuerpo de los métodos.</p>
@@ -6469,7 +6470,16 @@ public class Renglon {
     }
 }</code></pre></div></details></div></div></div></details></div>
 </section>
-<section id="uc-basecalc">
+<section id="uc-ejemplos">
+  <div><h2>Diez ejemplos completos</h2></div>
+  <p class="lead">Diez ejercicios como los del Generador, cada uno con su enunciado, el diagrama terminado y el paso a paso de cómo ir escribiendo el código: qué va primero, qué se tacha y qué se agrega en cada vuelta. Al final de cada uno está la hoja completa para comparar.</p>
+  <div id="uc-ejemplos-list"></div>
+</section></main>
+</div>
+</div>
+<div class="panel" id="precio-base" role="tabpanel" aria-labelledby="tab-precio-base" hidden>
+<div class="wrap">
+<main><section id="uc-basecalc">
   <div><h2>Cuando el precio base se calcula</h2></div>
   <p class="lead">A veces el enunciado no da un precio base. Da una cantidad en una clase (las horas del lavado) y una tarifa en otra (el precio por hora del vehículo). El precio base es la cuenta entre las dos.</p>
   <div class="prose"><h3>Cómo pensarlo</h3><ul>
@@ -6771,11 +6781,7 @@ public class Renglon {
     }
 }</code></pre></div></details></div></div></div></details></div>
 </section>
-<section id="uc-ejemplos">
-  <div><h2>Diez ejemplos completos</h2></div>
-  <p class="lead">Diez ejercicios como los del Generador, cada uno con su enunciado, el diagrama terminado y el paso a paso de cómo ir escribiendo el código: qué va primero, qué se tacha y qué se agrega en cada vuelta. Al final de cada uno está la hoja completa para comparar.</p>
-  <div id="uc-ejemplos-list"></div>
-</section></main>
+</main>
 </div>
 </div>
 <div class="panel" id="megastore" role="tabpanel" aria-labelledby="tab-megastore" hidden>
@@ -14283,7 +14289,7 @@ public class Hotel {
   }catch(e){}
 
   // pestañas
-  var panels=["teoria","composite-pat","repaso","megastore","ejemplos-uml","uml-codigo","generador","editor-uml","quizzes","tps","resueltos","simulacros"];
+  var panels=["teoria","composite-pat","repaso","megastore","ejemplos-uml","uml-codigo","precio-base","generador","editor-uml","quizzes","tps","resueltos","simulacros"];
   function show(pid){
     panels.forEach(function(p){
       document.getElementById(p).hidden = (p!==pid);
