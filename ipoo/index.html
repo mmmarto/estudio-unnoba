@@ -15848,7 +15848,52 @@ var DOM=[
         {n:"ParcelaConCabana",l:"Con cabaña",r:["sum","costoCabana","cabaña (variable)","el costo de la cabaña"],pl:"las parcelas con cabaña",id:"parcelasConCabana"}],
   C:"Campista",cl:"campista",cpl:"campistas",
   clis:[{n:"CampistaNacional",l:"Nacional",d:[0],r:["pct",[0],""]},{n:"CampistaExtranjero",l:"Extranjero",d:[0],r:["pct",[10,15],"seguro internacional"]},{n:"CampistaConMascota",l:"Con mascota",d:[0],r:["fix",[1500,2000],"mascota"]}],
-  staff:"encargado"}
+  staff:"encargado"},
+ {sim:1,adic:1,bc:1,pph:2500,full:1,filt:1,cap:"capacidad",vars:1,v4:"estudiosPremium",id:"sim14",tema:"Simulacro 14 · Estudio de grabación (horas × precio por hora)",S:"EstudioMusical",intro:"Un estudio musical quiere un sistema para registrar las grabaciones que realiza. Del estudio se conoce el nombre, la dirección y todas las grabaciones registradas.",
+  T:"Grabacion",tl:"grabación",tpl:"grabaciones",tf:1,
+  I:"Sala",il:"sala",ipl:"salas",if_:1,conoce:"el número, la capacidad y el precio por hora",attrs:[["numero","int"],["capacidad","int"],["precioPorHora","double"]],
+  subs:[{n:"SalaSimple",l:"Simple",r:["pct",[0],""],pl:"las salas simples",id:"salasSimples"},
+        {n:"SalaConCabina",l:"Con cabina de voces",r:["pct",[15,20],"cabina de voces aislada"],pl:"las salas con cabina",id:"salasConCabina"},
+        {n:"SalaPremium",l:"Premium",r:["sum","costoEquipos","equipos de alta gama (variable)","el costo de los equipos"],pl:"las salas premium",id:"salasPremium"}],
+  C:"Cliente",cl:"cliente",cpl:"clientes",
+  clis:[{n:"ClienteParticular",l:"Particular",d:[0],r:["pct",[0],""]},{n:"ClienteBanda",l:"Banda",d:[0],r:["pct",[10,15],"banda que graba seguido"]},{n:"ClienteConPromo",l:"Con promo",d:[0],r:["fix",[800,1000],"cupón de promoción"]}],
+  staff:"tecnico"},
+ {sim:1,adic:1,bc:1,pph:900,full:1,filt:2,cap:"capacidad",vars:1,v4:"cocherasCubiertas",id:"sim15",tema:"Simulacro 15 · Estacionamiento (horas × precio por hora)",S:"Estacionamiento",intro:"Un estacionamiento quiere un sistema para registrar las ocupaciones de sus cocheras. Del estacionamiento se conoce el nombre, la dirección y todas las ocupaciones registradas.",
+  T:"Ocupacion",tl:"ocupación",tpl:"ocupaciones",tf:1,
+  I:"Cochera",il:"cochera",ipl:"cocheras",if_:1,conoce:"el número, la capacidad y el precio por hora",attrs:[["numero","int"],["capacidad","int"],["precioPorHora","double"]],
+  subs:[{n:"CocheraDescubierta",l:"Descubierta",r:["pct",[0],""],pl:"las cocheras descubiertas",id:"cocherasDescubiertas"},
+        {n:"CocheraCubierta",l:"Cubierta",r:["pct",[10,15],"techo y protección"],pl:"las cocheras cubiertas",id:"cocherasCubiertas"},
+        {n:"CocheraConLavado",l:"Con lavado",r:["sum","costoLavado","servicio de lavado (variable)","el costo del lavado"],pl:"las cocheras con lavado",id:"cocherasConLavado"}],
+  C:"Conductor",cl:"conductor",cpl:"conductores",
+  clis:[{n:"ConductorOcasional",l:"Ocasional",d:[0],r:["pct",[0],""]},{n:"ConductorAbonado",l:"Abonado",d:[0],r:["pct",[10,15],"abono mensual"]},{n:"ConductorConVale",l:"Con vale",d:[0],r:["fix",[300,500],"vale de comercio adherido"]}],
+  staff:"playero"},
+ {sim:1,adic:1,bc:1,pph:12000,full:1,filt:1,cap:"potencia",capName:"maquinaDeMayorPotencia",vars:1,v4:"maquinasConOperario",id:"sim16",tema:"Simulacro 16 · Alquiler de maquinaria (horas × precio por hora)",S:"AlquilerDeMaquinas",intro:"Una empresa de alquiler de maquinaria quiere un sistema para registrar los alquileres que realiza. De la empresa se conoce el nombre, la dirección y todos los alquileres registrados.",
+  T:"Alquiler",tl:"alquiler",tpl:"alquileres",tf:0,
+  I:"Maquina",il:"máquina",ipl:"máquinas",if_:1,conoce:"el código, la potencia y el precio por hora",attrs:[["codigo","int"],["potencia","int"],["precioPorHora","double"]],
+  subs:[{n:"MaquinaLiviana",l:"Liviana",r:["pct",[0],""],pl:"las máquinas livianas",id:"maquinasLivianas"},
+        {n:"MaquinaPesada",l:"Pesada",r:["pct",[15,20],"traslado en camión"],pl:"las máquinas pesadas",id:"maquinasPesadas"},
+        {n:"MaquinaConOperario",l:"Con operario",r:["sum","costoOperario","operario incluido (variable)","el costo del operario"],pl:"las máquinas con operario",id:"maquinasConOperario"}],
+  C:"Contratista",cl:"contratista",cpl:"contratistas",
+  clis:[{n:"ContratistaNuevo",l:"Nuevo",d:[0],r:["pct",[0],""]},{n:"ContratistaHabitual",l:"Habitual",d:[0],r:["pct",[10,15],"trabaja siempre con la empresa"]},{n:"ContratistaConSeguro",l:"Con seguro propio",d:[0],r:["fix",[4000,5000],"seguro que ya contrató"]}],
+  staff:"encargado"},
+ {sim:1,adic:1,bc:1,pph:3200,full:1,filt:2,cap:"capacidad",vars:1,v4:"aulasConProyector",id:"sim17",tema:"Simulacro 17 · Centro de clases (horas × precio por hora)",S:"CentroDeClases",intro:"Un centro de clases particulares quiere un sistema para registrar las clases que se dictan. Del centro se conoce el nombre, la dirección y todas las clases registradas.",
+  T:"Clase",tl:"clase",tpl:"clases",tf:1,
+  I:"Salon",il:"salón",ipl:"salones",if_:0,conoce:"el número, la capacidad y el precio por hora",attrs:[["numero","int"],["capacidad","int"],["precioPorHora","double"]],
+  subs:[{n:"SalonComun",l:"Común",r:["pct",[0],""],pl:"los salones comunes",id:"salonesComunes"},
+        {n:"SalonConProyector",l:"Con proyector",r:["pct",[10,15],"proyector y pantalla"],pl:"los salones con proyector",id:"salonesConProyector"},
+        {n:"SalonDeLaboratorio",l:"De laboratorio",r:["sum","costoInsumos","insumos de laboratorio (variable)","el costo de los insumos"],pl:"los salones de laboratorio",id:"salonesDeLaboratorio"}],
+  C:"Alumno",cl:"alumno",cpl:"alumnos",
+  clis:[{n:"AlumnoRegular",l:"Regular",d:[0],r:["pct",[0],""]},{n:"AlumnoBecado",l:"Becado",d:[0],r:["pct",[15,20],"beca del centro"]},{n:"AlumnoConConvenio",l:"Con convenio",d:[0],r:["fix",[500,700],"convenio con su escuela"]}],
+  staff:"profesor"},
+ {sim:1,adic:1,bc:1,pph:1500,full:1,filt:1,cap:"memoria",capName:"computadoraConMasMemoria",vars:1,v4:"computadorasConStreaming",id:"sim18",tema:"Simulacro 18 · Cibercafé (horas × precio por hora)",S:"Cibercafe",intro:"Un cibercafé quiere un sistema para registrar las sesiones de uso de sus computadoras. Del cibercafé se conoce el nombre, la dirección y todas las sesiones registradas.",
+  T:"Sesion",tl:"sesión",tpl:"sesiones",tf:1,
+  I:"Computadora",il:"computadora",ipl:"computadoras",if_:1,conoce:"el número, la memoria (en GB) y el precio por hora",attrs:[["numero","int"],["memoria","int"],["precioPorHora","double"]],
+  subs:[{n:"ComputadoraBasica",l:"Básica",r:["pct",[0],""],pl:"las computadoras básicas",id:"computadorasBasicas"},
+        {n:"ComputadoraGamer",l:"Gamer",r:["pct",[20,25],"placa de video"],pl:"las computadoras gamer",id:"computadorasGamer"},
+        {n:"ComputadoraConStreaming",l:"Con streaming",r:["sum","costoEquipo","equipo de streaming (variable)","el costo del equipo de streaming"],pl:"las computadoras con streaming",id:"computadorasConStreaming"}],
+  C:"Usuario",cl:"usuario",cpl:"usuarios",
+  clis:[{n:"UsuarioComun",l:"Común",d:[0],r:["pct",[0],""]},{n:"UsuarioSocio",l:"Socio",d:[0],r:["pct",[10,15],"membresía del cibercafé"]},{n:"UsuarioConPromo",l:"Con promo",d:[0],r:["fix",[200,300],"promo de la semana"]}],
+  staff:"cajero"}
 ];
 var KEY="ipoo-generador-v1";
 function lc(s){return s.charAt(0).toLowerCase()+s.slice(1);}
@@ -15905,10 +15950,10 @@ function build(seed,tema){
 }
 
 // ---------- modo "adicionales": las dos jerarquías suman sobre el precio base ----------
-function adRule(s){
- if(s.kind==="pct")return s.v===0?"Sin adicional":"+"+s.v+" % del precio base ("+s.why+")";
- if(s.kind==="fix")return "+ "+money(s.v)+" fijos ("+s.why+")";
- return "+ "+s.why;
+function adRule(s,neg,rec){var sg=neg?"− ":"+ ";
+ if(s.kind==="pct")return s.v===0?(neg?"Sin descuento":(rec?"Sin recargo":"Sin adicional")):(neg?"− ":"+")+s.v+" % del precio base ("+s.why+")";
+ if(s.kind==="fix")return sg+money(s.v)+" fijos ("+s.why+")";
+ return sg+s.why;
 }
 function adBody(s){
  if(s.kind==="pct")return s.v===0?"        return 0; // sin adicional":"        return precioBase * "+fmtMul(s.v/100)+"; // "+s.v+" % del precio base";
@@ -15921,12 +15966,13 @@ function adBuild(c,r){
  c.clis=d.clis.map(function(s){var o={n:s.n,l:s.l,pl:s.pl,kind:s.r[0]};if(o.kind==="sum"){o.attr=s.r[1];o.why=s.r[2];o.lab=s.r[3]||"";}else{o.v=pick(r,s.r[1]);o.why=s.r[2];}return o;});
  var un=c.tf?"una":"un",la=c.tf?"la":"el",cv=c.cv;
  var nm=c.t+(c.tf?"MasCara":"MasCaro");
+ var bc=!!d.bc;c.bc=bc;c.rn=bc?"aplicarRecargo":"adicional";
  c.M=[
-  {k:"add",name:"add"+c.T,uml:"+add"+c.T+"(precioBase:double, i:"+c.I+", c:"+c.C+", p:Persona): void",pts:6,
-   sig:"public void add"+c.T+"(double precioBase, "+c.I+" "+c.i+", "+c.C+" "+cv+", Persona "+c.staff+")",
-   desc:"Registra "+un+" "+d.tl+" con su precio base, "+(c.if_?"la ":"el ")+d.il+", el "+d.cl+" y el "+c.staff+" responsable."},
+  {k:"add",name:"add"+c.T,uml:"+add"+c.T+"("+(bc?"horas:int":"precioBase:double")+", i:"+c.I+", c:"+c.C+", p:Persona): void",pts:6,
+   sig:"public void add"+c.T+"("+(bc?"int horas":"double precioBase")+", "+c.I+" "+c.i+", "+c.C+" "+cv+", Persona "+c.staff+")",
+   desc:"Registra "+un+" "+d.tl+" con "+(bc?"su cantidad de horas":"su precio base")+", "+(c.if_?"la ":"el ")+d.il+", el "+d.cl+" y el "+c.staff+" responsable."},
   {k:"precio",name:"precioDe",uml:"+precioDe("+c.t+":"+c.T+"): double",pts:10,sig:"public double precioDe("+c.T+" "+c.t+")",
-   desc:"Calcula el precio final de "+un+" "+d.tl+" (precio base + adicional "+(c.if_?"de la ":"del ")+d.il+" + adicional del "+d.cl+")."},
+   desc:"Calcula el precio final de "+un+" "+d.tl+(bc?" (precio base + recargo "+(c.if_?"de la ":"del ")+d.il+" − adicional del "+d.cl+").":" (precio base + adicional "+(c.if_?"de la ":"del ")+d.il+" + adicional del "+d.cl+").")},
   {k:"monto",name:"montoTotal"+c.Tpl,uml:"+montoTotal"+c.Tpl+"(): double",pts:15,sig:"public double montoTotal"+c.Tpl+"()",
    desc:"Retorna el monto total de "+(c.tf?"todas las ":"todos los ")+d.tpl+" registrad"+(c.tf?"as":"os")+"."},
   {k:"masCaro",name:nm,uml:"+"+nm+"(): "+c.T,pts:20,sig:"public "+c.T+" "+nm+"()",desc:"Retorna "+la+" "+d.tl+" de mayor precio final."}];
@@ -15942,54 +15988,55 @@ function adBuild(c,r){
   c.M.push({k:"capMax",name:cn2,uml:"+"+cn2+"(): "+c.I,pts:15,sig:"public "+c.I+" "+cn2+"()",
    desc:"Retorna "+(c.if_?"la ":"el ")+d.il+" de mayor "+d.cap+" entre "+(c.if_?"las ":"los ")+d.ipl+" de "+(c.tf?"las ":"los ")+d.tpl+" registrad"+(c.tf?"as":"os")+"."});
  }
- var sig="+adicional(precioBase:double): double",agrU=c.hasF?[["+"+c.agr+"(l:Vector<"+c.I+">): void",7]]:[];
+ var sig="+adicional(precioBase:double): double",sigR=bc?"+aplicarRecargo(precioBase:double): double":sig,agrU=c.hasF?[["+"+c.agr+"(l:Vector<"+c.I+">): void",7]]:[];
  c.cls=[
   {k:"sys",n:c.S,s:1,a:[["-nombre: String",2],["-direccion: String",2],["-"+c.tplv+": Vector<"+c.T+">",3]],m:c.M.map(function(x){return [x.uml,7];})},
-  {k:"tx",n:c.T,s:1,a:[["-precioBase: double",2],["-"+c.i+": "+c.I,6],["-"+cv+": "+c.C,6],["-"+c.staff+": Persona",6],["-fecha: Date",2]],m:[["+getPrecioFinal(): double",7]].concat(agrU)},
+  {k:"tx",n:c.T,s:1,a:[[bc?"-horas: int":"-precioBase: double",2],["-"+c.i+": "+c.I,6],["-"+cv+": "+c.C,6],["-"+c.staff+": Persona",6],["-fecha: Date",2]],m:[["+getPrecioFinal(): double",7]].concat(agrU)},
   {k:"per",n:"Persona",s:1,a:[["-nombre: String",2]],m:[]},
-  {k:"item",n:c.I,s:1,ab:4,a:d.attrs.map(function(x){return ["-"+x[0]+": "+x[1],2];}),m:[[sig,7,1]].concat(agrU)},
+  {k:"item",n:c.I,s:1,ab:4,a:d.attrs.map(function(x){return ["-"+x[0]+": "+x[1],2];}),m:(bc?[["+getPrecioBase(horas:int): double",7]]:[]).concat([[sigR,7,1]]).concat(agrU)},
   {k:"cli",n:c.C,s:5,ab:5,a:[],m:[[sig,7,1]]}];
- c.subs.forEach(function(s,ix){c.cls.push({k:"is"+ix,n:s.n,s:4,a:s.kind==="sum"?[["-"+s.attr+": double",4]]:[],m:[[sig,7]].concat(c.hasF&&s===c.F?agrU:[]),side:"L"});});
+ c.subs.forEach(function(s,ix){c.cls.push({k:"is"+ix,n:s.n,s:4,a:s.kind==="sum"?[["-"+s.attr+": double",4]]:[],m:[[sigR,7]].concat(c.hasF&&s===c.F?agrU:[]),side:"L"});});
  c.clis.forEach(function(s,ix){c.cls.push({k:"cs"+ix,n:s.n,s:5,a:s.kind==="sum"?[["-"+s.attr+": double",5]]:[],m:[[sig,7]],side:"R"});});
 }
 function adExample(c){
- var B=10000;
- return {B:B,rows:c.subs.map(function(s,ix){var cl=c.clis[ix],a1=adVal(s,B),a2=adVal(cl,B);return {base:B,a1:a1,a2:a2,cli:cl,fin:B+a1+a2};})};
+ var H=c.d.bc?4:0,PPH=c.d.pph||2500,B=c.d.bc?H*PPH:10000,sg=c.d.bc?-1:1;
+ return {B:B,H:H,PPH:PPH,rows:c.subs.map(function(s,ix){var cl=c.clis[ix],a1=adVal(s,B),a2=adVal(cl,B);return {base:B,a1:a1,a2:a2,cli:cl,fin:B+a1+sg*a2};})};
 }
 function adTabla(c){
  var d=c.d;
- return '<h3>Con números</h3><p>Antes del código, un caso de cada tipo, todos con el mismo precio base. Los dos adicionales salen del precio base y se suman.</p>'
-  +'<div class="tbl"><table><thead><tr><th>'+esc(cap(d.il))+'</th><th>Precio base</th><th>Adicional</th><th>'+esc(cap(d.cl))+'</th><th>Adicional</th><th>Precio final</th></tr></thead><tbody>'
-  +c.ex.rows.map(function(r,ix){var s=c.subs[ix];return "<tr><td><code>"+esc(s.n)+"</code></td><td class=\"pts\">"+nf(r.base)+"</td><td class=\"pts\">+ "+nf(r.a1)+"</td><td><code>"+esc(r.cli.n)+"</code></td><td class=\"pts\">+ "+nf(r.a2)+"</td><td class=\"pts\"><b>"+nf(r.fin)+"</b></td></tr>";}).join("")+"</tbody></table></div>";
+ var bc=c.bc;
+ return '<h3>Con números</h3><p>'+(bc?'Antes del código, un caso de cada tipo: <b>'+c.ex.H+' horas a '+nf(c.ex.PPH)+' por hora</b>, o sea un precio base de '+nf(c.ex.B)+'. El recargo y el adicional salen de ese precio base; el recargo se suma y el adicional se resta.':'Antes del código, un caso de cada tipo, todos con el mismo precio base. Los dos adicionales salen del precio base y se suman.')+'</p>'
+  +'<div class="tbl"><table><thead><tr><th>'+esc(cap(d.il))+'</th><th>Precio base</th><th>'+(bc?'Recargo':'Adicional')+'</th><th>'+esc(cap(d.cl))+'</th><th>Adicional</th><th>Precio final</th></tr></thead><tbody>'
+  +c.ex.rows.map(function(r,ix){var s=c.subs[ix];return "<tr><td><code>"+esc(s.n)+"</code></td><td class=\"pts\">"+nf(r.base)+"</td><td class=\"pts\">+ "+nf(r.a1)+"</td><td><code>"+esc(r.cli.n)+"</code></td><td class=\"pts\">"+(bc?"− ":"+ ")+nf(r.a2)+"</td><td class=\"pts\"><b>"+nf(r.fin)+"</b></td></tr>";}).join("")+"</tbody></table></div>";
 }
 function adEnunciado(c){
  var d=c.d,las=c.if_?"las":"los",sm=c.subs.filter(function(s){return s.kind==="sum";})[0],cm=c.clis.filter(function(s){return s.kind==="sum";})[0];
- var h="<p>"+esc(d.intro)+"</p>";
- h+="<p>De "+las+" "+d.ipl+" se conoce "+d.conoce+"."+(sm?" Además, de "+sm.pl+" se conoce "+sm.lab+", que es variable (puede cambiar).":"")+" Hay tres tipos. Según el tipo de "+d.il+" se agrega un adicional al precio base:</p>";
- h+='<div class="tbl"><table><thead><tr><th>Tipo de '+esc(d.il)+'</th><th>Adicional</th></tr></thead><tbody>'+c.subs.map(function(s){return "<tr><td>"+esc(s.l)+"</td><td>"+esc(adRule(s))+"</td></tr>";}).join("")+"</tbody></table></div>";
- h+="<p>Por otro lado, hay tres tipos de "+d.cpl+"."+(cm?" De "+cm.pl+" se conoce "+cm.lab+", que es variable (puede cambiar).":"")+" Según el tipo de "+d.cl+" se agrega otro adicional:</p>";
- h+='<div class="tbl"><table><thead><tr><th>Tipo de '+esc(d.cl)+'</th><th>Adicional</th></tr></thead><tbody>'+c.clis.map(function(s){return "<tr><td>"+esc(s.l)+"</td><td>"+esc(adRule(s))+"</td></tr>";}).join("")+"</tbody></table></div>";
- h+="<p>El precio final es el precio base, más el adicional "+(c.if_?"de la ":"del ")+d.il+", más el adicional del "+d.cl+". <b>Los dos adicionales se calculan sobre el precio base</b> y se suman.</p>";
- h+="<p>Cada vez que se registra "+(c.tf?"una ":"un ")+d.tl+", el sistema guarda el precio base, "+(c.if_?"la ":"el ")+d.il+", el "+d.cl+", el "+c.staff+" responsable (una persona) y la fecha.</p>";
+ var bc=c.bc;var h="<p>"+esc(d.intro)+"</p>";
+ h+="<p>De "+las+" "+d.ipl+" se conoce "+d.conoce+"."+(sm?" Además, de "+sm.pl+" se conoce "+sm.lab+", que es variable (puede cambiar).":"")+" Hay tres tipos. "+(bc?"El <b>precio base</b> de cada "+d.tl+" es la cantidad de horas por el precio por hora "+(c.if_?"de la ":"del ")+d.il+". Según el tipo de "+d.il+" se agrega un recargo:":"Según el tipo de "+d.il+" se agrega un adicional al precio base:")+"</p>";
+ h+='<div class="tbl"><table><thead><tr><th>Tipo de '+esc(d.il)+'</th><th>'+(bc?"Recargo":"Adicional")+'</th></tr></thead><tbody>'+c.subs.map(function(s){return "<tr><td>"+esc(s.l)+"</td><td>"+esc(adRule(s,false,bc))+"</td></tr>";}).join("")+"</tbody></table></div>";
+ h+="<p>Por otro lado, hay tres tipos de "+d.cpl+"."+(cm?" De "+cm.pl+" se conoce "+cm.lab+", que es variable (puede cambiar).":"")+" Según el tipo de "+d.cl+(bc?" se <b>descuenta</b> un adicional:":" se agrega otro adicional:")+"</p>";
+ h+='<div class="tbl"><table><thead><tr><th>Tipo de '+esc(d.cl)+'</th><th>Adicional</th></tr></thead><tbody>'+c.clis.map(function(s){return "<tr><td>"+esc(s.l)+"</td><td>"+esc(adRule(s,bc))+"</td></tr>";}).join("")+"</tbody></table></div>";
+ h+=bc?"<p>El precio final es el precio base, más el recargo "+(c.if_?"de la ":"del ")+d.il+", menos el adicional del "+d.cl+". <b>El recargo y el adicional se calculan sobre el precio base</b>, no uno sobre el otro.</p>":"<p>El precio final es el precio base, más el adicional "+(c.if_?"de la ":"del ")+d.il+", más el adicional del "+d.cl+". <b>Los dos adicionales se calculan sobre el precio base</b> y se suman.</p>";
+ h+="<p>Cada vez que se registra "+(c.tf?"una ":"un ")+d.tl+", el sistema guarda "+(bc?"la cantidad de horas, ":"el precio base, ")+(c.if_?"la ":"el ")+d.il+", el "+d.cl+", el "+c.staff+" responsable (una persona) y la fecha.</p>";
  h+="<h3>Se pide</h3><ol><li>Diseñe una solución en UML: clases, atributos y relaciones. <span class=\"gen-pts\">25 pts</span></li><li>En Java-Like, implemente todas las clases y estos métodos del sistema:<ul>"+c.M.map(function(m){return "<li><code>"+esc(m.sig)+"</code> — "+esc(m.desc)+" <span class=\"gen-pts\">"+m.pts+" pts</span></li>";}).join("")+"</ul></li></ol>";
- h+="<p class=\"muted\">Los adicionales se resuelven con polimorfismo: cada tipo define el suyo. Los getters y setters se asumen hechos.</p>";
+ h+=(bc?"<p class=\"muted\">El recargo y el adicional se resuelven con polimorfismo: cada tipo define el suyo. Los getters y setters se asumen hechos.</p>":"<p class=\"muted\">Los adicionales se resuelven con polimorfismo: cada tipo define el suyo. Los getters y setters se asumen hechos.</p>");
  return h;
 }
 function adSteps(c){
  var d=c.d,subsN=c.subs.map(function(s){return "<code>"+s.n+"</code>";}).join(", "),clisN=c.clis.map(function(s){return "<code>"+s.n+"</code>";}).join(", ");
  var laT=(c.tf?"la ":"el ")+d.tl,lasT=(c.tf?"las ":"los ")+d.tpl,elI=(c.if_?"la ":"el ")+d.il,unI=(c.if_?"una ":"un ")+d.il;
- var prop=c.subs.concat(c.clis).filter(function(s){return s.kind==="sum";})[0];
- return [
+ var prop=c.subs.concat(c.clis).filter(function(s){return s.kind==="sum";})[0],bc=c.bc;
+ var S=[
  {t:"Encontrar las clases",q:"¿Qué sustantivos del enunciado tienen datos propios? Esos son tus primeras clases.",
   b:"Acá aparecen <code>"+c.S+"</code> (el que guarda todo), <code>"+c.T+"</code>, <code>"+c.I+"</code> y <code>Persona</code>: el "+c.staff+" responsable es una persona. Los tipos de "+d.ipl+" y de "+d.cpl+" quedan para más adelante.",
   e:"Hacer una clase <code>Adicional</code> o <code>Precio</code>. Eso son números que se calculan, no objetos."},
  {t:"Atributos simples",q:"¿Qué datos \"se conocen\" de cada clase? ¿En qué clase va el precio base?",
-  b:"<code>"+c.I+"</code> lleva "+d.conoce+". <code>Persona</code> lleva el nombre. Lo distinto de este ejercicio: el <b>precio base va en <code>"+c.T+"</code></b>, junto con la fecha, porque el enunciado dice que se guarda al registrar "+laT+". No es un dato de "+elI+" ni del "+d.cl+".",
-  e:"Poner <code>precioBase</code> en <code>"+c.I+"</code>. Después <code>"+c.C+"</code> no tendría de dónde sacarlo."},
+  b:bc?"<code>"+c.I+"</code> lleva "+d.conoce+": ahí está el <b>precio por hora</b>. <code>Persona</code> lleva el nombre. Lo distinto de este ejercicio: <b>no hay atributo <code>precioBase</code></b>. El precio base se calcula, y para calcularlo hacen falta dos datos que viven en clases distintas: las <b>horas</b> van en <code>"+c.T+"</code> (se guardan al registrar "+laT+", junto con la fecha) y el precio por hora va en <code>"+c.I+"</code>.":"<code>"+c.I+"</code> lleva "+d.conoce+". <code>Persona</code> lleva el nombre. Lo distinto de este ejercicio: el <b>precio base va en <code>"+c.T+"</code></b>, junto con la fecha, porque el enunciado dice que se guarda al registrar "+laT+". No es un dato de "+elI+" ni del "+d.cl+".",
+  e:bc?"Poner <code>precioBase</code> como atributo, o poner <code>horas</code> en <code>"+c.I+"</code>. Las horas cambian en cada "+d.tl+"; el precio por hora es de "+elI+".":"Poner <code>precioBase</code> en <code>"+c.I+"</code>. Después <code>"+c.C+"</code> no tendría de dónde sacarlo."},
  {t:"Armar el vector",q:"¿Qué clase guarda muchas cosas? ¿Cómo se dibuja esa relación?",
   b:"<code>"+c.S+"</code> guarda "+lasT+", así que lleva un <code>Vector&lt;"+c.T+"&gt;</code>. Rombo relleno del lado de <code>"+c.S+"</code> (composición) y <code>*</code> del lado de <code>"+c.T+"</code>.",
   e:"Pista: si un método recorre \"todas las X\", alguna clase tiene un <code>Vector</code> de X."},
- {t:"Herencia de "+d.ipl,q:"El adicional cambia según el tipo de "+d.il+". ¿Cómo lo modelás sin usar if?",
+ {t:"Herencia de "+d.ipl,q:"El "+(bc?"recargo":"adicional")+" cambia según el tipo de "+d.il+". ¿Cómo lo modelás sin usar if?",
   b:"Superclase abstracta <code>"+c.I+"</code> (nombre en cursiva) y una subclase por tipo: "+subsN+"."+(c.subs.some(function(s){return s.kind==="sum";})?" La que tiene un monto variable lo lleva como atributo propio.":""),
   e:"Poner un atributo <code>tipo: String</code> y resolver con if. Así se pierden los puntos de polimorfismo."},
  {t:"Herencia de "+d.cpl,q:"¿Cómo modelás los tipos de "+d.cl+"? ¿De qué clase heredan?",
@@ -15999,18 +16046,19 @@ function adSteps(c){
   b:"<code>"+c.T+"</code> conoce "+unI+", un "+d.cl+" y un "+c.staff+": tres flechas de asociación que salen de ella, con <code>1</code> del otro lado. Van a <code>"+c.I+"</code> y a <code>"+c.C+"</code>, las abstractas, para que sirvan con cualquier tipo.",
   e:"Conectar <code>"+c.T+"</code> con una subclase, por ejemplo <code>"+c.clis[1].n+"</code>."},
  {t:"Métodos",q:"¿Qué método abstracto necesita cada jerarquía? ¿Qué tiene que recibir?",
-  b:"Las dos superclases llevan el mismo método en cursiva: <code>+adicional(precioBase:double): double</code>. Recibe el precio base porque el adicional se calcula sobre él y el precio base está en <code>"+c.T+"</code>. Se repite en cada subclase. <code>getPrecioFinal()</code> en <code>"+c.T+"</code> suma los tres: precio base, adicional de "+elI+" y adicional del "+d.cl+"."+(c.hasF?" Para <code>"+c.F.id+"()</code>: <code>"+c.I+"</code> tiene <code>"+c.agr+"</code> con el cuerpo vacío, solo <code>"+c.F.n+"</code> lo redefine para agregarse a la lista, y <code>"+c.T+"</code> le pasa la lista a su "+d.il+". Así no usás <code>instanceof</code>.":""),
-  e:"Un método <code>adicional()</code> sin parámetro: la subclase no tendría sobre qué calcular el porcentaje."},
+  b:bc?"<code>"+c.I+"</code> tiene un método <b>concreto</b>: <code>+getPrecioBase(horas:int): double</code>. Es el único que tiene el precio por hora, así que multiplica ahí y recibe las horas por parámetro. Después, cada jerarquía lleva un método abstracto en cursiva que recibe el precio base: <code>+aplicarRecargo(precioBase:double): double</code> en <code>"+c.I+"</code> y <code>+adicional(precioBase:double): double</code> en <code>"+c.C+"</code>. <code>getPrecioFinal()</code> en <code>"+c.T+"</code> arma el resultado: precio base + recargo − adicional."+(c.hasF?" Para <code>"+c.F.id+"()</code>: <code>"+c.I+"</code> tiene <code>"+c.agr+"</code> con el cuerpo vacío, solo <code>"+c.F.n+"</code> lo redefine para agregarse a la lista, y <code>"+c.T+"</code> le pasa la lista a su "+d.il+". Así no usás <code>instanceof</code>.":""):"Las dos superclases llevan el mismo método en cursiva: <code>+adicional(precioBase:double): double</code>. Recibe el precio base porque el adicional se calcula sobre él y el precio base está en <code>"+c.T+"</code>. Se repite en cada subclase. <code>getPrecioFinal()</code> en <code>"+c.T+"</code> suma los tres: precio base, adicional de "+elI+" y adicional del "+d.cl+"."+(c.hasF?" Para <code>"+c.F.id+"()</code>: <code>"+c.I+"</code> tiene <code>"+c.agr+"</code> con el cuerpo vacío, solo <code>"+c.F.n+"</code> lo redefine para agregarse a la lista, y <code>"+c.T+"</code> le pasa la lista a su "+d.il+". Así no usás <code>instanceof</code>.":""),
+  e:bc?"Que <code>"+c.T+"</code> calcule <code>horas * "+c.i+".getPrecioPorHora()</code> por su cuenta, o que <code>getPrecioBase()</code> use <code>getHoras()</code> sin llamarlo desde <code>"+c.T+"</code>: <code>"+c.I+"</code> no conoce las horas, se las tenés que pasar.":"Un método <code>adicional()</code> sin parámetro: la subclase no tendría sobre qué calcular el porcentaje."},
  {t:"Repaso: lo que miran al corregir",q:"",
-  b:"El precio base en <code>"+c.T+"</code>. Dos jerarquías con superclase abstracta. El mismo método abstracto en las dos, con el precio base como parámetro. Asociaciones hacia las clases padre."+(c.hasF?" <code>"+c.agr+"</code> en tres lugares: vacío en <code>"+c.I+"</code>, redefinido en <code>"+c.F.n+"</code> y delegado en <code>"+c.T+"</code>.":"")+(d.cap?" En <code>"+(d.capName||d.il+"MayorCapacidad")+"()</code> guardás "+(c.if_?"la ":"el ")+d.il+", no la "+d.cap+".":"")+" Abajo tenés el código para comparar con el tuyo.",
-  e:"Antes de entregar, probá un caso con números: precio base + un adicional + el otro."}
+  b:(bc?"Las horas en <code>"+c.T+"</code> y el precio por hora en <code>"+c.I+"</code>, sin atributo <code>precioBase</code>. <code>getPrecioBase(horas)</code> concreto en <code>"+c.I+"</code>. Dos jerarquías con superclase abstracta, cada una con su método que recibe el precio base. Asociaciones hacia las clases padre.":"El precio base en <code>"+c.T+"</code>. Dos jerarquías con superclase abstracta. El mismo método abstracto en las dos, con el precio base como parámetro. Asociaciones hacia las clases padre.")+(c.hasF?" <code>"+c.agr+"</code> en tres lugares: vacío en <code>"+c.I+"</code>, redefinido en <code>"+c.F.n+"</code> y delegado en <code>"+c.T+"</code>.":"")+(d.cap?" En <code>"+(d.capName||d.il+"MayorCapacidad")+"()</code> guardás "+(c.if_?"la ":"el ")+d.il+", no la "+d.cap+".":"")+" Abajo tenés el código para comparar con el tuyo.",
+  e:bc?"Antes de entregar, probá un caso con números: horas × precio por hora, más el recargo, menos el adicional.":"Antes de entregar, probá un caso con números: precio base + un adicional + el otro."}
  ];
+ return S;
 }
 function adParts(c){
  var d=c.d,I=c.I,i=c.i,T=c.T,t=c.t,C=c.C,cv=c.cv,st=c.staff,P=[],ex=c.ex,N=11,n=0;
  var fI=c.if_,fT=c.tf,elI=fI?"la":"el",unI=fI?"una":"un",elT=fT?"la":"el",unT=fT?"una":"un",losT=fT?"las":"los";
  function eb(x){n++;return "Clase "+n+" de "+N+" · "+x;}
- var sig="public double adicional(double precioBase)";
+ var bc=c.bc,sig="public double adicional(double precioBase)",sigR=bc?"public double aplicarRecargo(double precioBase)":sig;
  P.push({id:"persona",eyebrow:eb("la más simple"),title:"Persona",intro:"Empezá por la clase que no depende de nadie. La usan el "+esc(st)+" y los "+esc(d.cpl)+".",
   chunks:[{src:"public class Persona {\n\n    private String nombre;\n}",exp:[
    kc("private String nombre;")+" es el único atributo. Se usa con "+kc("getNombre()")+" y "+kc("setNombre(...)")+", que el enunciado da por hechos.",
@@ -16019,12 +16067,16 @@ function adParts(c){
  P.push({id:lc(I),eyebrow:eb("la primera superclase"),title:I+" (abstracta)",intro:"Guarda lo que tienen "+(fI?"todas las":"todos los")+" "+esc(d.ipl)+" y declara el método que cada tipo resuelve distinto.",
   chunks:[{src:"public abstract class "+I+" {\n\n"+d.attrs.map(function(a){return "    private "+a[1]+" "+a[0]+";";}).join("\n"),exp:[
     kc("abstract")+": no existe "+unI+" "+esc(d.il)+" sin tipo, así que no se puede hacer "+kc("new "+I+"()")+".",
-    "Fijate que <strong>no tiene precio base</strong>. En este ejercicio el precio base es "+(fT?"de la":"del")+" "+esc(d.tl)+"."]},
-   {src:"    public abstract double adicional(double precioBase);"+(c.hasF?"":"\n}"),exp:[
-    "<strong>Método abstracto</strong>: firma sin cuerpo, termina en "+kc(";")+". Cada tipo de "+esc(d.il)+" dice cuánto agrega.",
-    "Recibe "+kc("precioBase")+" como <strong>parámetro</strong> porque "+elI+" "+esc(d.il)+" no lo tiene guardado: se lo pasa "+elT+" "+esc(d.tl)+" cuando le pregunta.",
-    "Devuelve <strong>solo el adicional</strong>, no el precio completo. La suma se hace en "+kc(T)+"."]}],
-  warn:"Que "+kc("adicional()")+" no reciba parámetro. Sin el precio base no puede calcular un porcentaje."});
+    bc?"Tiene el <strong>precio por hora</strong>, pero no tiene las horas ni un "+kc("precioBase")+" guardado. Las horas son "+(fT?"de la":"del")+" "+esc(d.tl)+".":"Fijate que <strong>no tiene precio base</strong>. En este ejercicio el precio base es "+(fT?"de la":"del")+" "+esc(d.tl)+"."]}].concat(bc?[{src:"    public double getPrecioBase(int horas) {\n        return horas * precioPorHora;\n    }",exp:[
+    "Es un método <strong>concreto</strong> (con cuerpo): todos los tipos calculan el precio base igual, así que se escribe una sola vez acá y las subclases lo heredan.",
+    "Recibe "+kc("horas")+" como <strong>parámetro</strong> porque las horas no están en "+kc(I)+": se las pasa "+elT+" "+esc(d.tl)+" cuando le pregunta.",
+    kc("precioPorHora")+" es un atributo de esta misma clase, así que se usa directo, sin getter.",
+    "Devuelve el precio base ya calculado. Quien lo llame no tiene que saber cómo se obtiene."]}]:[]).concat([
+   {src:"    public abstract double "+(bc?"aplicarRecargo":"adicional")+"(double precioBase);"+(c.hasF?"":"\n}"),exp:[
+    "<strong>Método abstracto</strong>: firma sin cuerpo, termina en "+kc(";")+". Cada tipo de "+esc(d.il)+" dice cuánto "+(bc?"recarga":"agrega")+".",
+    "Recibe "+kc("precioBase")+" como <strong>parámetro</strong> porque "+elI+" "+esc(d.il)+" no lo tiene guardado: "+(bc?"lo calcula ella misma con "+kc("getPrecioBase(horas)")+" y se lo pasa a quien corresponda.":"se lo pasa "+elT+" "+esc(d.tl)+" cuando le pregunta."),
+    "Devuelve <strong>solo el "+(bc?"recargo":"adicional")+"</strong>, no el precio completo. La cuenta final se hace en "+kc(T)+"."]}]),
+  warn:bc?"Calcular el precio base en las subclases, o hacer "+kc("getPrecioBase()")+" sin parámetro y usar "+kc("getHoras()")+" adentro: "+kc(I)+" no conoce las horas, y ese código no compila.":"Que "+kc("adicional()")+" no reciba parámetro. Sin el precio base no puede calcular un porcentaje."});
  if(c.hasF)P[P.length-1].chunks.push({src:"    public void "+c.agr+"(Vector<"+I+"> lista) {\n        // por defecto no se agrega\n    }\n}",exp:[
   "Este método es el truco para "+kc(c.F.id+"()")+" sin preguntar tipos. Recibe una lista y decide si se agrega o no.",
   "En "+kc(I)+" tiene el <strong>cuerpo vacío</strong>: por defecto, "+unI+" "+esc(d.il)+" no se agrega. No es abstracto, porque la mayoría de los tipos no hacen nada.",
@@ -16034,14 +16086,15 @@ function adParts(c){
   var head="public class "+sb.n+" extends "+parent+" {"+(hasA?"\n\n    private double "+sb.attr+";":"");
   var hexp=[kc("extends "+parent)+": hereda todo lo de "+kc(parent)+" sin escribirlo de nuevo."];
   if(hasA)hexp.push("Lleva un atributo propio, "+kc(sb.attr)+", porque el enunciado dice que es <strong>variable</strong>: cada objeto tiene el suyo y se cambia con "+kc("set"+cap(sb.attr)+"(...)")+".");
+  var sg=(bc&&!isCli)?sigR:sig,neg=bc&&isCli;
   var mexp=[kc("@Override")+" avisa que redefine el método del padre. La firma es idéntica: mismo nombre, mismo parámetro, mismo retorno."];
   if(sb.kind==="pct"&&sb.v===0)mexp.push("Sin adicional también se programa: devuelve "+kc("0")+". Si falta el método, la clase no compila.","No usa el parámetro, pero igual lo recibe: la firma tiene que ser la del padre.");
-  else if(sb.kind==="pct")mexp.push(kc("precioBase * "+fmtMul(sb.v/100))+" es el "+sb.v+" % del precio base. Con base "+nf(B)+" da "+nf(val)+".","Ojo: es "+kc(fmtMul(sb.v/100))+" y no "+kc(fmtMul(1+sb.v/100))+". Acá se devuelve solo lo que se agrega; el precio base lo suma "+kc(T)+".");
+  else if(sb.kind==="pct")mexp.push(kc("precioBase * "+fmtMul(sb.v/100))+" es el "+sb.v+" % del precio base. Con base "+nf(B)+" da "+nf(val)+".","Ojo: es "+kc(fmtMul(sb.v/100))+" y no "+kc(fmtMul(1+sb.v/100))+". Acá se devuelve solo lo que "+(neg?"se descuenta; el precio base y la resta los hace ":"se agrega; el precio base lo suma ")+kc(T)+".");
   else if(sb.kind==="fix")mexp.push("Monto fijo: "+nf(sb.v)+" para cualquier precio base. Va escrito en el código porque el enunciado dice que es fijo.","No usa el parámetro, pero igual lo recibe: la firma tiene que ser la del padre.");
   else mexp.push(kc(sb.attr)+" es un atributo de esta misma clase, así que se usa directo, como hace el profe en su repo.","En el ejemplo de arriba vale "+nf(val)+".");
-  var w=sb.kind==="pct"&&sb.v>0?"Devolver "+kc("precioBase * "+fmtMul(1+sb.v/100))+". Eso es el precio con el adicional, y después "+kc(T)+" le volvería a sumar el precio base.":(sb.kind==="sum"?"Escribir un número fijo. El enunciado dice que es variable, así que es un atributo.":(sb.kind==="fix"?"Hacerlo atributo. Si es fijo, va en el código.":"Saltearte esta clase porque devuelve 0. El enunciado la nombra y el diagrama la necesita."));
-  return {id:lc(sb.n),eyebrow:eb(adRule(sb).replace(/ \(.*\)$/,"").toLowerCase()),title:sb.n,intro:e1,
-   chunks:[{src:head,exp:hexp},{src:"    @Override\n    "+sig+" {\n"+adBody(sb)+"\n    }"+(c.hasF&&sb===c.F?"":"\n}"),exp:mexp}].concat(c.hasF&&sb===c.F?[{src:"    @Override\n    public void "+c.agr+"(Vector<"+I+"> lista) {\n        lista.add(this);\n    }\n}",exp:[
+  var w=sb.kind==="pct"&&sb.v>0?(neg?"Devolver "+kc("precioBase * "+fmtMul(1-sb.v/100))+". Eso ya es el precio descontado, y después "+kc(T)+" lo restaría de nuevo.":"Devolver "+kc("precioBase * "+fmtMul(1+sb.v/100))+". Eso es el precio con el adicional, y después "+kc(T)+" le volvería a sumar el precio base."):(sb.kind==="sum"?"Escribir un número fijo. El enunciado dice que es variable, así que es un atributo.":(sb.kind==="fix"?"Hacerlo atributo. Si es fijo, va en el código.":"Saltearte esta clase porque devuelve 0. El enunciado la nombra y el diagrama la necesita."));
+  return {id:lc(sb.n),eyebrow:eb(adRule(sb,neg,bc&&!isCli).replace(/ \(.*\)$/,"").toLowerCase()),title:sb.n,intro:e1,
+   chunks:[{src:head,exp:hexp},{src:"    @Override\n    "+sg+" {\n"+((bc&&!isCli)?adBody(sb).replace("sin adicional","sin recargo"):adBody(sb))+"\n    }"+(c.hasF&&sb===c.F?"":"\n}"),exp:mexp}].concat(c.hasF&&sb===c.F?[{src:"    @Override\n    public void "+c.agr+"(Vector<"+I+"> lista) {\n        lista.add(this);\n    }\n}",exp:[
     "Redefine el método que en "+kc(I)+" no hacía nada. Es la única clase que lo cambia.",
     kc("lista.add(this)")+": "+kc("this")+" es este mismo objeto. "+(fI?"La":"El")+" "+esc(d.il)+" se agrega a sí "+(fI?"misma":"mismo")+" a la lista que le pasaron.",
     "Los otros tipos heredan la versión vacía y no se agregan. Nadie pregunta de qué tipo es."]}]:[]),warn:w};
@@ -16049,24 +16102,31 @@ function adParts(c){
  c.subs.forEach(function(sb,ix){P.push(sub(sb,I,ix===0?"La primera subclase. Corta: solo dice cuánto agrega.":"Mismo esquema: "+kc("extends")+", "+kc("@Override")+" y la cuenta.",ix,false));});
  P.push({id:lc(C),eyebrow:eb("la segunda superclase"),title:C+" (abstracta)",intro:"La misma idea del otro lado. Además hereda de "+kc("Persona")+".",
   chunks:[{src:"public abstract class "+C+" extends Persona {",exp:[kc("extends Persona")+": un "+esc(d.cl)+" es una persona y hereda el nombre.","No hace falta constructor ni "+kc("super(...)")+"."]},
-   {src:"    public abstract double adicional(double precioBase);\n}",exp:[
+   {src:"    public abstract double adicional(double precioBase);\n}",exp:bc?[
+    "Método abstracto como el de "+kc(I)+", pero con otro nombre y otro papel: este monto se <strong>resta</strong>.",
+    "Recibe el precio base, no el precio ya recargado: el enunciado dice que el recargo y el adicional salen del precio base."]:[
     "El <strong>mismo método</strong> que en "+kc(I)+": mismo nombre, mismo parámetro. No se pisan porque son dos clases distintas.",
     "También recibe el precio base: el enunciado dice que los dos adicionales se calculan sobre él."]}],
   warn:"Que este adicional reciba el precio ya recargado por "+elI+" "+esc(d.il)+". El enunciado dice que los dos van sobre el precio base."});
  c.clis.forEach(function(sb,ix){P.push(sub(sb,C,"Igual que las de "+esc(d.ipl)+": dice cuánto agrega este tipo de "+esc(d.cl)+".",ix,true));});
  var r0=ex.rows[1];
- P.push({id:lc(T),eyebrow:eb("donde se suman los tres"),title:T,intro:"La clase que une todo. Tiene el precio base y conoce "+(fI?"a la":"al")+" "+esc(d.il)+" y al "+esc(d.cl)+".",
-  chunks:[{src:"public class "+T+" {\n\n    private double precioBase;\n    private "+I+" "+i+";\n    private "+C+" "+cv+";\n    private Persona "+st+";\n    private Date fecha;",exp:[
-    kc("precioBase")+" va acá: el enunciado dice que se guarda cuando se registra "+elT+" "+esc(d.tl)+".",
+ P.push({id:lc(T),eyebrow:eb("donde se suman los tres"),title:T,intro:bc?"La clase que une todo. Tiene las horas y conoce "+(fI?"a la":"al")+" "+esc(d.il)+" y al "+esc(d.cl)+". Acá se arma el precio final.":"La clase que une todo. Tiene el precio base y conoce "+(fI?"a la":"al")+" "+esc(d.il)+" y al "+esc(d.cl)+".",
+  chunks:[{src:"public class "+T+" {\n\n    private "+(bc?"int horas":"double precioBase")+";\n    private "+I+" "+i+";\n    private "+C+" "+cv+";\n    private Persona "+st+";\n    private Date fecha;",exp:[
+    bc?kc("horas")+" va acá: se guarda cuando se registra "+elT+" "+esc(d.tl)+". No hay atributo "+kc("precioBase")+": se calcula.":kc("precioBase")+" va acá: el enunciado dice que se guarda cuando se registra "+elT+" "+esc(d.tl)+".",
     kc(i)+", "+kc(cv)+" y "+kc(st)+" son objetos: cada uno es una flecha de asociación del UML. Los tipos son las clases padre, para que entre cualquier subclase."]},
-   {src:"    public double getPrecioFinal() {\n        return precioBase + "+i+".adicional(precioBase) + "+cv+".adicional(precioBase);\n    }"+(c.hasF?"":"\n}"),exp:[
+   {src:bc?"    public double getPrecioFinal() {\n        double precioBase = "+i+".getPrecioBase(horas);\n        return precioBase + "+i+".aplicarRecargo(precioBase) - "+cv+".adicional(precioBase);\n    }"+(c.hasF?"":"\n}"):"    public double getPrecioFinal() {\n        return precioBase + "+i+".adicional(precioBase) + "+cv+".adicional(precioBase);\n    }"+(c.hasF?"":"\n}"),exp:bc?[
+    "Es <strong>el corazón del ejercicio</strong>. Primero se calcula el precio base y se guarda en una variable local, porque se va a usar tres veces.",
+    kc(i+".getPrecioBase(horas)")+": "+kc("horas")+" es un atributo de "+kc(T)+" y se usa directo; se la pasa "+(fI?"a la":"al")+" "+esc(d.il)+", que tiene el precio por hora y multiplica.",
+    kc(i+".aplicarRecargo(precioBase)")+": le pasa el precio base y recibe cuánto se recarga. Java ejecuta la versión de la clase real, sin preguntar el tipo.",
+    kc(cv+".adicional(precioBase)")+": lo mismo con el "+esc(d.cl)+", y se <strong>resta</strong>. Recibe el <strong>mismo</strong> "+kc("precioBase")+", no el recargado.",
+    "Con "+ex.H+" horas a "+nf(ex.PPH)+" ("+nf(r0.base)+"), "+kc(c.subs[1].n)+" y "+kc(c.clis[1].n)+": "+nf(r0.base)+" + "+nf(r0.a1)+" − "+nf(r0.a2)+" = "+nf(r0.fin)+"."]:[
     "Es <strong>el corazón del ejercicio</strong>: una suma de tres partes.",
     kc(i+".adicional(precioBase)")+": le pasa el precio base "+(fI?"a la":"al")+" "+esc(d.il)+" y recibe cuánto agrega. Java ejecuta la versión de la clase real, sin preguntar el tipo.",
     kc(cv+".adicional(precioBase)")+": lo mismo con el "+esc(d.cl)+". Recibe el <strong>mismo</strong> "+kc("precioBase")+", no el resultado anterior.",
     kc("precioBase")+", "+kc(i)+" y "+kc(cv)+" son atributos de "+kc(T)+": se usan directo.",
     "Con base "+nf(r0.base)+", "+kc(c.subs[1].n)+" y "+kc(c.clis[1].n)+": "+nf(r0.base)+" + "+nf(r0.a1)+" + "+nf(r0.a2)+" = "+nf(r0.fin)+".",
     "Como es una suma, da igual cuál adicional va primero."]}],
-  warn:"Encadenar: "+kc(cv+".adicional("+i+".adicional(precioBase))")+". Eso calcula el segundo adicional sobre el primero, no sobre el precio base."});
+  warn:bc?"Escribir "+kc("precioBase + recargo + adicional")+" cuando el enunciado dice que el adicional se resta, o calcular el adicional sobre el precio ya recargado.":"Encadenar: "+kc(cv+".adicional("+i+".adicional(precioBase))")+". Eso calcula el segundo adicional sobre el primero, no sobre el precio base."});
  if(c.hasF)P[P.length-1].chunks.push({src:"    public void "+c.agr+"(Vector<"+I+"> lista) {\n        "+i+"."+c.agr+"(lista);\n    }\n}",exp:[
   "Otra delegación. "+(fT?"La":"El")+" "+esc(d.tl)+" no sabe de qué tipo es su "+esc(d.il)+": le pasa la lista y "+(fI?"ella":"él")+" decide si se agrega.",
   "Hace falta porque el sistema guarda "+esc(d.tpl)+", no "+esc(d.ipl)+": para llegar "+(fI?"a la":"al")+" "+esc(d.il)+" hay que pasar por "+elT+" "+esc(d.tl)+"."]});
@@ -16074,8 +16134,8 @@ function adParts(c){
   kc("Vector<"+T+">")+" es la colección de "+losT+" "+esc(d.tpl)+". Se crea vacía en la misma línea donde se declara."]}];
  c.M.forEach(function(m,ix){
   var s="    "+m.sig+" {\n",e=[],isLast=ix===c.M.length-1;
-  if(m.k==="add"){s+="        "+T+" "+t+" = new "+T+"();\n        "+t+".setPrecioBase(precioBase);\n        "+t+".set"+cap(i)+"("+i+");\n        "+t+".set"+cap(cv)+"("+cv+");\n        "+t+".set"+cap(st)+"("+st+");\n        "+t+".setFecha(new Date());\n        "+c.tplv+".add("+t+");\n";e=[
-   "La firma se copia exacta del enunciado. Acá el precio base llega por parámetro.",
+  if(m.k==="add"){s+="        "+T+" "+t+" = new "+T+"();\n        "+t+(bc?".setHoras(horas);\n":".setPrecioBase(precioBase);\n")+"        "+t+".set"+cap(i)+"("+i+");\n        "+t+".set"+cap(cv)+"("+cv+");\n        "+t+".set"+cap(st)+"("+st+");\n        "+t+".setFecha(new Date());\n        "+c.tplv+".add("+t+");\n";e=[
+   (bc?"La firma se copia exacta del enunciado. Llegan las horas, no el precio base: el precio base se calcula después.":"La firma se copia exacta del enunciado. Acá el precio base llega por parámetro."),
    "Crear vacío, cargar con setters y agregar. La fecha es "+kc("new Date()")+", el momento actual.",
    kc(c.tplv+".add(...)")+": "+kc(c.tplv)+" es un atributo de esta clase y se usa directo."];}
   if(m.k==="precio"){s+="        return "+t+".getPrecioFinal();\n";e=["Una sola línea que <strong>delega</strong>. La suma la sabe hacer "+elT+" "+esc(d.tl)+"."];}
