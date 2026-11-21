@@ -6490,90 +6490,93 @@ public class Renglon {
     <li>Lo que sigue es igual que siempre: recargo y descuento reciben el precio base y devuelven lo suyo; el lavado combina los tres.</li>
     <li>Lo que dice el enunciado manda: si pide el descuento sobre otro monto, o que <code>aplicarDescuento</code> devuelva el monto ya descontado, la cuenta final cambia.</li>
   </ul></div>
-  <div id="uc-basecalc-list"><details open><summary>Lavadero: el precio base se calcula</summary><div class="uc-ex"><div class="blk enunciado gen-enun"><p>Un lavadero quiere un sistema para registrar los lavados que realiza. Del lavadero se conoce el nombre, la dirección y todos los lavados realizados. De cada lavado se conoce el vehículo, el cliente, la cantidad de horas que duró y la fecha.</p><p>De cada vehículo se conoce la patente y el <b>precio por hora</b>. Según el tipo de vehículo se agrega un recargo:</p><div class="tbl"><table><thead><tr><th>Tipo de vehículo</th><th>Recargo</th></tr></thead><tbody><tr><td>Auto</td><td>Sin recargo</td></tr><tr><td>Camioneta</td><td>20 % del precio base</td></tr><tr><td>Camión</td><td>50 % del precio base</td></tr></tbody></table></div><p>De cada cliente se conoce el nombre y el DNI. Según el tipo de cliente se aplica un descuento:</p><div class="tbl"><table><thead><tr><th>Tipo de cliente</th><th>Descuento</th></tr></thead><tbody><tr><td>Particular</td><td>Sin descuento</td></tr><tr><td>Abonado</td><td>10 % del precio base</td></tr><tr><td>Flota</td><td>25 % del precio base</td></tr></tbody></table></div><p>El <b>precio base</b> de un lavado es la cantidad de horas por el precio por hora del vehículo. El precio final es el precio base, más el recargo, menos el descuento. <b>El recargo y el descuento se calculan sobre el precio base.</b></p><h3>Se pide</h3><ol><li>Diseñe una solución en UML: clases, atributos y relaciones. <span class="gen-pts">25 pts</span></li><li>En Java-Like, implemente todas las clases y estos métodos del sistema:<ul><li><code>public void addLavado(Vehiculo vehiculo, Cliente cliente, int horas)</code> — Registra un lavado de un vehículo para un cliente, con la cantidad de horas. <span class="gen-pts">6 pts</span></li><li><code>public float precioDe(Lavado lavado)</code> — Calcula el precio final de un lavado. <span class="gen-pts">10 pts</span></li><li><code>public float montoTotalLavados()</code> — Retorna el monto total de todos los lavados. <span class="gen-pts">15 pts</span></li><li><code>public Lavado lavadoMasCaro()</code> — Retorna el lavado de mayor precio final. <span class="gen-pts">20 pts</span></li></ul></li></ol><p class="muted">El recargo y el descuento se resuelven con polimorfismo: cada tipo define el suyo.</p></div><div class="blk"><h3>Diagrama de clases</h3><div class="uml-svg"><svg viewBox="-24 -24 883 780" width="883" height="780" role="img" aria-label="Diagrama de clases"><rect class="u-box" x="247.0" y="0" width="341" height="138" rx="2"/>
-<text class="u-t u-name" x="417.5" y="18" text-anchor="middle">Lavadero</text>
-<line class="u-sep" x1="247.0" y1="26" x2="588.0" y2="26"/>
-<text class="u-t" x="257.0" y="42">- nombre : String</text>
-<text class="u-t" x="257.0" y="58">- direccion : String</text>
-<line class="u-sep" x1="247.0" y1="66" x2="588.0" y2="66"/>
-<text class="u-t" x="257.0" y="82">+ addLavado(vehiculo, cliente, horas) : void</text>
-<text class="u-t" x="257.0" y="98">+ precioDe(lavado : Lavado) : float</text>
-<text class="u-t" x="257.0" y="114">+ montoTotalLavados() : float</text>
-<text class="u-t" x="257.0" y="130">+ lavadoMasCaro() : Lavado</text>
-<rect class="u-box" x="312.5" y="208" width="210" height="106" rx="2"/>
-<text class="u-t u-name" x="417.5" y="226" text-anchor="middle">Lavado</text>
-<line class="u-sep" x1="312.5" y1="234" x2="522.5" y2="234"/>
-<text class="u-t" x="322.5" y="250">- horas : int</text>
-<text class="u-t" x="322.5" y="266">- fecha : Date</text>
-<line class="u-sep" x1="312.5" y1="274" x2="522.5" y2="274"/>
-<text class="u-t" x="322.5" y="290">+ getPrecioBase() : float</text>
-<text class="u-t" x="322.5" y="306">+ getPrecioFinal() : float</text>
-<rect class="u-box" x="0.0" y="394" width="341" height="98" rx="2"/>
-<text class="u-t u-st" x="170.5" y="409" text-anchor="middle">«abstract»</text>
-<text class="u-t u-name u-it" x="170.5" y="426" text-anchor="middle">Vehiculo</text>
-<line class="u-sep" x1="0.0" y1="434" x2="341.0" y2="434"/>
-<text class="u-t" x="10.0" y="450">- patente : String</text>
-<text class="u-t" x="10.0" y="466">- precioPorHora : float</text>
-<line class="u-sep" x1="0.0" y1="474" x2="341.0" y2="474"/>
-<text class="u-t u-it" x="10.0" y="490">+ aplicarRecargo(precioBase : float) : float</text>
-<rect class="u-box" x="445.0" y="394" width="356" height="98" rx="2"/>
-<text class="u-t u-st" x="623.0" y="409" text-anchor="middle">«abstract»</text>
-<text class="u-t u-name u-it" x="623.0" y="426" text-anchor="middle">Cliente</text>
-<line class="u-sep" x1="445.0" y1="434" x2="801.0" y2="434"/>
-<text class="u-t" x="455.0" y="450">- nombre : String</text>
-<text class="u-t" x="455.0" y="466">- dni : String</text>
-<line class="u-sep" x1="445.0" y1="474" x2="801.0" y2="474"/>
-<text class="u-t u-it" x="455.0" y="490">+ aplicarDescuento(precioBase : float) : float</text>
-<rect class="u-box" x="34.0" y="526" width="341" height="58" rx="2"/>
-<text class="u-t u-name" x="204.5" y="544" text-anchor="middle">Auto</text>
-<line class="u-sep" x1="34.0" y1="552" x2="375.0" y2="552"/>
-<line class="u-sep" x1="34.0" y1="560" x2="375.0" y2="560"/>
-<text class="u-t" x="44.0" y="576">+ aplicarRecargo(precioBase : float) : float</text>
-<rect class="u-box" x="34.0" y="600" width="341" height="58" rx="2"/>
-<text class="u-t u-name" x="204.5" y="618" text-anchor="middle">Camioneta</text>
-<line class="u-sep" x1="34.0" y1="626" x2="375.0" y2="626"/>
-<line class="u-sep" x1="34.0" y1="634" x2="375.0" y2="634"/>
-<text class="u-t" x="44.0" y="650">+ aplicarRecargo(precioBase : float) : float</text>
-<rect class="u-box" x="34.0" y="674" width="341" height="58" rx="2"/>
-<text class="u-t u-name" x="204.5" y="692" text-anchor="middle">Camion</text>
-<line class="u-sep" x1="34.0" y1="700" x2="375.0" y2="700"/>
-<line class="u-sep" x1="34.0" y1="708" x2="375.0" y2="708"/>
-<text class="u-t" x="44.0" y="724">+ aplicarRecargo(precioBase : float) : float</text>
-<rect class="u-box" x="479.0" y="526" width="356" height="58" rx="2"/>
-<text class="u-t u-name" x="657.0" y="544" text-anchor="middle">ClienteParticular</text>
-<line class="u-sep" x1="479.0" y1="552" x2="835.0" y2="552"/>
-<line class="u-sep" x1="479.0" y1="560" x2="835.0" y2="560"/>
-<text class="u-t" x="489.0" y="576">+ aplicarDescuento(precioBase : float) : float</text>
-<rect class="u-box" x="479.0" y="600" width="356" height="58" rx="2"/>
-<text class="u-t u-name" x="657.0" y="618" text-anchor="middle">ClienteAbonado</text>
-<line class="u-sep" x1="479.0" y1="626" x2="835.0" y2="626"/>
-<line class="u-sep" x1="479.0" y1="634" x2="835.0" y2="634"/>
-<text class="u-t" x="489.0" y="650">+ aplicarDescuento(precioBase : float) : float</text>
-<rect class="u-box" x="479.0" y="674" width="356" height="58" rx="2"/>
-<text class="u-t u-name" x="657.0" y="692" text-anchor="middle">ClienteFlota</text>
-<line class="u-sep" x1="479.0" y1="700" x2="835.0" y2="700"/>
-<line class="u-sep" x1="479.0" y1="708" x2="835.0" y2="708"/>
-<text class="u-t" x="489.0" y="724">+ aplicarDescuento(precioBase : float) : float</text>
-<path class="u-ln" d="M 417.5 160.0 L 417.5 208.0"/>
-<polygon class="u-fill" points="417.5,138.0 424.0,149.0 417.5,160.0 411.0,149.0"/>
-<text class="u-lbl" x="427.5" y="182.0">lavados</text>
-<text class="u-lbl" x="427.5" y="200.0">*</text>
-<path class="u-ln" d="M 357.5 314.0 L 357.5 350.0 L 170.5 350.0 L 170.5 394.0"/>
-<path class="u-ln" d="M 164.5 384.0 L 170.5 394.0 L 176.5 384.0"/>
-<text class="u-lbl" x="160.5" y="380.0" text-anchor="end">1 vehiculo</text>
-<path class="u-ln" d="M 477.5 314.0 L 477.5 350.0 L 623.0 350.0 L 623.0 394.0"/>
-<path class="u-ln" d="M 617.0 384.0 L 623.0 394.0 L 629.0 384.0"/>
-<text class="u-lbl" x="633.0" y="380.0" text-anchor="start">1 cliente</text>
-<path class="u-ln" d="M 16.0 506.0 L 16.0 703.0"/>
-<path class="u-ln" d="M 16.0 555.0 L 34.0 555.0"/>
-<path class="u-ln" d="M 16.0 629.0 L 34.0 629.0"/>
-<path class="u-ln" d="M 16.0 703.0 L 34.0 703.0"/>
-<polygon class="u-hollow" points="16.0,492.0 24.0,506.0 8.0,506.0"/>
-<path class="u-ln" d="M 461.0 506.0 L 461.0 703.0"/>
-<path class="u-ln" d="M 461.0 555.0 L 479.0 555.0"/>
-<path class="u-ln" d="M 461.0 629.0 L 479.0 629.0"/>
-<path class="u-ln" d="M 461.0 703.0 L 479.0 703.0"/>
-<polygon class="u-hollow" points="461.0,492.0 469.0,506.0 453.0,506.0"/></svg></div></div><div class="blk"><h3>Cómo lo vas escribiendo</h3><div class="uc-step"><div class="eyebrow">Paso 1</div><h4>Una caja, un encabezado</h4><p>Un encabezado por cada caja del diagrama, todavía vacías.</p><pre><code><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> Vehiculo {
+  <div id="uc-basecalc-list"><details open><summary>Lavadero: el precio base se calcula</summary><div class="uc-ex"><div class="blk enunciado gen-enun"><p>Un lavadero quiere un sistema para registrar los lavados que realiza. Del lavadero se conoce el nombre, la dirección y todos los lavados realizados. De cada lavado se conoce el vehículo, el cliente, la cantidad de horas que duró y la fecha.</p><p>De cada vehículo se conoce la patente y el <b>precio por hora</b>. Según el tipo de vehículo se agrega un recargo:</p><div class="tbl"><table><thead><tr><th>Tipo de vehículo</th><th>Recargo</th></tr></thead><tbody><tr><td>Auto</td><td>Sin recargo</td></tr><tr><td>Camioneta</td><td>20 % del precio base</td></tr><tr><td>Camión</td><td>50 % del precio base</td></tr></tbody></table></div><p>De cada cliente se conoce el nombre y el DNI. Según el tipo de cliente se aplica un descuento:</p><div class="tbl"><table><thead><tr><th>Tipo de cliente</th><th>Descuento</th></tr></thead><tbody><tr><td>Particular</td><td>Sin descuento</td></tr><tr><td>Abonado</td><td>10 % del precio base</td></tr><tr><td>Flota</td><td>25 % del precio base</td></tr></tbody></table></div><p>El <b>precio base</b> de un lavado es la cantidad de horas por el precio por hora del vehículo. El precio final es el precio base, más el recargo, menos el descuento. <b>El recargo y el descuento se calculan sobre el precio base.</b></p><h3>Se pide</h3><ol><li>Diseñe una solución en UML: clases, atributos y relaciones. <span class="gen-pts">25 pts</span></li><li>En Java-Like, implemente todas las clases y estos métodos del sistema:<ul><li><code>public void addLavado(Vehiculo vehiculo, Cliente cliente, int horas)</code> — Registra un lavado de un vehículo para un cliente, con la cantidad de horas. <span class="gen-pts">6 pts</span></li><li><code>public float precioDe(Lavado lavado)</code> — Calcula el precio final de un lavado. <span class="gen-pts">10 pts</span></li><li><code>public float montoTotalLavados()</code> — Retorna el monto total de todos los lavados. <span class="gen-pts">15 pts</span></li><li><code>public Vector&lt;Vehiculo&gt; camiones()</code> — Retorna un vector solamente con los camiones de los lavados realizados. <span class="gen-pts">20 pts</span></li></ul></li></ol><p class="muted">El recargo y el descuento se resuelven con polimorfismo: cada tipo define el suyo.</p></div><div class="blk"><h3>Diagrama de clases</h3><div class="uml-svg"><svg viewBox="-24 -24 912 828" width="912" height="828" role="img" aria-label="Diagrama de clases"><rect class="u-box" x="261.5" y="0" width="341" height="138" rx="2"/>
+<text class="u-t u-name" x="432.0" y="18" text-anchor="middle">Lavadero</text>
+<line class="u-sep" x1="261.5" y1="26" x2="602.5" y2="26"/>
+<text class="u-t" x="271.5" y="42">- nombre : String</text>
+<text class="u-t" x="271.5" y="58">- direccion : String</text>
+<line class="u-sep" x1="261.5" y1="66" x2="602.5" y2="66"/>
+<text class="u-t" x="271.5" y="82">+ addLavado(vehiculo, cliente, horas) : void</text>
+<text class="u-t" x="271.5" y="98">+ precioDe(lavado : Lavado) : float</text>
+<text class="u-t" x="271.5" y="114">+ montoTotalLavados() : float</text>
+<text class="u-t" x="271.5" y="130">+ camiones() : Vector&lt;Vehiculo&gt;</text>
+<rect class="u-box" x="247.0" y="208" width="370" height="122" rx="2"/>
+<text class="u-t u-name" x="432.0" y="226" text-anchor="middle">Lavado</text>
+<line class="u-sep" x1="247.0" y1="234" x2="617.0" y2="234"/>
+<text class="u-t" x="257.0" y="250">- horas : int</text>
+<text class="u-t" x="257.0" y="266">- fecha : Date</text>
+<line class="u-sep" x1="247.0" y1="274" x2="617.0" y2="274"/>
+<text class="u-t" x="257.0" y="290">+ getPrecioBase() : float</text>
+<text class="u-t" x="257.0" y="306">+ getPrecioFinal() : float</text>
+<text class="u-t" x="257.0" y="322">+ agregarSiEsCamion(l : Vector&lt;Vehiculo&gt;) : void</text>
+<rect class="u-box" x="0.0" y="410" width="370" height="114" rx="2"/>
+<text class="u-t u-st" x="185.0" y="425" text-anchor="middle">«abstract»</text>
+<text class="u-t u-name u-it" x="185.0" y="442" text-anchor="middle">Vehiculo</text>
+<line class="u-sep" x1="0.0" y1="450" x2="370.0" y2="450"/>
+<text class="u-t" x="10.0" y="466">- patente : String</text>
+<text class="u-t" x="10.0" y="482">- precioPorHora : float</text>
+<line class="u-sep" x1="0.0" y1="490" x2="370.0" y2="490"/>
+<text class="u-t u-it" x="10.0" y="506">+ aplicarRecargo(precioBase : float) : float</text>
+<text class="u-t" x="10.0" y="522">+ agregarSiEsCamion(l : Vector&lt;Vehiculo&gt;) : void</text>
+<rect class="u-box" x="474.0" y="410" width="356" height="98" rx="2"/>
+<text class="u-t u-st" x="652.0" y="425" text-anchor="middle">«abstract»</text>
+<text class="u-t u-name u-it" x="652.0" y="442" text-anchor="middle">Cliente</text>
+<line class="u-sep" x1="474.0" y1="450" x2="830.0" y2="450"/>
+<text class="u-t" x="484.0" y="466">- nombre : String</text>
+<text class="u-t" x="484.0" y="482">- dni : String</text>
+<line class="u-sep" x1="474.0" y1="490" x2="830.0" y2="490"/>
+<text class="u-t u-it" x="484.0" y="506">+ aplicarDescuento(precioBase : float) : float</text>
+<rect class="u-box" x="34.0" y="558" width="341" height="58" rx="2"/>
+<text class="u-t u-name" x="204.5" y="576" text-anchor="middle">Auto</text>
+<line class="u-sep" x1="34.0" y1="584" x2="375.0" y2="584"/>
+<line class="u-sep" x1="34.0" y1="592" x2="375.0" y2="592"/>
+<text class="u-t" x="44.0" y="608">+ aplicarRecargo(precioBase : float) : float</text>
+<rect class="u-box" x="34.0" y="632" width="341" height="58" rx="2"/>
+<text class="u-t u-name" x="204.5" y="650" text-anchor="middle">Camioneta</text>
+<line class="u-sep" x1="34.0" y1="658" x2="375.0" y2="658"/>
+<line class="u-sep" x1="34.0" y1="666" x2="375.0" y2="666"/>
+<text class="u-t" x="44.0" y="682">+ aplicarRecargo(precioBase : float) : float</text>
+<rect class="u-box" x="34.0" y="706" width="370" height="74" rx="2"/>
+<text class="u-t u-name" x="219.0" y="724" text-anchor="middle">Camion</text>
+<line class="u-sep" x1="34.0" y1="732" x2="404.0" y2="732"/>
+<line class="u-sep" x1="34.0" y1="740" x2="404.0" y2="740"/>
+<text class="u-t" x="44.0" y="756">+ aplicarRecargo(precioBase : float) : float</text>
+<text class="u-t" x="44.0" y="772">+ agregarSiEsCamion(l : Vector&lt;Vehiculo&gt;) : void</text>
+<rect class="u-box" x="508.0" y="558" width="356" height="58" rx="2"/>
+<text class="u-t u-name" x="686.0" y="576" text-anchor="middle">ClienteParticular</text>
+<line class="u-sep" x1="508.0" y1="584" x2="864.0" y2="584"/>
+<line class="u-sep" x1="508.0" y1="592" x2="864.0" y2="592"/>
+<text class="u-t" x="518.0" y="608">+ aplicarDescuento(precioBase : float) : float</text>
+<rect class="u-box" x="508.0" y="632" width="356" height="58" rx="2"/>
+<text class="u-t u-name" x="686.0" y="650" text-anchor="middle">ClienteAbonado</text>
+<line class="u-sep" x1="508.0" y1="658" x2="864.0" y2="658"/>
+<line class="u-sep" x1="508.0" y1="666" x2="864.0" y2="666"/>
+<text class="u-t" x="518.0" y="682">+ aplicarDescuento(precioBase : float) : float</text>
+<rect class="u-box" x="508.0" y="706" width="356" height="58" rx="2"/>
+<text class="u-t u-name" x="686.0" y="724" text-anchor="middle">ClienteFlota</text>
+<line class="u-sep" x1="508.0" y1="732" x2="864.0" y2="732"/>
+<line class="u-sep" x1="508.0" y1="740" x2="864.0" y2="740"/>
+<text class="u-t" x="518.0" y="756">+ aplicarDescuento(precioBase : float) : float</text>
+<path class="u-ln" d="M 432.0 160.0 L 432.0 208.0"/>
+<polygon class="u-fill" points="432.0,138.0 438.5,149.0 432.0,160.0 425.5,149.0"/>
+<text class="u-lbl" x="442.0" y="182.0">lavados</text>
+<text class="u-lbl" x="442.0" y="200.0">*</text>
+<path class="u-ln" d="M 372.0 330.0 L 372.0 366.0 L 185.0 366.0 L 185.0 410.0"/>
+<path class="u-ln" d="M 179.0 400.0 L 185.0 410.0 L 191.0 400.0"/>
+<text class="u-lbl" x="175.0" y="396.0" text-anchor="end">1 vehiculo</text>
+<path class="u-ln" d="M 492.0 330.0 L 492.0 366.0 L 652.0 366.0 L 652.0 410.0"/>
+<path class="u-ln" d="M 646.0 400.0 L 652.0 410.0 L 658.0 400.0"/>
+<text class="u-lbl" x="662.0" y="396.0" text-anchor="start">1 cliente</text>
+<path class="u-ln" d="M 16.0 538.0 L 16.0 743.0"/>
+<path class="u-ln" d="M 16.0 587.0 L 34.0 587.0"/>
+<path class="u-ln" d="M 16.0 661.0 L 34.0 661.0"/>
+<path class="u-ln" d="M 16.0 743.0 L 34.0 743.0"/>
+<polygon class="u-hollow" points="16.0,524.0 24.0,538.0 8.0,538.0"/>
+<path class="u-ln" d="M 490.0 522.0 L 490.0 735.0"/>
+<path class="u-ln" d="M 490.0 587.0 L 508.0 587.0"/>
+<path class="u-ln" d="M 490.0 661.0 L 508.0 661.0"/>
+<path class="u-ln" d="M 490.0 735.0 L 508.0 735.0"/>
+<polygon class="u-hollow" points="490.0,508.0 498.0,522.0 482.0,522.0"/></svg></div></div><div class="blk"><h3>Cómo lo vas escribiendo</h3><div class="uc-step"><div class="eyebrow">Paso 1</div><h4>Una caja, un encabezado</h4><p>Un encabezado por cada caja del diagrama, todavía vacías.</p><pre><code><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> Vehiculo {
 }
 
 <span class="k">public</span> <span class="k">class</span> Auto <span class="k">extends</span> Vehiculo {
@@ -6604,6 +6607,9 @@ public class Renglon {
 }</code></pre><p class="uc-note">Son 10 cajas. Las dos abstractas llevan <code>abstract</code>; cada triángulo es un <code>extends</code>.</p></div><div class="uc-step"><div class="eyebrow">Paso 2</div><h4>Tachá lo que no se escribe</h4><p>Ya está en el diagrama. No lo declares: usalo por su nombre.</p><ul><li><code>Lavadero</code>: <code>nombre</code>, <code>direccion</code>, <code>lavados</code> (línea)</li><li><code>Lavado</code>: <code>horas</code>, <code>fecha</code>, <code>vehiculo</code> (línea), <code>cliente</code> (línea)</li><li><code>Vehiculo</code>: <code>patente</code>, <code>precioPorHora</code></li><li><code>Cliente</code>: <code>nombre</code>, <code>dni</code></li><li>Los getters y setters de todos ellos.</li></ul><p class="uc-note">Fijate que <b>no existe un atributo <code>precioBase</code></b>: el diagrama tiene <code>horas</code> y <code>precioPorHora</code>. El precio base se calcula, no se guarda.</p></div><div class="uc-step"><div class="eyebrow">Paso 3</div><h4>Un método en cursiva en cada padre</h4><p>Cada superclase tiene su método abstracto. Los dos reciben el precio base, porque el recargo y el descuento se calculan sobre él.</p><pre><code><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> Vehiculo {
 
     <span class="k">public</span> <span class="k">abstract</span> <span class="k">float</span> aplicarRecargo(<span class="k">float</span> precioBase);
+
+    <span class="k">public</span> <span class="k">void</span> agregarSiEsCamion(Vector&lt;Vehiculo&gt; l) {
+    }
 }
 
 <span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> Cliente {
@@ -6626,6 +6632,11 @@ public class Renglon {
     @Override
     <span class="k">public</span> <span class="k">float</span> aplicarRecargo(<span class="k">float</span> precioBase) {
         <span class="k">return</span> precioBase * 0.50f;
+    }
+
+    @Override
+    <span class="k">public</span> <span class="k">void</span> agregarSiEsCamion(Vector&lt;Vehiculo&gt; l) {
+        l.add(<span class="k">this</span>);
     }
 }</code></pre><p class="uc-note">Mismo método que las otras: cambia solo el porcentaje.</p></div><div class="uc-step"><div class="eyebrow">Paso 5</div><h4>Cada tipo de cliente dice su descuento</h4><p>Lo mismo con la segunda tabla. Cada clase devuelve <b>cuánto se descuenta</b>.</p><pre><code><span class="k">public</span> <span class="k">class</span> ClienteParticular <span class="k">extends</span> Cliente {
 
@@ -6655,32 +6666,50 @@ public class Renglon {
         <span class="k">float</span> precioBase = getPrecioBase();
         <span class="k">return</span> precioBase + vehiculo.aplicarRecargo(precioBase) - cliente.aplicarDescuento(precioBase);
     }
-}</code></pre><p class="uc-note"><code>horas</code> es un atributo de <code>Lavado</code>: se usa directo. El precio por hora es de <code>Vehiculo</code>: se pide con <code>vehiculo.getPrecioPorHora()</code>.</p><p class="uc-note">Al vehículo y al cliente se les pasa el mismo <code>precioBase</code>, así ninguno se calcula sobre el otro. El recargo se <b>suma</b> y el descuento se <b>resta</b>.</p><div class="def"><p><b>El error clásico:</b> escribir <code>horas * precioPorHora</code> dentro de <code>Vehiculo</code>, o llamar a <code>getHoras()</code> ahí. <code>Vehiculo</code> no conoce al lavado, así que no ve <code>horas</code> y no compila. Si el cálculo tiene que ir en <code>Vehiculo</code>, las horas llegan por parámetro: <code>getPrecioBase(int horas)</code> y desde el lavado <code>vehiculo.getPrecioBase(horas)</code>.</p></div></div><div class="uc-step"><div class="eyebrow">Paso 7</div><h4>La clase del sistema, un método por vez</h4><p>Encabezado y después un método por vez. <code>lavados</code> es la línea con <code>*</code>: se usa directo.</p><pre><code><span class="k">public</span> <span class="k">class</span> Lavadero {</code></pre><div class="uc-sub"><div class="eyebrow">Paso 7.1 · 6 pts</div><p>Registra un lavado de un vehículo para un cliente, con la cantidad de horas.</p><pre><code>    <span class="k">public</span> <span class="k">void</span> addLavado(Vehiculo vehiculo, Cliente cliente, <span class="k">int</span> horas) {
+
+    <span class="k">public</span> <span class="k">void</span> agregarSiEsCamion(Vector&lt;Vehiculo&gt; l) {
+        vehiculo.agregarSiEsCamion(l);
+    }
+}</code></pre><p class="uc-note"><code>horas</code> es un atributo de <code>Lavado</code>: se usa directo. El precio por hora es de <code>Vehiculo</code>: se pide con <code>vehiculo.getPrecioPorHora()</code>.</p><p class="uc-note">Al vehículo y al cliente se les pasa el mismo <code>precioBase</code>, así ninguno se calcula sobre el otro. El recargo se <b>suma</b> y el descuento se <b>resta</b>.</p><div class="def"><p><b>El error clásico:</b> escribir <code>horas * precioPorHora</code> dentro de <code>Vehiculo</code>, o llamar a <code>getHoras()</code> ahí. <code>Vehiculo</code> no conoce al lavado, así que no ve <code>horas</code> y no compila. Si el cálculo tiene que ir en <code>Vehiculo</code>, las horas llegan por parámetro: <code>getPrecioBase(int horas)</code> y desde el lavado <code>vehiculo.getPrecioBase(horas)</code>.</p></div></div><div class="uc-step"><div class="eyebrow">Paso 7</div><h4>El filtro: tres clases se reparten el trabajo</h4><p>Para devolver solo los camiones sin usar <code>if</code> ni <code>instanceof</code>, el método <code>agregarSiEsCamion</code> existe en las tres clases del camino, con el mismo vector como parámetro:</p><pre><code><span class="c">// Vehiculo: no hace nada (así no agregan ni el auto ni la camioneta)</span>
+<span class="k">public</span> <span class="k">void</span> agregarSiEsCamion(Vector&lt;Vehiculo&gt; l) {
+}
+
+<span class="c">// Camion: se agrega a sí mismo</span>
+@Override
+<span class="k">public</span> <span class="k">void</span> agregarSiEsCamion(Vector&lt;Vehiculo&gt; l) {
+    l.add(<span class="k">this</span>);
+}
+
+<span class="c">// Lavado: le pasa el vector a su vehículo</span>
+<span class="k">public</span> <span class="k">void</span> agregarSiEsCamion(Vector&lt;Vehiculo&gt; l) {
+    vehiculo.agregarSiEsCamion(l);
+}</code></pre><p class="uc-note">En <code>Vehiculo</code> el método está <b>vacío</b>: Auto y Camioneta lo heredan y no agregan nada. Solo <code>Camion</code> lo redefine. <code>this</code> es el propio camión.</p><p class="uc-note">El vector llega por parámetro porque lo crea <code>camiones()</code> y todos tienen que llenar <b>el mismo</b>.</p></div><div class="uc-step"><div class="eyebrow">Paso 8</div><h4>La clase del sistema, un método por vez</h4><p>Encabezado y después un método por vez. <code>lavados</code> es la línea con <code>*</code>: se usa directo.</p><pre><code><span class="k">public</span> <span class="k">class</span> Lavadero {</code></pre><div class="uc-sub"><div class="eyebrow">Paso 8.1 · 6 pts</div><p>Registra un lavado de un vehículo para un cliente, con la cantidad de horas.</p><pre><code>    <span class="k">public</span> <span class="k">void</span> addLavado(Vehiculo vehiculo, Cliente cliente, <span class="k">int</span> horas) {
         Lavado lavado = <span class="k">new</span> Lavado();
         lavado.setVehiculo(vehiculo);
         lavado.setCliente(cliente);
         lavado.setHoras(horas);
         lavado.setFecha(<span class="k">new</span> Date());
         lavados.add(lavado);
-    }</code></pre><p class="uc-note">Crear vacío, cargar con setters, agregar. Las horas llegan por parámetro; el precio base no se guarda en ningún lado.</p></div><div class="uc-sub"><div class="eyebrow">Paso 7.2 · 10 pts</div><p>Calcula el precio final de un lavado.</p><pre><code>    <span class="k">public</span> <span class="k">float</span> precioDe(Lavado lavado) {
+    }</code></pre><p class="uc-note">Crear vacío, cargar con setters, agregar. Las horas llegan por parámetro; el precio base no se guarda en ningún lado.</p></div><div class="uc-sub"><div class="eyebrow">Paso 8.2 · 10 pts</div><p>Calcula el precio final de un lavado.</p><pre><code>    <span class="k">public</span> <span class="k">float</span> precioDe(Lavado lavado) {
         <span class="k">return</span> lavado.getPrecioFinal();
-    }</code></pre><p class="uc-note">Una línea que delega. La cuenta la sabe hacer el lavado.</p></div><div class="uc-sub"><div class="eyebrow">Paso 7.3 · 15 pts</div><p>Retorna el monto total de todos los lavados.</p><pre><code>    <span class="k">public</span> <span class="k">float</span> montoTotalLavados() {
+    }</code></pre><p class="uc-note">Una línea que delega. La cuenta la sabe hacer el lavado.</p></div><div class="uc-sub"><div class="eyebrow">Paso 8.3 · 15 pts</div><p>Retorna el monto total de todos los lavados.</p><pre><code>    <span class="k">public</span> <span class="k">float</span> montoTotalLavados() {
         <span class="k">float</span> total = 0;
         <span class="k">for</span> (Lavado lavado : lavados) {
             total += precioDe(lavado);
         }
         <span class="k">return</span> total;
-    }</code></pre><p class="uc-note">Acumulador: arranca en 0, suma con <code>+=</code> y devuelve afuera del <code>for</code>.</p></div><div class="uc-sub"><div class="eyebrow">Paso 7.4 · 20 pts</div><p>Retorna el lavado de mayor precio final.</p><pre><code>    <span class="k">public</span> Lavado lavadoMasCaro() {
-        Lavado masCaro = <span class="k">null</span>;
+    }</code></pre><p class="uc-note">Acumulador: arranca en 0, suma con <code>+=</code> y devuelve afuera del <code>for</code>.</p></div><div class="uc-sub"><div class="eyebrow">Paso 8.4 · 20 pts</div><p>Retorna un vector solamente con los camiones de los lavados realizados.</p><pre><code>    <span class="k">public</span> Vector&lt;Vehiculo&gt; camiones() {
+        Vector&lt;Vehiculo&gt; resultado = <span class="k">new</span> Vector&lt;Vehiculo&gt;();
         <span class="k">for</span> (Lavado lavado : lavados) {
-            <span class="k">if</span> (masCaro == <span class="k">null</span> || precioDe(lavado) &gt; precioDe(masCaro)) {
-                masCaro = lavado;
-            }
+            lavado.agregarSiEsCamion(resultado);
         }
-        <span class="k">return</span> masCaro;
-    }</code></pre><p class="uc-note">Máximo: guardás el lavado, no el precio. Empieza en <code>null</code>.</p></div><pre><code>}</code></pre><p class="uc-note">No te olvides de la llave que cierra la clase.</p></div><div class="uc-step"><div class="eyebrow">Paso 8</div><h4>Probalo con números</h4><ul><li>Lavado de 4 horas, vehículo de $1.000 por hora: el precio base es 4 × 1.000 = <b>$4.000</b>.</li><li>Ese mismo lavado con una camioneta y un cliente abonado: 4.000 + 800 (20 %) − 400 (10 %) = <b>$4.400</b>.</li><li>Con un camión y un cliente de flota: 4.000 + 2.000 (50 %) − 1.000 (25 %) = <b>$5.000</b>.</li><li>Con un auto y un cliente particular: 4.000 + 0 − 0 = <b>$4.000</b>.</li></ul><details><summary>Ver cómo queda la hoja completa</summary><div class="uc-ex"><pre><code><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> Vehiculo {
+        <span class="k">return</span> resultado;
+    }</code></pre><p class="uc-note">Filtro: creás el vector vacío con <code>new</code> una sola vez, le pedís a cada lavado que agregue su vehículo si es camión, y devolvés el vector afuera del <code>for</code>. No hay <code>if</code> ni <code>instanceof</code>: cada tipo de vehículo decide.</p></div><pre><code>}</code></pre><p class="uc-note">No te olvides de la llave que cierra la clase.</p></div><div class="uc-step"><div class="eyebrow">Paso 9</div><h4>Probalo con números</h4><ul><li>Lavado de 4 horas, vehículo de $1.000 por hora: el precio base es 4 × 1.000 = <b>$4.000</b>.</li><li>Ese mismo lavado con una camioneta y un cliente abonado: 4.000 + 800 (20 %) − 400 (10 %) = <b>$4.400</b>.</li><li>Con un camión y un cliente de flota: 4.000 + 2.000 (50 %) − 1.000 (25 %) = <b>$5.000</b>.</li><li>Con un auto y un cliente particular: 4.000 + 0 − 0 = <b>$4.000</b>.</li><li>Con tres lavados (un auto, una camioneta y un camión), <code>camiones()</code> devuelve un vector con <b>un solo</b> vehículo: el camión. Sin camiones devuelve un vector vacío, no <code>null</code>.</li></ul><details><summary>Ver cómo queda la hoja completa</summary><div class="uc-ex"><pre><code><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> Vehiculo {
 
     <span class="k">public</span> <span class="k">abstract</span> <span class="k">float</span> aplicarRecargo(<span class="k">float</span> precioBase);
+
+    <span class="k">public</span> <span class="k">void</span> agregarSiEsCamion(Vector&lt;Vehiculo&gt; l) {
+    }
 }
 
 <span class="k">public</span> <span class="k">class</span> Auto <span class="k">extends</span> Vehiculo {
@@ -6704,6 +6733,11 @@ public class Renglon {
     @Override
     <span class="k">public</span> <span class="k">float</span> aplicarRecargo(<span class="k">float</span> precioBase) {
         <span class="k">return</span> precioBase * 0.50f;
+    }
+
+    @Override
+    <span class="k">public</span> <span class="k">void</span> agregarSiEsCamion(Vector&lt;Vehiculo&gt; l) {
+        l.add(<span class="k">this</span>);
     }
 }
 
@@ -6746,6 +6780,10 @@ public class Renglon {
         <span class="k">float</span> precioBase = getPrecioBase();
         <span class="k">return</span> precioBase + vehiculo.aplicarRecargo(precioBase) - cliente.aplicarDescuento(precioBase);
     }
+
+    <span class="k">public</span> <span class="k">void</span> agregarSiEsCamion(Vector&lt;Vehiculo&gt; l) {
+        vehiculo.agregarSiEsCamion(l);
+    }
 }
 
 <span class="k">public</span> <span class="k">class</span> Lavadero {
@@ -6771,14 +6809,12 @@ public class Renglon {
         <span class="k">return</span> total;
     }
 
-    <span class="k">public</span> Lavado lavadoMasCaro() {
-        Lavado masCaro = <span class="k">null</span>;
+    <span class="k">public</span> Vector&lt;Vehiculo&gt; camiones() {
+        Vector&lt;Vehiculo&gt; resultado = <span class="k">new</span> Vector&lt;Vehiculo&gt;();
         <span class="k">for</span> (Lavado lavado : lavados) {
-            <span class="k">if</span> (masCaro == <span class="k">null</span> || precioDe(lavado) &gt; precioDe(masCaro)) {
-                masCaro = lavado;
-            }
+            lavado.agregarSiEsCamion(resultado);
         }
-        <span class="k">return</span> masCaro;
+        <span class="k">return</span> resultado;
     }
 }</code></pre></div></details></div></div></div></details></div>
 </section>
@@ -6848,7 +6884,7 @@ public class Renglon {
     </ul></div>
   </details>
   
-<div class="pm-box" style="margin-top:18px"><h3>3 · Código</h3><p class="muted">Está la solución que armamos, con los porcentajes de ejemplo. Escribí o corregí tu versión y comparala. Tab inserta cuatro espacios.</p><textarea id="pm-code-ta" class="pm-ta" rows="40" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Código del parcial"></textarea><div class="pm-btns"><button class="ed-btn" id="pm-code-ta-copy">Copiar</button><button class="ed-btn" id="pm-code-ta-reset">Volver al texto inicial</button><span class="pm-saved" id="pm-code-ta-st"></span></div></div></section><script type="application/json" id="pm-data">[{"id": "martin", "titulo": "Parcial Martin", "enunciado": "", "classes": [["Lavadero", [], false], ["Lavado", [], false], ["Persona", [], false], ["Vehiculo", [], true], ["Auto", [], false], ["Camioneta", [], false], ["Camion", ["camión"], false], ["Cliente", [], true], ["ClienteParticular", ["particular"], false], ["ClienteAbonado", ["abonado"], false], ["ClienteFlota", ["flota"], false]], "inherit": [["Auto", "Vehiculo"], ["Camioneta", "Vehiculo"], ["Camion", "Vehiculo"], ["ClienteParticular", "Cliente"], ["ClienteAbonado", "Cliente"], ["ClienteFlota", "Cliente"]], "optional_inherit": [["Cliente", "Persona"]], "rel": [["Lavadero", "Lavado", ["comp", "aggr", "assoc", "nav"]], ["Lavado", "Vehiculo", ["assoc", "nav"]], ["Lavado", "Cliente", ["assoc", "nav"]], ["Lavado", "Persona", ["assoc", "nav"]]]}]</script><script type="application/json" id="pm-init">{"enun": "Un lavadero de vehículos quiere un sistema para registrar los lavados que realiza. Del lavadero se conoce el nombre, la dirección y todos los lavados realizados. De cada lavado se conoce el vehículo, el cliente, el lavador (una persona), la cantidad de horas y la fecha.\n\nDe cada vehículo se conoce la patente, la marca y el precio por hora. Hay tres tipos, cada uno con su recargo sobre el precio base:\n  Auto: [completá]\n  Camioneta: [completá]\n  Camión: [completá]\n\nLos clientes son personas y hay tres tipos, cada uno con su descuento sobre el precio base:\n  Particular: [completá]\n  Abonado: [completá]\n  Flota: [completá]\n\nEl precio base de un lavado es la cantidad de horas por el precio por hora del vehículo. El precio final es el precio base, más el recargo del vehículo, menos el descuento del cliente.\n\nSe pide:\n1. Diseñe una solución en UML: clases, atributos y relaciones.\n2. En Java-Like, implemente todas las clases y estos métodos:\n   addLavado(i : Vehiculo, c : Cliente, p : Persona, horas : int) : void\n   precioDe(lavado : Lavado) : double\n   montoTotalLavados() : double\n   lavadoMasCaro() : Lavado\n   camiones() : Vector<Vehiculo>\n\n(Reconstruido de memoria: completá los porcentajes y corregí lo que no coincida con tu parcial. Agregué \"horas\" a addLavado porque el lavado las necesita: si en tu parcial no estaba, sacalo.)", "code": "public class Lavadero {\n\n    public void addLavado(Vehiculo i, Cliente c, Persona p, int horas) {\n        Lavado lavado = new Lavado();\n        lavado.setVehiculo(i);\n        lavado.setCliente(c);\n        lavado.setLavador(p);\n        lavado.setHoras(horas);\n        lavado.setFecha(new Date());\n        lavados.add(lavado);\n    }\n\n    public double precioDe(Lavado lavado) {\n        return lavado.getPrecioFinal();\n    }\n\n    public double montoTotalLavados() {\n        double total = 0;\n        for (Lavado lavado : lavados) {\n            total += precioDe(lavado);\n        }\n        return total;\n    }\n\n    public Lavado lavadoMasCaro() {\n        Lavado masCaro = null;\n        for (Lavado lavado : lavados) {\n            if (masCaro == null || precioDe(lavado) > precioDe(masCaro)) {\n                masCaro = lavado;\n            }\n        }\n        return masCaro;\n    }\n\n    public Vector<Vehiculo> camiones() {\n        Vector<Vehiculo> resultado = new Vector<Vehiculo>();\n        for (Lavado lavado : lavados) {\n            lavado.agregarSiEsCamion(resultado);\n        }\n        return resultado;\n    }\n}\n\npublic class Lavado {\n\n    public double getPrecioBase() {\n        return horas * vehiculo.getPrecioPorHora();\n    }\n\n    public double getPrecioFinal() {\n        double precioBase = getPrecioBase();\n        return precioBase + vehiculo.aplicarRecargo(precioBase) - cliente.aplicarDescuento(precioBase);\n    }\n\n    public void agregarSiEsCamion(Vector<Vehiculo> l) {\n        vehiculo.agregarSiEsCamion(l);\n    }\n}\n\npublic abstract class Vehiculo {\n\n    public abstract double aplicarRecargo(double precioBase);\n\n    public void agregarSiEsCamion(Vector<Vehiculo> l) {\n    }\n}\n\npublic class Auto extends Vehiculo {\n\n    @Override\n    public double aplicarRecargo(double precioBase) {\n        return 0;\n    }\n}\n\npublic class Camioneta extends Vehiculo {\n\n    @Override\n    public double aplicarRecargo(double precioBase) {\n        return precioBase * 0.20;   // ajustá el porcentaje al enunciado\n    }\n}\n\npublic class Camion extends Vehiculo {\n\n    @Override\n    public double aplicarRecargo(double precioBase) {\n        return precioBase * 0.50;   // ajustá el porcentaje al enunciado\n    }\n\n    @Override\n    public void agregarSiEsCamion(Vector<Vehiculo> l) {\n        l.add(this);\n    }\n}\n\npublic abstract class Cliente extends Persona {\n\n    public abstract double aplicarDescuento(double precioBase);\n}\n\npublic class ClienteParticular extends Cliente {\n\n    @Override\n    public double aplicarDescuento(double precioBase) {\n        return 0;\n    }\n}\n\npublic class ClienteAbonado extends Cliente {\n\n    @Override\n    public double aplicarDescuento(double precioBase) {\n        return precioBase * 0.10;   // ajustá el porcentaje al enunciado\n    }\n}\n\npublic class ClienteFlota extends Cliente {\n\n    @Override\n    public double aplicarDescuento(double precioBase) {\n        return precioBase * 0.25;   // ajustá el porcentaje al enunciado\n    }\n}\n"}</script><script type="application/json" id="pm-pre">{"classes": [{"id": "c1", "name": "Lavadero", "x": 944, "y": 30, "attrs": ["- nombre : String", "- direccion : String", "- lavados : Vector<Lavado>"], "methods": ["+ addLavado(i : Vehiculo, c : Cliente, p : Persona, horas : int) : void", "+ precioDe(lavado : Lavado) : double", "+ montoTotalLavados() : double", "+ lavadoMasCaro() : Lavado", "+ camiones() : Vector<Vehiculo>"], "abstract": false, "iface": false}, {"id": "c2", "name": "Lavado", "x": 1027, "y": 290, "attrs": ["- vehiculo : Vehiculo", "- cliente : Cliente", "- lavador : Persona", "- horas : int", "- fecha : Date"], "methods": ["+ getPrecioBase() : double", "+ getPrecioFinal() : double", "+ agregarSiEsCamion(l : Vector<Vehiculo>) : void"], "abstract": false, "iface": false}, {"id": "c3", "name": "Persona", "x": 1756, "y": 290, "attrs": ["- nombre : String"], "methods": [], "abstract": false, "iface": false}, {"id": "c4", "name": "Vehiculo", "x": 410, "y": 580, "attrs": ["- patente : String", "- marca : String", "- precioPorHora : double"], "methods": ["abstract + aplicarRecargo(precioBase : double) : double", "+ agregarSiEsCamion(l : Vector<Vehiculo>) : void"], "abstract": true, "iface": false}, {"id": "c5", "name": "Auto", "x": 30, "y": 806, "attrs": [], "methods": ["+ aplicarRecargo(precioBase : double) : double"], "abstract": false, "iface": false}, {"id": "c6", "name": "Camioneta", "x": 410, "y": 806, "attrs": [], "methods": ["+ aplicarRecargo(precioBase : double) : double"], "abstract": false, "iface": false}, {"id": "c7", "name": "Camion", "x": 790, "y": 806, "attrs": [], "methods": ["+ aplicarRecargo(precioBase : double) : double", "+ agregarSiEsCamion(l : Vector<Vehiculo>) : void"], "abstract": false, "iface": false}, {"id": "c8", "name": "Cliente", "x": 1644, "y": 580, "attrs": [], "methods": ["abstract + aplicarDescuento(precioBase : double) : double"], "abstract": true, "iface": false}, {"id": "c9", "name": "ClienteParticular", "x": 1250, "y": 806, "attrs": [], "methods": ["+ aplicarDescuento(precioBase : double) : double"], "abstract": false, "iface": false}, {"id": "c10", "name": "ClienteAbonado", "x": 1644, "y": 806, "attrs": [], "methods": ["+ aplicarDescuento(precioBase : double) : double"], "abstract": false, "iface": false}, {"id": "c11", "name": "ClienteFlota", "x": 2038, "y": 806, "attrs": [], "methods": ["+ aplicarDescuento(precioBase : double) : double"], "abstract": false, "iface": false}], "rels": [{"id": "r101", "a": "c1", "b": "c2", "type": "comp", "ma": "", "mb": "*", "label": "lavados"}, {"id": "r102", "a": "c2", "b": "c4", "type": "nav", "ma": "", "mb": "1", "label": "vehiculo"}, {"id": "r103", "a": "c2", "b": "c8", "type": "nav", "ma": "", "mb": "1", "label": "cliente"}, {"id": "r104", "a": "c2", "b": "c3", "type": "nav", "ma": "", "mb": "1", "label": "lavador"}, {"id": "r105", "a": "c5", "b": "c4", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r106", "a": "c6", "b": "c4", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r107", "a": "c7", "b": "c4", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r108", "a": "c8", "b": "c3", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r109", "a": "c9", "b": "c8", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r110", "a": "c10", "b": "c8", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r111", "a": "c11", "b": "c8", "type": "inherit", "ma": "", "mb": "", "label": ""}], "next": 1000}</script></main>
+<div class="pm-box" style="margin-top:18px"><h3>3 · Código</h3><p class="muted">Está la solución que armamos, con los porcentajes de ejemplo. Escribí o corregí tu versión y comparala. Tab inserta cuatro espacios.</p><textarea id="pm-code-ta" class="pm-ta" rows="40" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Código del parcial"></textarea><div class="pm-btns"><button class="ed-btn" id="pm-code-ta-copy">Copiar</button><button class="ed-btn" id="pm-code-ta-reset">Volver al texto inicial</button><span class="pm-saved" id="pm-code-ta-st"></span></div></div></section><script type="application/json" id="pm-data">[{"id": "martin", "titulo": "Parcial Martin", "enunciado": "", "classes": [["Lavadero", [], false], ["Lavado", [], false], ["Persona", [], false], ["Vehiculo", [], true], ["Auto", [], false], ["Camioneta", [], false], ["Camion", ["camión"], false], ["Cliente", [], true], ["ClienteParticular", ["particular"], false], ["ClienteAbonado", ["abonado"], false], ["ClienteFlota", ["flota"], false]], "inherit": [["Auto", "Vehiculo"], ["Camioneta", "Vehiculo"], ["Camion", "Vehiculo"], ["ClienteParticular", "Cliente"], ["ClienteAbonado", "Cliente"], ["ClienteFlota", "Cliente"]], "optional_inherit": [["Cliente", "Persona"]], "rel": [["Lavadero", "Lavado", ["comp", "aggr", "assoc", "nav"]], ["Lavado", "Vehiculo", ["assoc", "nav"]], ["Lavado", "Cliente", ["assoc", "nav"]], ["Lavado", "Persona", ["assoc", "nav"]]]}]</script><script type="application/json" id="pm-init">{"enun": "Un lavadero de vehículos quiere un sistema para registrar los lavados que realiza. Del lavadero se conoce el nombre, la dirección y todos los lavados realizados. De cada lavado se conoce el vehículo, el cliente, el lavador (una persona), la cantidad de horas y la fecha.\n\nDe cada vehículo se conoce la patente, la marca y el precio por hora. Hay tres tipos, cada uno con su recargo sobre el precio base:\n  Auto: [completá]\n  Camioneta: [completá]\n  Camión: [completá]\n\nLos clientes son personas y hay tres tipos, cada uno con su descuento sobre el precio base:\n  Particular: [completá]\n  Abonado: [completá]\n  Flota: [completá]\n\nEl precio base de un lavado es la cantidad de horas por el precio por hora del vehículo. El precio final es el precio base, más el recargo del vehículo, menos el descuento del cliente.\n\nSe pide:\n1. Diseñe una solución en UML: clases, atributos y relaciones.\n2. En Java-Like, implemente todas las clases y estas cuatro funciones:\n   addLavado(i : Vehiculo, c : Cliente, p : Persona, horas : int) : void\n   precioDe(lavado : Lavado) : double\n   montoTotalLavados() : double\n   camiones() : Vector<Vehiculo>\n\n(Reconstruido de memoria: completá los porcentajes y corregí lo que no coincida con tu parcial. Agregué \"horas\" a addLavado porque el lavado las necesita: si en tu parcial no estaba, sacalo.)", "code": "public class Lavadero {\n\n    public void addLavado(Vehiculo i, Cliente c, Persona p, int horas) {\n        Lavado lavado = new Lavado();\n        lavado.setVehiculo(i);\n        lavado.setCliente(c);\n        lavado.setLavador(p);\n        lavado.setHoras(horas);\n        lavado.setFecha(new Date());\n        lavados.add(lavado);\n    }\n\n    public double precioDe(Lavado lavado) {\n        return lavado.getPrecioFinal();\n    }\n\n    public double montoTotalLavados() {\n        double total = 0;\n        for (Lavado lavado : lavados) {\n            total += precioDe(lavado);\n        }\n        return total;\n    }\n\n    public Vector<Vehiculo> camiones() {\n        Vector<Vehiculo> resultado = new Vector<Vehiculo>();\n        for (Lavado lavado : lavados) {\n            lavado.agregarSiEsCamion(resultado);\n        }\n        return resultado;\n    }\n}\n\npublic class Lavado {\n\n    public double getPrecioBase() {\n        return horas * vehiculo.getPrecioPorHora();\n    }\n\n    public double getPrecioFinal() {\n        double precioBase = getPrecioBase();\n        return precioBase + vehiculo.aplicarRecargo(precioBase) - cliente.aplicarDescuento(precioBase);\n    }\n\n    public void agregarSiEsCamion(Vector<Vehiculo> l) {\n        vehiculo.agregarSiEsCamion(l);\n    }\n}\n\npublic abstract class Vehiculo {\n\n    public abstract double aplicarRecargo(double precioBase);\n\n    public void agregarSiEsCamion(Vector<Vehiculo> l) {\n    }\n}\n\npublic class Auto extends Vehiculo {\n\n    @Override\n    public double aplicarRecargo(double precioBase) {\n        return 0;\n    }\n}\n\npublic class Camioneta extends Vehiculo {\n\n    @Override\n    public double aplicarRecargo(double precioBase) {\n        return precioBase * 0.20;   // ajustá el porcentaje al enunciado\n    }\n}\n\npublic class Camion extends Vehiculo {\n\n    @Override\n    public double aplicarRecargo(double precioBase) {\n        return precioBase * 0.50;   // ajustá el porcentaje al enunciado\n    }\n\n    @Override\n    public void agregarSiEsCamion(Vector<Vehiculo> l) {\n        l.add(this);\n    }\n}\n\npublic abstract class Cliente extends Persona {\n\n    public abstract double aplicarDescuento(double precioBase);\n}\n\npublic class ClienteParticular extends Cliente {\n\n    @Override\n    public double aplicarDescuento(double precioBase) {\n        return 0;\n    }\n}\n\npublic class ClienteAbonado extends Cliente {\n\n    @Override\n    public double aplicarDescuento(double precioBase) {\n        return precioBase * 0.10;   // ajustá el porcentaje al enunciado\n    }\n}\n\npublic class ClienteFlota extends Cliente {\n\n    @Override\n    public double aplicarDescuento(double precioBase) {\n        return precioBase * 0.25;   // ajustá el porcentaje al enunciado\n    }\n}\n"}</script><script type="application/json" id="pm-pre">{"classes": [{"id": "c1", "name": "Lavadero", "x": 944, "y": 30, "attrs": ["- nombre : String", "- direccion : String", "- lavados : Vector<Lavado>"], "methods": ["+ addLavado(i : Vehiculo, c : Cliente, p : Persona, horas : int) : void", "+ precioDe(lavado : Lavado) : double", "+ montoTotalLavados() : double", "+ camiones() : Vector<Vehiculo>"], "abstract": false, "iface": false}, {"id": "c2", "name": "Lavado", "x": 1027, "y": 274, "attrs": ["- vehiculo : Vehiculo", "- cliente : Cliente", "- lavador : Persona", "- horas : int", "- fecha : Date"], "methods": ["+ getPrecioBase() : double", "+ getPrecioFinal() : double", "+ agregarSiEsCamion(l : Vector<Vehiculo>) : void"], "abstract": false, "iface": false}, {"id": "c3", "name": "Persona", "x": 1756, "y": 274, "attrs": ["- nombre : String"], "methods": [], "abstract": false, "iface": false}, {"id": "c4", "name": "Vehiculo", "x": 410, "y": 564, "attrs": ["- patente : String", "- marca : String", "- precioPorHora : double"], "methods": ["abstract + aplicarRecargo(precioBase : double) : double", "+ agregarSiEsCamion(l : Vector<Vehiculo>) : void"], "abstract": true, "iface": false}, {"id": "c5", "name": "Auto", "x": 30, "y": 790, "attrs": [], "methods": ["+ aplicarRecargo(precioBase : double) : double"], "abstract": false, "iface": false}, {"id": "c6", "name": "Camioneta", "x": 410, "y": 790, "attrs": [], "methods": ["+ aplicarRecargo(precioBase : double) : double"], "abstract": false, "iface": false}, {"id": "c7", "name": "Camion", "x": 790, "y": 790, "attrs": [], "methods": ["+ aplicarRecargo(precioBase : double) : double", "+ agregarSiEsCamion(l : Vector<Vehiculo>) : void"], "abstract": false, "iface": false}, {"id": "c8", "name": "Cliente", "x": 1644, "y": 564, "attrs": [], "methods": ["abstract + aplicarDescuento(precioBase : double) : double"], "abstract": true, "iface": false}, {"id": "c9", "name": "ClienteParticular", "x": 1250, "y": 790, "attrs": [], "methods": ["+ aplicarDescuento(precioBase : double) : double"], "abstract": false, "iface": false}, {"id": "c10", "name": "ClienteAbonado", "x": 1644, "y": 790, "attrs": [], "methods": ["+ aplicarDescuento(precioBase : double) : double"], "abstract": false, "iface": false}, {"id": "c11", "name": "ClienteFlota", "x": 2038, "y": 790, "attrs": [], "methods": ["+ aplicarDescuento(precioBase : double) : double"], "abstract": false, "iface": false}], "rels": [{"id": "r101", "a": "c1", "b": "c2", "type": "comp", "ma": "", "mb": "*", "label": "lavados"}, {"id": "r102", "a": "c2", "b": "c4", "type": "nav", "ma": "", "mb": "1", "label": "vehiculo"}, {"id": "r103", "a": "c2", "b": "c8", "type": "nav", "ma": "", "mb": "1", "label": "cliente"}, {"id": "r104", "a": "c2", "b": "c3", "type": "nav", "ma": "", "mb": "1", "label": "lavador"}, {"id": "r105", "a": "c5", "b": "c4", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r106", "a": "c6", "b": "c4", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r107", "a": "c7", "b": "c4", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r108", "a": "c8", "b": "c3", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r109", "a": "c9", "b": "c8", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r110", "a": "c10", "b": "c8", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r111", "a": "c11", "b": "c8", "type": "inherit", "ma": "", "mb": "", "label": ""}], "next": 1000}</script></main>
 </div>
 </div>
 <div class="panel" id="megastore" role="tabpanel" aria-labelledby="tab-megastore" hidden>
