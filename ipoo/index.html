@@ -202,7 +202,7 @@ main{grid-template-columns:minmax(0,1fr)}
 .ed-main{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px;align-items:start}
 @media (max-width:860px){.ed-main{grid-template-columns:minmax(0,1fr)}}
 .ed-canvas-wrap{overflow:auto;height:min(70vh,640px);border:1px solid var(--line);border-radius:10px;background:var(--paper);touch-action:none}
-#ed-svg{display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+#ed-svg,#pm-svg{display:block;touch-action:none;user-select:none;-webkit-user-select:none}.pm-box{display:grid;gap:8px;max-width:900px}.pm-box h3{margin:0}.pm-ta{width:100%;box-sizing:border-box;font-family:var(--f-mono);font-size:.84rem;line-height:1.5;background:var(--code-bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 14px;resize:vertical;tab-size:4;white-space:pre;overflow:auto}.pm-ta.txt{font-family:var(--f-body);font-size:.95rem;white-space:pre-wrap}.pm-ta:focus{outline:2px solid var(--accent);outline-offset:1px}.pm-btns{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.pm-saved{color:var(--muted);font-size:.85rem}
 .ed-bg{fill:var(--paper)}
 .ed-cls{cursor:grab}
 .ed-cls.sel .u-box{stroke:var(--accent);stroke-width:2.4}
@@ -459,6 +459,8 @@ a.rp-tile:hover{border-color:var(--accent)}
     <button class="tab" role="tab" id="tab-repaso" aria-controls="repaso" aria-selected="false">Repaso exigente<span class="n">corregí y sumá</span></button>
     <button class="tab" role="tab" id="tab-ejemplos-uml" aria-controls="ejemplos-uml" aria-selected="false">UML<span class="n">10 ejemplos</span></button>
     <button class="tab" role="tab" id="tab-uml-codigo" aria-controls="uml-codigo" aria-selected="false">UML a código<span class="n">paso a paso</span></button>
+    <button class="tab" role="tab" id="tab-precio-base" aria-controls="precio-base" aria-selected="false">Precio base calculado<span class="n">lavadero</span></button>
+    <button class="tab" role="tab" id="tab-parcial-martin" aria-controls="parcial-martin" aria-selected="false">PARCIAL MARTIN<span class="n">editable</span></button>
     <button class="tab" role="tab" id="tab-megastore" aria-controls="megastore" aria-selected="false">Parcial MegaStore<span class="n">resuelto</span></button>
     <button class="tab" role="tab" id="tab-generador" aria-controls="generador" aria-selected="false">Generador<span class="n">UML paso a paso</span></button>
     <button class="tab" role="tab" id="tab-editor-uml" aria-controls="editor-uml" aria-selected="false">Editor UML<span class="n">dibujá</span></button>
@@ -5614,7 +5616,7 @@ public class Renglon {
 </div>
 <div class="panel" id="uml-codigo" role="tabpanel" aria-labelledby="tab-uml-codigo" hidden>
 <div class="wrap">
-<main><div class="panel-head"><div class="jump"><label for="jump-uml-codigo">Ir a</label><select id="jump-uml-codigo" class="jump-sel"><option value="">Elegí una sección…</option><option value="uc-regla">La regla del profe</option><option value="uc-tabla">Qué se convierte en qué</option><option value="uc-ejemplo">El diagrama del ejemplo</option><option value="uc-pasos">Los seis pasos</option><option value="uc-hoja">Lo que queda en la hoja</option><option value="uc-nombres">Cómo nombrar lo que no escribiste</option><option value="uc-errores">Errores que restan puntos</option><option value="uc-adicionales">Dos ejercicios con adicionales</option><option value="uc-basecalc">Cuando el precio base se calcula</option><option value="uc-ejemplos">Diez ejemplos completos</option></select></div></div>
+<main><div class="panel-head"><div class="jump"><label for="jump-uml-codigo">Ir a</label><select id="jump-uml-codigo" class="jump-sel"><option value="">Elegí una sección…</option><option value="uc-regla">La regla del profe</option><option value="uc-tabla">Qué se convierte en qué</option><option value="uc-ejemplo">El diagrama del ejemplo</option><option value="uc-pasos">Los seis pasos</option><option value="uc-hoja">Lo que queda en la hoja</option><option value="uc-nombres">Cómo nombrar lo que no escribiste</option><option value="uc-errores">Errores que restan puntos</option><option value="uc-adicionales">Dos ejercicios con adicionales</option><option value="uc-ejemplos">Diez ejemplos completos</option></select></div></div>
 <section id="uc-regla">
   <div><div class="eyebrow">Del diagrama a la hoja</div><h2>Cómo pasar del UML al código</h2></div>
   <p class="lead">Una vez que el diagrama está hecho, el código no se piensa de nuevo: se copia del diagrama lo que da forma a las clases y se escribe solo lo que falta, que es el cuerpo de los métodos.</p>
@@ -6469,7 +6471,16 @@ public class Renglon {
     }
 }</code></pre></div></details></div></div></div></details></div>
 </section>
-<section id="uc-basecalc">
+<section id="uc-ejemplos">
+  <div><h2>Diez ejemplos completos</h2></div>
+  <p class="lead">Diez ejercicios como los del Generador, cada uno con su enunciado, el diagrama terminado y el paso a paso de cómo ir escribiendo el código: qué va primero, qué se tacha y qué se agrega en cada vuelta. Al final de cada uno está la hoja completa para comparar.</p>
+  <div id="uc-ejemplos-list"></div>
+</section></main>
+</div>
+</div>
+<div class="panel" id="precio-base" role="tabpanel" aria-labelledby="tab-precio-base" hidden>
+<div class="wrap">
+<main><section id="uc-basecalc">
   <div><h2>Cuando el precio base se calcula</h2></div>
   <p class="lead">A veces el enunciado no da un precio base. Da una cantidad en una clase (las horas del lavado) y una tarifa en otra (el precio por hora del vehículo). El precio base es la cuenta entre las dos.</p>
   <div class="prose"><h3>Cómo pensarlo</h3><ul>
@@ -6771,11 +6782,73 @@ public class Renglon {
     }
 }</code></pre></div></details></div></div></div></details></div>
 </section>
-<section id="uc-ejemplos">
-  <div><h2>Diez ejemplos completos</h2></div>
-  <p class="lead">Diez ejercicios como los del Generador, cada uno con su enunciado, el diagrama terminado y el paso a paso de cómo ir escribiendo el código: qué va primero, qué se tacha y qué se agrega en cada vuelta. Al final de cada uno está la hoja completa para comparar.</p>
-  <div id="uc-ejemplos-list"></div>
-</section></main>
+</main>
+</div>
+</div>
+<div class="panel" id="parcial-martin" role="tabpanel" aria-labelledby="tab-parcial-martin" hidden>
+<div class="wrap">
+<main><section id="martin-app">
+  <div><div class="eyebrow">Mi parcial</div><h2>PARCIAL MARTIN</h2></div><p class="lead">El ejercicio del lavadero como lo recordás. Todo se puede editar y queda guardado en este navegador: el enunciado, el diagrama (mové las clases, cambiá atributos y métodos, agregá o borrá lo que falte) y el código.</p><div class="pm-box"><h3>1 · Enunciado</h3><textarea id="pm-enun-ta" class="pm-ta txt" rows="22" spellcheck="false" aria-label="Enunciado del parcial"></textarea><div class="pm-btns"><button class="ed-btn" id="pm-enun-ta-copy">Copiar</button><button class="ed-btn" id="pm-enun-ta-reset">Volver al texto inicial</button><span class="pm-saved" id="pm-enun-ta-st"></span></div></div><h3 style="margin:8px 0 0">2 · Diagrama de clases</h3><p class="muted">Tocá una clase para editar su nombre, atributos y métodos en el panel de la derecha. Con <b>Conectar</b> unís dos clases. <b>Revisar mi diagrama</b> mira clases, abstractas, herencias y relaciones.</p><select id="pm-ejercicio" hidden><option value="martin">Parcial Martin</option></select><p id="pm-enunciado" hidden></p><div class="ed-toolbar" role="toolbar" aria-label="Herramientas del editor">
+    <button class="ed-btn primary" id="pm-add">+ Clase</button>
+    <span class="ed-sep"></span>
+    <label for="pm-tipo" class="ed-lbl">Relación</label>
+    <select id="pm-tipo">
+      <option value="assoc">Asociación ────</option>
+      <option value="nav">Asociación navegable ───&gt;</option>
+      <option value="aggr">Agregación ◇───</option>
+      <option value="comp">Composición ◆───</option>
+      <option value="inherit">Herencia ───▷</option>
+      <option value="realize">Implementación - - -▷</option>
+      <option value="dep">Dependencia - - -&gt;</option>
+    </select>
+    <button class="ed-btn" id="pm-conectar" aria-pressed="false">Conectar</button>
+    <span class="ed-sep"></span>
+    <button class="ed-btn" id="pm-deshacer" title="Ctrl+Z">Deshacer</button>
+    <button class="ed-btn" id="pm-borrar" title="Supr">Borrar selección</button>
+    <button class="ed-btn" id="pm-ordenar">Ordenar</button>
+    <span class="ed-sep"></span>
+    <button class="ed-btn" id="pm-zout" aria-label="Alejar">−</button>
+    <span id="pm-zoom" class="ed-lbl">100 %</span>
+    <button class="ed-btn" id="pm-zin" aria-label="Acercar">+</button>
+    <span class="ed-sep"></span>
+    <button class="ed-btn" id="pm-limpiar">Limpiar todo</button>
+  </div>
+  <div id="pm-status" class="ed-status" role="status">Tocá <b>+ Clase</b> para empezar.</div>
+
+  <div class="ed-main">
+    <div class="ed-canvas-wrap" id="pm-wrap">
+      <svg id="pm-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" aria-label="Lienzo del diagrama"></svg>
+    </div>
+    <aside class="ed-panel" id="pm-panel" aria-label="Propiedades"></aside>
+  </div>
+
+  <div class="ed-actions">
+    <button class="ed-btn primary" id="pm-revisar" disabled>Revisar mi diagrama</button><button class="ed-btn" id="pm-restaurar-dib">Volver al diagrama inicial</button>
+    <button class="ed-btn" id="pm-versol" hidden disabled>Ver solución</button>
+  </div>
+  <div id="pm-result" class="ed-result" hidden></div>
+  <details class="ed-io">
+    <summary>Guardar o pasar el diagrama como texto</summary>
+    <div class="ans">
+      <p>El dibujo ya se guarda solo en este navegador. Si querés pasarlo a otro dispositivo, copiá este texto y pegalo allá.</p>
+      <textarea id="pm-json" rows="5" aria-label="Diagrama en formato texto"></textarea>
+      <div class="ed-io-btns"><button class="ed-btn" id="pm-copiar">Copiar texto</button><button class="ed-btn" id="pm-cargar">Cargar desde el texto</button></div>
+    </div>
+  </details>
+
+  <details class="ed-io">
+    <summary>Cómo se usa</summary>
+    <div class="ans"><ul>
+      <li><b>Clase:</b> tocá <b>+ Clase</b>. Después, con la clase seleccionada, escribí el nombre, los atributos y los métodos en el panel (uno por renglón).</li>
+      <li><b>Mover:</b> arrastrá la clase con el mouse o con el dedo.</li>
+      <li><b>Relación:</b> elegí el tipo, tocá <b>Conectar</b> y después tocá las dos clases. Para <b>herencia</b>, primero la hija y después el padre. Para <b>agregación y composición</b>, primero el todo (donde va el rombo) y después la parte. Para asociación navegable y dependencia, primero la que conoce o usa.</li>
+      <li><b>Multiplicidad y rol:</b> tocá la línea para seleccionarla y completá los campos del panel.</li>
+      <li><b>Abstractas:</b> tildá <i>Clase abstracta</i>. Para un método abstracto, empezá el renglón con <code>abstract</code>: <code>abstract + area() : double</code>.</li>
+      <li><b>Borrar:</b> seleccioná y apretá <b>Borrar selección</b> o la tecla Supr.</li>
+    </ul></div>
+  </details>
+  
+<div class="pm-box" style="margin-top:18px"><h3>3 · Código</h3><p class="muted">Está la solución que armamos, con los porcentajes de ejemplo. Escribí o corregí tu versión y comparala. Tab inserta cuatro espacios.</p><textarea id="pm-code-ta" class="pm-ta" rows="40" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Código del parcial"></textarea><div class="pm-btns"><button class="ed-btn" id="pm-code-ta-copy">Copiar</button><button class="ed-btn" id="pm-code-ta-reset">Volver al texto inicial</button><span class="pm-saved" id="pm-code-ta-st"></span></div></div></section><script type="application/json" id="pm-data">[{"id": "martin", "titulo": "Parcial Martin", "enunciado": "", "classes": [["Lavadero", [], false], ["Lavado", [], false], ["Persona", [], false], ["Vehiculo", [], true], ["Auto", [], false], ["Camioneta", [], false], ["Camion", ["camión"], false], ["Cliente", [], true], ["ClienteParticular", ["particular"], false], ["ClienteAbonado", ["abonado"], false], ["ClienteFlota", ["flota"], false]], "inherit": [["Auto", "Vehiculo"], ["Camioneta", "Vehiculo"], ["Camion", "Vehiculo"], ["ClienteParticular", "Cliente"], ["ClienteAbonado", "Cliente"], ["ClienteFlota", "Cliente"]], "optional_inherit": [["Cliente", "Persona"]], "rel": [["Lavadero", "Lavado", ["comp", "aggr", "assoc", "nav"]], ["Lavado", "Vehiculo", ["assoc", "nav"]], ["Lavado", "Cliente", ["assoc", "nav"]], ["Lavado", "Persona", ["assoc", "nav"]]]}]</script><script type="application/json" id="pm-init">{"enun": "Un lavadero de vehículos quiere un sistema para registrar los lavados que realiza. Del lavadero se conoce el nombre, la dirección y todos los lavados realizados. De cada lavado se conoce el vehículo, el cliente, el lavador (una persona), la cantidad de horas y la fecha.\n\nDe cada vehículo se conoce la patente, la marca y el precio por hora. Hay tres tipos, cada uno con su recargo sobre el precio base:\n  Auto: [completá]\n  Camioneta: [completá]\n  Camión: [completá]\n\nLos clientes son personas y hay tres tipos, cada uno con su descuento sobre el precio base:\n  Particular: [completá]\n  Abonado: [completá]\n  Flota: [completá]\n\nEl precio base de un lavado es la cantidad de horas por el precio por hora del vehículo. El precio final es el precio base, más el recargo del vehículo, menos el descuento del cliente.\n\nSe pide:\n1. Diseñe una solución en UML: clases, atributos y relaciones.\n2. En Java-Like, implemente todas las clases y estos métodos:\n   addLavado(i : Vehiculo, c : Cliente, p : Persona, horas : int) : void\n   precioDe(lavado : Lavado) : double\n   montoTotalLavados() : double\n   lavadoMasCaro() : Lavado\n   camiones() : Vector<Vehiculo>\n\n(Reconstruido de memoria: completá los porcentajes y corregí lo que no coincida con tu parcial. Agregué \"horas\" a addLavado porque el lavado las necesita: si en tu parcial no estaba, sacalo.)", "code": "public class Lavadero {\n\n    public void addLavado(Vehiculo i, Cliente c, Persona p, int horas) {\n        Lavado lavado = new Lavado();\n        lavado.setVehiculo(i);\n        lavado.setCliente(c);\n        lavado.setLavador(p);\n        lavado.setHoras(horas);\n        lavado.setFecha(new Date());\n        lavados.add(lavado);\n    }\n\n    public double precioDe(Lavado lavado) {\n        return lavado.getPrecioFinal();\n    }\n\n    public double montoTotalLavados() {\n        double total = 0;\n        for (Lavado lavado : lavados) {\n            total += precioDe(lavado);\n        }\n        return total;\n    }\n\n    public Lavado lavadoMasCaro() {\n        Lavado masCaro = null;\n        for (Lavado lavado : lavados) {\n            if (masCaro == null || precioDe(lavado) > precioDe(masCaro)) {\n                masCaro = lavado;\n            }\n        }\n        return masCaro;\n    }\n\n    public Vector<Vehiculo> camiones() {\n        Vector<Vehiculo> resultado = new Vector<Vehiculo>();\n        for (Lavado lavado : lavados) {\n            lavado.agregarSiEsCamion(resultado);\n        }\n        return resultado;\n    }\n}\n\npublic class Lavado {\n\n    public double getPrecioBase() {\n        return horas * vehiculo.getPrecioPorHora();\n    }\n\n    public double getPrecioFinal() {\n        double precioBase = getPrecioBase();\n        return precioBase + vehiculo.aplicarRecargo(precioBase) - cliente.aplicarDescuento(precioBase);\n    }\n\n    public void agregarSiEsCamion(Vector<Vehiculo> l) {\n        vehiculo.agregarSiEsCamion(l);\n    }\n}\n\npublic abstract class Vehiculo {\n\n    public abstract double aplicarRecargo(double precioBase);\n\n    public void agregarSiEsCamion(Vector<Vehiculo> l) {\n    }\n}\n\npublic class Auto extends Vehiculo {\n\n    @Override\n    public double aplicarRecargo(double precioBase) {\n        return 0;\n    }\n}\n\npublic class Camioneta extends Vehiculo {\n\n    @Override\n    public double aplicarRecargo(double precioBase) {\n        return precioBase * 0.20;   // ajustá el porcentaje al enunciado\n    }\n}\n\npublic class Camion extends Vehiculo {\n\n    @Override\n    public double aplicarRecargo(double precioBase) {\n        return precioBase * 0.50;   // ajustá el porcentaje al enunciado\n    }\n\n    @Override\n    public void agregarSiEsCamion(Vector<Vehiculo> l) {\n        l.add(this);\n    }\n}\n\npublic abstract class Cliente extends Persona {\n\n    public abstract double aplicarDescuento(double precioBase);\n}\n\npublic class ClienteParticular extends Cliente {\n\n    @Override\n    public double aplicarDescuento(double precioBase) {\n        return 0;\n    }\n}\n\npublic class ClienteAbonado extends Cliente {\n\n    @Override\n    public double aplicarDescuento(double precioBase) {\n        return precioBase * 0.10;   // ajustá el porcentaje al enunciado\n    }\n}\n\npublic class ClienteFlota extends Cliente {\n\n    @Override\n    public double aplicarDescuento(double precioBase) {\n        return precioBase * 0.25;   // ajustá el porcentaje al enunciado\n    }\n}\n"}</script><script type="application/json" id="pm-pre">{"classes": [{"id": "c1", "name": "Lavadero", "x": 944, "y": 30, "attrs": ["- nombre : String", "- direccion : String", "- lavados : Vector<Lavado>"], "methods": ["+ addLavado(i : Vehiculo, c : Cliente, p : Persona, horas : int) : void", "+ precioDe(lavado : Lavado) : double", "+ montoTotalLavados() : double", "+ lavadoMasCaro() : Lavado", "+ camiones() : Vector<Vehiculo>"], "abstract": false, "iface": false}, {"id": "c2", "name": "Lavado", "x": 1027, "y": 290, "attrs": ["- vehiculo : Vehiculo", "- cliente : Cliente", "- lavador : Persona", "- horas : int", "- fecha : Date"], "methods": ["+ getPrecioBase() : double", "+ getPrecioFinal() : double", "+ agregarSiEsCamion(l : Vector<Vehiculo>) : void"], "abstract": false, "iface": false}, {"id": "c3", "name": "Persona", "x": 1756, "y": 290, "attrs": ["- nombre : String"], "methods": [], "abstract": false, "iface": false}, {"id": "c4", "name": "Vehiculo", "x": 410, "y": 580, "attrs": ["- patente : String", "- marca : String", "- precioPorHora : double"], "methods": ["abstract + aplicarRecargo(precioBase : double) : double", "+ agregarSiEsCamion(l : Vector<Vehiculo>) : void"], "abstract": true, "iface": false}, {"id": "c5", "name": "Auto", "x": 30, "y": 806, "attrs": [], "methods": ["+ aplicarRecargo(precioBase : double) : double"], "abstract": false, "iface": false}, {"id": "c6", "name": "Camioneta", "x": 410, "y": 806, "attrs": [], "methods": ["+ aplicarRecargo(precioBase : double) : double"], "abstract": false, "iface": false}, {"id": "c7", "name": "Camion", "x": 790, "y": 806, "attrs": [], "methods": ["+ aplicarRecargo(precioBase : double) : double", "+ agregarSiEsCamion(l : Vector<Vehiculo>) : void"], "abstract": false, "iface": false}, {"id": "c8", "name": "Cliente", "x": 1644, "y": 580, "attrs": [], "methods": ["abstract + aplicarDescuento(precioBase : double) : double"], "abstract": true, "iface": false}, {"id": "c9", "name": "ClienteParticular", "x": 1250, "y": 806, "attrs": [], "methods": ["+ aplicarDescuento(precioBase : double) : double"], "abstract": false, "iface": false}, {"id": "c10", "name": "ClienteAbonado", "x": 1644, "y": 806, "attrs": [], "methods": ["+ aplicarDescuento(precioBase : double) : double"], "abstract": false, "iface": false}, {"id": "c11", "name": "ClienteFlota", "x": 2038, "y": 806, "attrs": [], "methods": ["+ aplicarDescuento(precioBase : double) : double"], "abstract": false, "iface": false}], "rels": [{"id": "r101", "a": "c1", "b": "c2", "type": "comp", "ma": "", "mb": "*", "label": "lavados"}, {"id": "r102", "a": "c2", "b": "c4", "type": "nav", "ma": "", "mb": "1", "label": "vehiculo"}, {"id": "r103", "a": "c2", "b": "c8", "type": "nav", "ma": "", "mb": "1", "label": "cliente"}, {"id": "r104", "a": "c2", "b": "c3", "type": "nav", "ma": "", "mb": "1", "label": "lavador"}, {"id": "r105", "a": "c5", "b": "c4", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r106", "a": "c6", "b": "c4", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r107", "a": "c7", "b": "c4", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r108", "a": "c8", "b": "c3", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r109", "a": "c9", "b": "c8", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r110", "a": "c10", "b": "c8", "type": "inherit", "ma": "", "mb": "", "label": ""}, {"id": "r111", "a": "c11", "b": "c8", "type": "inherit", "ma": "", "mb": "", "label": ""}], "next": 1000}</script></main>
 </div>
 </div>
 <div class="panel" id="megastore" role="tabpanel" aria-labelledby="tab-megastore" hidden>
@@ -14283,7 +14356,7 @@ public class Hotel {
   }catch(e){}
 
   // pestañas
-  var panels=["teoria","composite-pat","repaso","megastore","ejemplos-uml","uml-codigo","generador","editor-uml","quizzes","tps","resueltos","simulacros"];
+  var panels=["teoria","composite-pat","repaso","megastore","ejemplos-uml","uml-codigo","precio-base","parcial-martin","generador","editor-uml","quizzes","tps","resueltos","simulacros"];
   function show(pid){
     panels.forEach(function(p){
       document.getElementById(p).hidden = (p!==pid);
@@ -14901,6 +14974,455 @@ public class Hotel {
   if(state.classes.length) say("Se recuperó tu último diagrama.");
 })();
 </script>
+<script>
+(function(){
+  var svg=document.getElementById("pm-svg");
+  if(!svg) return;
+  var NS="http://www.w3.org/2000/svg";
+  var W0=1600, H0=1000, W=W0, H=H0, zoom=1;
+  var KEY="ipoo-parcial-martin";
+  var state={classes:[],rels:[],next:1};
+  var hist=[], sel=null, connectFrom=null, connecting=false, ejercicio="";
+  var panel=document.getElementById("pm-panel"), statusEl=document.getElementById("pm-status");
+  var EJ=[]; try{EJ=JSON.parse(document.getElementById("pm-data").textContent);}catch(e){}
+
+  // ---------- medidas de texto
+  var cv=document.createElement("canvas").getContext("2d");
+  function tw(t,bold){ cv.font=(bold?"600 ":"")+"12px 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace"; return cv.measureText(t).width; }
+
+  // ---------- persistencia e historial
+  function save(){ try{localStorage.setItem(KEY, JSON.stringify({state:state, ej:ejercicio}));}catch(e){} syncJson(); }
+  function load(){
+    try{ var raw=localStorage.getItem(KEY); if(raw){ var o=JSON.parse(raw); if(o&&o.state&&o.state.classes){ state=o.state; ejercicio=o.ej||""; } } }catch(e){}
+  }
+  function snap(){ hist.push(JSON.stringify(state)); if(hist.length>60) hist.shift(); }
+  function undo(){ if(!hist.length){ say("No hay nada para deshacer."); return; } state=JSON.parse(hist.pop()); sel=null; render(); save(); say("Se deshizo el último cambio."); }
+  function say(html){ statusEl.innerHTML=html; }
+  function syncJson(){ var t=document.getElementById("pm-json"); if(t && document.activeElement!==t) t.value=JSON.stringify(state); }
+
+  // ---------- modelo
+  function cls(id){ for(var i=0;i<state.classes.length;i++) if(state.classes[i].id===id) return state.classes[i]; return null; }
+  function rel(id){ for(var i=0;i<state.rels.length;i++) if(state.rels[i].id===id) return state.rels[i]; return null; }
+  function size(c){
+    var stereo=c.iface?"«interface»":(c.abstract?"«abstract»":"");
+    var lines=[c.name].concat(c.attrs, c.methods.map(clean));
+    var w=Math.max(tw(c.name,true), stereo?tw(stereo):0);
+    lines.forEach(function(l){ w=Math.max(w, tw(l)); });
+    w=Math.max(110, Math.ceil(w)+22);
+    var head=26+(stereo?14:0);
+    var ha=Math.max(1,c.attrs.length)*16+8, hm=Math.max(1,c.methods.length)*16+8;
+    if(!c.attrs.length) ha=12; if(!c.methods.length) hm=12;
+    return {w:w,h:head+ha+hm,head:head,ha:ha,hm:hm,stereo:stereo};
+  }
+  function clean(m){ return m.replace(/^\s*abstract\s+/i,""); }
+  function isAbs(m){ return /^\s*abstract\s+/i.test(m); }
+
+  // ---------- dibujo
+  function el(tag, attrs, parent, text){
+    var e=document.createElementNS(NS,tag);
+    for(var k in attrs) e.setAttribute(k, attrs[k]);
+    if(text!=null) e.textContent=text;
+    if(parent) parent.appendChild(e);
+    return e;
+  }
+  function clip(c, s, px, py){
+    var cx=c.x+s.w/2, cy=c.y+s.h/2, dx=px-cx, dy=py-cy;
+    if(dx===0 && dy===0) return [cx,cy];
+    var k=Math.min(dx!==0?(s.w/2)/Math.abs(dx):Infinity, dy!==0?(s.h/2)/Math.abs(dy):Infinity);
+    return [cx+dx*k, cy+dy*k];
+  }
+  function render(){
+    // agrandar el lienzo si hace falta
+    var maxX=W0, maxY=H0;
+    state.classes.forEach(function(c){ var s=size(c); maxX=Math.max(maxX,c.x+s.w+80); maxY=Math.max(maxY,c.y+s.h+80); });
+    W=maxX; H=maxY;
+    svg.setAttribute("viewBox","0 0 "+W+" "+H);
+    svg.setAttribute("width", Math.round(W*zoom)); svg.setAttribute("height", Math.round(H*zoom));
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    el("rect",{x:0,y:0,width:W,height:H,class:"ed-bg"},svg);
+    var gl=el("g",{},svg), gb=el("g",{},svg), gm=el("g",{},svg);
+    var sizes={}; state.classes.forEach(function(c){ sizes[c.id]=size(c); });
+    // relaciones
+    state.rels.forEach(function(r){
+      var A=cls(r.a), B=cls(r.b); if(!A||!B) return;
+      var sa=sizes[A.id], sb=sizes[B.id];
+      var g=el("g",{class:"ed-rel"+(sel&&sel.t==="r"&&sel.id===r.id?" sel":""), "data-rid":r.id},gl);
+      var p, q, d, mid;
+      if(A.id===B.id){
+        var x0=A.x+sa.w, y1=A.y+sa.h*0.3, y2=A.y+sa.h*0.7, xx=x0+44;
+        p=[x0,y1]; q=[x0,y2];
+        d="M "+x0+" "+y1+" L "+xx+" "+y1+" L "+xx+" "+y2+" L "+x0+" "+y2;
+        mid=[xx+6,(y1+y2)/2];
+        var dirB=[-1,0], dirA=[-1,0];
+      }else{
+        var ca=[A.x+sa.w/2,A.y+sa.h/2], cb=[B.x+sb.w/2,B.y+sb.h/2];
+        p=clip(A,sa,cb[0],cb[1]); q=clip(B,sb,ca[0],ca[1]);
+        d="M "+p[0]+" "+p[1]+" L "+q[0]+" "+q[1];
+        mid=[(p[0]+q[0])/2,(p[1]+q[1])/2];
+        var L=Math.hypot(q[0]-p[0],q[1]-p[1])||1;
+        var dirB=[(q[0]-p[0])/L,(q[1]-p[1])/L], dirA=[-dirB[0],-dirB[1]];
+      }
+      var dash=(r.type==="dep"||r.type==="realize");
+      // acortar la línea donde va un marcador relleno
+      var pp=p.slice(), qq=q.slice();
+      if(A.id!==B.id){
+        if(r.type==="inherit"||r.type==="realize"){ qq=[q[0]-dirB[0]*14,q[1]-dirB[1]*14]; }
+        if(r.type==="aggr"||r.type==="comp"){ pp=[p[0]-dirA[0]*22,p[1]-dirA[1]*22]; }
+        d="M "+pp[0]+" "+pp[1]+" L "+qq[0]+" "+qq[1];
+      }
+      el("path",{d:d,class:"u-ln"+(dash?" u-dash":"")},g);
+      el("path",{d:d,class:"ed-hit"},g);
+      var nb=[-dirB[1],dirB[0]], na=[-dirA[1],dirA[0]];
+      if(r.type==="inherit"||r.type==="realize"){
+        el("polygon",{class:"u-hollow",points:[q,[q[0]-dirB[0]*14+nb[0]*8,q[1]-dirB[1]*14+nb[1]*8],[q[0]-dirB[0]*14-nb[0]*8,q[1]-dirB[1]*14-nb[1]*8]].map(function(t){return t[0].toFixed(1)+","+t[1].toFixed(1);}).join(" ")},g);
+      }
+      if(r.type==="nav"||r.type==="dep"){
+        el("polyline",{class:"u-ln",points:[[q[0]-dirB[0]*11+nb[0]*6,q[1]-dirB[1]*11+nb[1]*6],q,[q[0]-dirB[0]*11-nb[0]*6,q[1]-dirB[1]*11-nb[1]*6]].map(function(t){return t[0].toFixed(1)+","+t[1].toFixed(1);}).join(" ")},g);
+      }
+      if(r.type==="aggr"||r.type==="comp"){
+        el("polygon",{class:r.type==="comp"?"u-fill":"u-hollow",points:[p,[p[0]-dirA[0]*11+na[0]*6.5,p[1]-dirA[1]*11+na[1]*6.5],[p[0]-dirA[0]*22,p[1]-dirA[1]*22],[p[0]-dirA[0]*11-na[0]*6.5,p[1]-dirA[1]*11-na[1]*6.5]].map(function(t){return t[0].toFixed(1)+","+t[1].toFixed(1);}).join(" ")},g);
+      }
+      function lab(txt, pt, dir, back){
+        if(!txt) return;
+        var n=[-dir[1],dir[0]];
+        el("text",{class:"u-lbl",x:(pt[0]-dir[0]*back+n[0]*12).toFixed(1),y:(pt[1]-dir[1]*back+n[1]*12+4).toFixed(1),"text-anchor":"middle"},gm,txt);
+      }
+      if(A.id!==B.id){
+        lab(r.ma,p,dirA,(r.type==="aggr"||r.type==="comp")?34:14);
+        lab(r.mb,q,dirB,(r.type==="inherit"||r.type==="realize")?26:16);
+      }else{
+        if(r.ma) el("text",{class:"u-lbl",x:p[0]+6,y:p[1]-6},gm,r.ma);
+        if(r.mb) el("text",{class:"u-lbl",x:q[0]+6,y:q[1]+16},gm,r.mb);
+      }
+      if(r.label) el("text",{class:"u-rel",x:mid[0].toFixed(1),y:(mid[1]-7).toFixed(1),"text-anchor":"middle"},gm,r.label);
+    });
+    // clases
+    state.classes.forEach(function(c){
+      var s=sizes[c.id];
+      var g=el("g",{class:"ed-cls"+(sel&&sel.t==="c"&&sel.id===c.id?" sel":"")+(connectFrom===c.id?" from":""),"data-cid":c.id,transform:"translate("+c.x+","+c.y+")"},gb);
+      el("rect",{class:"u-box",x:0,y:0,width:s.w,height:s.h,rx:2},g);
+      var y=18;
+      if(s.stereo){ el("text",{class:"u-t u-st",x:s.w/2,y:15,"text-anchor":"middle"},g,s.stereo); y+=14; }
+      el("text",{class:"u-t u-name"+(c.abstract?" u-it":""),x:s.w/2,y:y,"text-anchor":"middle"},g,c.name||"(sin nombre)");
+      var yy=s.head;
+      el("line",{class:"u-sep",x1:0,y1:yy,x2:s.w,y2:yy},g);
+      c.attrs.forEach(function(a,i){ el("text",{class:"u-t",x:10,y:yy+16+i*16},g,a); });
+      yy+=s.ha;
+      el("line",{class:"u-sep",x1:0,y1:yy,x2:s.w,y2:yy},g);
+      c.methods.forEach(function(m,i){ el("text",{class:"u-t"+(isAbs(m)?" u-it":""),x:10,y:yy+16+i*16},g,clean(m)); });
+    });
+    renderPanel();
+    document.getElementById("pm-zoom").textContent=Math.round(zoom*100)+" %";
+  }
+
+  // ---------- panel de propiedades
+  function renderPanel(){
+    if(!sel){
+      panel.innerHTML='<div class="ed-k">Nada seleccionado</div><p class="muted">Tocá una clase o una línea para editarla. Con <b>Conectar</b> unís dos clases con el tipo de relación elegido.</p>'+
+        '<div class="ed-k">Leyenda</div><ul class="ed-leg"><li>◇ agregación: el rombo va en el todo</li><li>◆ composición: la parte muere con el todo</li><li>▷ herencia: el triángulo va en el padre</li><li>- - -&gt; dependencia: la usa de paso</li></ul>';
+      return;
+    }
+    if(sel.t==="c"){
+      var c=cls(sel.id); if(!c){ sel=null; return renderPanel(); }
+      panel.innerHTML='<div class="ed-k">Clase</div>'+
+        '<label for="ed-nombre">Nombre</label><input id="pm-nombre" type="text" autocomplete="off">'+
+        '<label class="ed-chk"><input id="pm-abs" type="checkbox"> Clase abstracta</label>'+
+        '<label class="ed-chk"><input id="pm-ifc" type="checkbox"> Interfaz</label>'+
+        '<label for="ed-attrs">Atributos (uno por renglón)</label><textarea id="pm-attrs" rows="4" placeholder="- nombre : String"></textarea>'+
+        '<label for="ed-mets">Métodos (uno por renglón)</label><textarea id="pm-mets" rows="4" placeholder="+ precio() : float&#10;abstract + tasa() : float"></textarea>'+
+        '<button class="ed-btn danger" id="pm-delc">Borrar clase</button>';
+      var n=document.getElementById("pm-nombre"), a=document.getElementById("pm-attrs"), m=document.getElementById("pm-mets");
+      n.value=c.name; a.value=c.attrs.join("\n"); m.value=c.methods.join("\n");
+      document.getElementById("pm-abs").checked=!!c.abstract; document.getElementById("pm-ifc").checked=!!c.iface;
+      var first=true;
+      function upd(){ if(first){ snap(); first=false; } c.name=n.value.trim(); c.attrs=lines(a.value); c.methods=lines(m.value); redraw(); save(); }
+      n.addEventListener("input",upd); a.addEventListener("input",upd); m.addEventListener("input",upd);
+      document.getElementById("pm-abs").addEventListener("change",function(e){ snap(); c.abstract=e.target.checked; if(c.abstract) c.iface=false; render(); save(); });
+      document.getElementById("pm-ifc").addEventListener("change",function(e){ snap(); c.iface=e.target.checked; if(c.iface) c.abstract=false; render(); save(); });
+      document.getElementById("pm-delc").addEventListener("click",borrar);
+    }else{
+      var r=rel(sel.id); if(!r){ sel=null; return renderPanel(); }
+      var A=cls(r.a), B=cls(r.b);
+      panel.innerHTML='<div class="ed-k">Relación</div>'+
+        '<label for="ed-rtipo">Tipo</label><select id="pm-rtipo">'+document.getElementById("pm-tipo").innerHTML+'</select>'+
+        '<p class="muted ed-dir">De <b></b> a <b></b></p>'+
+        '<button class="ed-btn" id="pm-inv">Invertir sentido</button>'+
+        '<label for="ed-ma">Multiplicidad del lado de <span class="ed-na"></span></label><input id="pm-ma" type="text" placeholder="1, *, 0..1, 1..*" autocomplete="off">'+
+        '<label for="ed-mb">Multiplicidad del lado de <span class="ed-nb"></span></label><input id="pm-mb" type="text" placeholder="1, *, 0..1, 1..*" autocomplete="off">'+
+        '<label for="ed-rl">Rol o nombre</label><input id="pm-rl" type="text" placeholder="titular, dueño…" autocomplete="off">'+
+        '<button class="ed-btn danger" id="pm-delr">Borrar relación</button>';
+      var dir=panel.querySelectorAll(".ed-dir b"); dir[0].textContent=A?A.name:"?"; dir[1].textContent=B?B.name:"?";
+      panel.querySelector(".ed-na").textContent=A?A.name:""; panel.querySelector(".ed-nb").textContent=B?B.name:"";
+      var t=document.getElementById("pm-rtipo"); t.value=r.type;
+      var ma=document.getElementById("pm-ma"), mb=document.getElementById("pm-mb"), rl=document.getElementById("pm-rl");
+      ma.value=r.ma||""; mb.value=r.mb||""; rl.value=r.label||"";
+      var first2=true;
+      function updr(){ if(first2){ snap(); first2=false; } r.ma=ma.value.trim(); r.mb=mb.value.trim(); r.label=rl.value.trim(); redraw(); save(); }
+      ma.addEventListener("input",updr); mb.addEventListener("input",updr); rl.addEventListener("input",updr);
+      t.addEventListener("change",function(){ snap(); r.type=t.value; render(); save(); });
+      document.getElementById("pm-inv").addEventListener("click",function(){ snap(); var x=r.a; r.a=r.b; r.b=x; var y=r.ma; r.ma=r.mb; r.mb=y; render(); save(); });
+      document.getElementById("pm-delr").addEventListener("click",borrar);
+    }
+  }
+  function lines(t){ return t.split("\n").map(function(s){return s.replace(/\s+$/,"");}).filter(function(s){return s.trim().length;}); }
+  // redibuja sin reconstruir el panel (para no perder el foco al escribir)
+  function redraw(){ var rp=renderPanel; renderPanel=function(){}; render(); renderPanel=rp; }
+
+  // ---------- acciones
+  function nuevaClase(){
+    snap();
+    var wrap=document.getElementById("pm-wrap");
+    var x=Math.round((wrap.scrollLeft+40)/zoom + (state.classes.length%5)*30), y=Math.round((wrap.scrollTop+40)/zoom + (state.classes.length%5)*30);
+    var c={id:"c"+(state.next++), name:"Clase"+state.classes.length, x:x, y:y, attrs:[], methods:[], abstract:false, iface:false};
+    state.classes.push(c); sel={t:"c",id:c.id}; render(); save();
+    var n=document.getElementById("pm-nombre"); if(n){ n.focus(); n.select(); }
+    say("Clase creada. Escribí su nombre, atributos y métodos en el panel.");
+  }
+  function borrar(){
+    if(!sel){ say("Primero seleccioná una clase o una línea."); return; }
+    snap();
+    if(sel.t==="c"){
+      var id=sel.id;
+      state.classes=state.classes.filter(function(c){return c.id!==id;});
+      state.rels=state.rels.filter(function(r){return r.a!==id && r.b!==id;});
+      say("Clase borrada (y sus relaciones).");
+    }else{
+      var rid=sel.id; state.rels=state.rels.filter(function(r){return r.id!==rid;});
+      say("Relación borrada.");
+    }
+    sel=null; render(); save();
+  }
+  var HINT={assoc:"Tocá las dos clases que se conocen.",nav:"Tocá primero la clase que <b>conoce</b> y después la conocida.",
+    aggr:"Tocá primero el <b>todo</b> (lleva el rombo vacío) y después la parte.",comp:"Tocá primero el <b>todo</b> (lleva el rombo relleno) y después la parte.",
+    inherit:"Tocá primero la clase <b>hija</b> y después el <b>padre</b>.",realize:"Tocá primero la clase y después la <b>interfaz</b> que implementa.",
+    dep:"Tocá primero la clase que <b>usa</b> y después la usada."};
+  function setConnect(on){
+    connecting=on; connectFrom=null;
+    var b=document.getElementById("pm-conectar"); b.setAttribute("aria-pressed",on?"true":"false"); b.classList.toggle("on",on);
+    svg.classList.toggle("connecting",on);
+    if(on){ if(state.classes.length<1){ say("Primero agregá al menos una clase."); setConnect(false); return; } say("Modo conectar: "+HINT[document.getElementById("pm-tipo").value]); }
+    render();
+  }
+  function clickClase(id){
+    if(connecting){
+      if(!connectFrom){ connectFrom=id; render(); say("Ahora tocá la segunda clase."); return; }
+      snap();
+      var r={id:"r"+(state.next++), a:connectFrom, b:id, type:document.getElementById("pm-tipo").value, ma:"", mb:"", label:""};
+      state.rels.push(r); sel={t:"r",id:r.id}; setConnect(false); save();
+      say("Relación creada. Completá las multiplicidades en el panel si hacen falta.");
+      return;
+    }
+    sel={t:"c",id:id}; render();
+  }
+
+  // ---------- puntero (mouse y touch)
+  function pt(e){ var m=svg.getScreenCTM(); if(!m) return {x:0,y:0}; var p=svg.createSVGPoint(); p.x=e.clientX; p.y=e.clientY; var r=p.matrixTransform(m.inverse()); return {x:r.x,y:r.y}; }
+  var drag=null;
+  svg.addEventListener("pointerdown",function(e){
+    var g=e.target.closest("[data-cid]"), rg=e.target.closest("[data-rid]");
+    if(g){
+      var id=g.getAttribute("data-cid");
+      if(connecting){ clickClase(id); return; }
+      var c=cls(id), p=pt(e);
+      drag={id:id, dx:p.x-c.x, dy:p.y-c.y, moved:false, start:JSON.stringify(state)};
+      try{ svg.setPointerCapture(e.pointerId); }catch(err){}
+      if(!(sel&&sel.t==="c"&&sel.id===id)){ sel={t:"c",id:id}; render(); }
+      e.preventDefault();
+    }else if(rg && !connecting){
+      sel={t:"r",id:rg.getAttribute("data-rid")}; render();
+    }else if(!connecting){
+      sel=null; render();
+    }
+  });
+  svg.addEventListener("pointermove",function(e){
+    if(!drag) return;
+    var c=cls(drag.id); if(!c) return;
+    var p=pt(e), nx=Math.max(0,Math.round(p.x-drag.dx)), ny=Math.max(0,Math.round(p.y-drag.dy));
+    if(nx!==c.x||ny!==c.y){ if(!drag.moved){ hist.push(drag.start); drag.moved=true; } c.x=nx; c.y=ny; redraw(); }
+  });
+  function endDrag(){ if(drag){ if(drag.moved) save(); drag=null; } }
+  svg.addEventListener("pointerup",endDrag); svg.addEventListener("pointercancel",endDrag);
+
+  document.addEventListener("keydown",function(e){
+    var tag=(document.activeElement&&document.activeElement.tagName)||"";
+    if(document.getElementById("editor-uml") && document.getElementById("editor-uml").hidden) return;
+    if(tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT") return;
+    if(e.key==="Delete"||e.key==="Backspace"){ if(sel){ e.preventDefault(); borrar(); } }
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z"){ e.preventDefault(); undo(); }
+    if(e.key==="Escape"&&connecting){ setConnect(false); say("Conexión cancelada."); }
+  });
+
+  // ---------- ordenar automáticamente (por niveles de herencia)
+  function ordenar(){
+    if(!state.classes.length) return;
+    snap();
+    var lvl={}; state.classes.forEach(function(c){ lvl[c.id]=0; });
+    for(var it=0; it<20; it++){
+      state.rels.forEach(function(r){ if(r.type==="inherit"||r.type==="realize"){ if(lvl[r.a]<=lvl[r.b]) lvl[r.a]=lvl[r.b]+1; } });
+    }
+    var rows={}; state.classes.forEach(function(c){ (rows[lvl[c.id]]=rows[lvl[c.id]]||[]).push(c); });
+    var y=40;
+    Object.keys(rows).sort(function(a,b){return a-b;}).forEach(function(k){
+      var x=40, hmax=0;
+      rows[k].forEach(function(c){ var s=size(c); c.x=x; c.y=y; x+=s.w+60; hmax=Math.max(hmax,s.h); });
+      y+=hmax+90;
+    });
+    render(); save(); say("Diagrama ordenado: los padres arriba y las hijas abajo.");
+  }
+
+  // ---------- ejercicios y corrección
+  function norm(s){ return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]/g,""); }
+  function ejActual(){ for(var i=0;i<EJ.length;i++) if(EJ[i].id===ejercicio) return EJ[i]; return null; }
+  function mostrarEj(){
+    var e=ejActual(), p=document.getElementById("pm-enunciado");
+    document.getElementById("pm-revisar").disabled=!e; document.getElementById("pm-versol").disabled=!e;
+    document.getElementById("pm-result").hidden=true;
+    document.querySelectorAll(".ed-sol").forEach(function(s){ s.hidden=true; });
+    p.hidden=true;
+    document.getElementById("pm-ejercicio").value=ejercicio;
+  }
+  function revisar(){
+    var e=ejActual(); if(!e) return;
+    var mapa={}, items=[], ok=0, tot=0;
+    function buscar(nombre, alias){
+      var keys=[norm(nombre)].concat(alias.map(norm));
+      for(var i=0;i<state.classes.length;i++){ if(keys.indexOf(norm(state.classes[i].name))>=0) return state.classes[i]; }
+      return null;
+    }
+    e.classes.forEach(function(ec){
+      tot++; var c=buscar(ec[0], ec[1]);
+      if(c){ mapa[ec[0]]=c.id; ok++; items.push(["ok","Clase <b>"+ec[0]+"</b>"]); }
+      else items.push(["bad","Falta la clase <b>"+ec[0]+"</b> (o tiene otro nombre)."]);
+      if(ec[2]){
+        tot++;
+        if(c && c.abstract){ ok++; items.push(["ok","<b>"+ec[0]+"</b> es abstracta"]); }
+        else items.push(["bad","<b>"+ec[0]+"</b> debería ser <b>abstracta</b>: hay un cálculo que cada subclase resuelve a su manera."]);
+      }
+    });
+    function hay(a,b,tipos,dirigida){
+      var A=mapa[a], B=mapa[b]; if(!A||!B) return null;
+      for(var i=0;i<state.rels.length;i++){
+        var r=state.rels[i];
+        if(dirigida){ if(r.a===A&&r.b===B&&tipos.indexOf(r.type)>=0) return r; }
+        else if(((r.a===A&&r.b===B)||(r.a===B&&r.b===A))&&tipos.indexOf(r.type)>=0) return r;
+      }
+      return false;
+    }
+    function cualquiera(a,b){ var A=mapa[a],B=mapa[b]; for(var i=0;i<state.rels.length;i++){ var r=state.rels[i]; if((r.a===A&&r.b===B)||(r.a===B&&r.b===A)) return r; } return null; }
+    var NOM={assoc:"asociación",nav:"asociación navegable",aggr:"agregación",comp:"composición",inherit:"herencia",realize:"implementación",dep:"dependencia"};
+    e.inherit.forEach(function(h){
+      tot++; var r=hay(h[0],h[1],["inherit"],true);
+      if(r){ ok++; items.push(["ok","<b>"+h[0]+"</b> hereda de <b>"+h[1]+"</b>"]); }
+      else if(r===null) items.push(["bad","Falta la herencia <b>"+h[0]+" ▷ "+h[1]+"</b> (primero hay que crear las dos clases)."]);
+      else { var x=cualquiera(h[0],h[1]); if(x&&x.type==="inherit") items.push(["bad","La herencia entre <b>"+h[0]+"</b> y <b>"+h[1]+"</b> está al revés: el triángulo va del lado del padre (<b>"+h[1]+"</b>). Usá <i>Invertir sentido</i>."]);
+             else if(x) items.push(["bad","Entre <b>"+h[0]+"</b> y <b>"+h[1]+"</b> pusiste "+NOM[x.type]+", pero es <b>herencia</b> (\""+h[0]+" es un "+h[1]+"\")."]);
+             else items.push(["bad","Falta la herencia <b>"+h[0]+" ▷ "+h[1]+"</b>."]); }
+    });
+    (e.optional_inherit||[]).forEach(function(h){
+      var r=hay(h[0],h[1],["inherit"],true);
+      if(r) items.push(["ok","<b>"+h[0]+"</b> hereda de <b>"+h[1]+"</b> (recomendado)"]);
+      else items.push(["tip","Sugerencia: <b>"+h[0]+"</b> podría heredar de <b>"+h[1]+"</b>."]);
+    });
+    e.rel.forEach(function(x){
+      tot++; var r=hay(x[0],x[1],x[2],false);
+      if(r){
+        ok++;
+        var m=(r.ma||r.mb)?"":" · Agregale las multiplicidades.";
+        var dirOk=true;
+        if((r.type==="comp"||r.type==="aggr") && x[2][0]==="comp" && mapa[x[0]]!==r.a) dirOk=false;
+        items.push([dirOk?"ok":"bad","Relación <b>"+x[0]+" – "+x[1]+"</b> ("+NOM[r.type]+")"+(dirOk?"":" · el rombo tiene que ir del lado de <b>"+x[0]+"</b> (el todo). Usá <i>Invertir sentido</i>.")+m]);
+      }else if(r===null) items.push(["bad","Falta relacionar <b>"+x[0]+"</b> con <b>"+x[1]+"</b>."]);
+      else { var y=cualquiera(x[0],x[1]);
+             if(y) items.push(["bad","Entre <b>"+x[0]+"</b> y <b>"+x[1]+"</b> pusiste "+NOM[y.type]+"; lo esperable es "+x[2].slice(0,2).map(function(t){return NOM[t];}).join(" o ")+"."]);
+             else items.push(["bad","Falta relacionar <b>"+x[0]+"</b> con <b>"+x[1]+"</b>."]); }
+    });
+    // herencias de más (por ejemplo, una parte que hereda del todo)
+    state.rels.forEach(function(r){
+      if(r.type!=="inherit") return;
+      var A=cls(r.a), B=cls(r.b); if(!A||!B) return;
+      var esperada=false;
+      e.inherit.concat(e.optional_inherit||[]).forEach(function(h){ if(mapa[h[0]]===r.a&&mapa[h[1]]===r.b) esperada=true; });
+      if(!esperada) items.push(["tip","Revisá la herencia <b>"+A.name+" ▷ "+B.name+"</b>: ¿\""+A.name+" es un "+B.name+"\" es siempre verdadero?"]);
+    });
+    var box=document.getElementById("pm-result");
+    box.hidden=false;
+    var pct=Math.round(ok*100/tot);
+    box.innerHTML='<div class="ed-score"><b>'+ok+' de '+tot+'</b> puntos de control ('+pct+' %)</div><ul class="ed-checks">'+
+      items.map(function(i){ return '<li class="'+i[0]+'">'+i[1]+'</li>'; }).join("")+'</ul>'+
+      '<p class="muted">La corrección mira clases, abstractas, herencias y relaciones. No mira atributos ni métodos: comparalos con la solución.</p>';
+  }
+
+  // ---------- botones
+  document.getElementById("pm-add").addEventListener("click",nuevaClase);
+  document.getElementById("pm-conectar").addEventListener("click",function(){ setConnect(!connecting); });
+  document.getElementById("pm-tipo").addEventListener("change",function(){ if(connecting) say("Modo conectar: "+HINT[this.value]); });
+  document.getElementById("pm-deshacer").addEventListener("click",undo);
+  document.getElementById("pm-borrar").addEventListener("click",borrar);
+  document.getElementById("pm-ordenar").addEventListener("click",ordenar);
+  document.getElementById("pm-zin").addEventListener("click",function(){ zoom=Math.min(2,zoom+0.1); render(); });
+  document.getElementById("pm-zout").addEventListener("click",function(){ zoom=Math.max(0.4,zoom-0.1); render(); });
+  var limpiarArmado=false;
+  document.getElementById("pm-limpiar").addEventListener("click",function(){
+    var b=this;
+    if(!limpiarArmado){ limpiarArmado=true; b.textContent="¿Seguro? Tocá de nuevo"; b.classList.add("danger"); setTimeout(function(){ limpiarArmado=false; b.textContent="Limpiar todo"; b.classList.remove("danger"); },3000); return; }
+    limpiarArmado=false; b.textContent="Limpiar todo"; b.classList.remove("danger");
+    snap(); state={classes:[],rels:[],next:state.next}; sel=null; render(); save(); say("Lienzo vacío. Con Deshacer lo recuperás.");
+  });
+  document.getElementById("pm-ejercicio").addEventListener("change",function(){ ejercicio=this.value; mostrarEj(); save(); });
+  document.getElementById("pm-revisar").addEventListener("click",revisar);
+  document.getElementById("pm-versol").addEventListener("click",function(){
+    var s=document.querySelector('.ed-sol[data-sol="'+ejercicio+'"]'); if(!s) return;
+    s.hidden=!s.hidden; this.textContent=s.hidden?"Ver solución":"Ocultar solución";
+  });
+  document.getElementById("pm-copiar").addEventListener("click",function(){
+    var t=document.getElementById("pm-json"); t.value=JSON.stringify(state);
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t.value).then(function(){ say("Texto copiado."); },function(){ t.select(); say("Seleccioné el texto: copialo con Ctrl+C."); }); }
+    else { t.select(); say("Seleccioné el texto: copialo con Ctrl+C."); }
+  });
+  document.getElementById("pm-cargar").addEventListener("click",function(){
+    try{ var o=JSON.parse(document.getElementById("pm-json").value); if(!o||!o.classes||!o.rels) throw 0; snap(); state=o; if(!state.next) state.next=1000; sel=null; render(); save(); say("Diagrama cargado."); }
+    catch(e){ say("Ese texto no es un diagrama válido. Copialo completo desde <i>Copiar texto</i>."); }
+  });
+
+  load(); ejercicio="martin"; var pre=false; if(!state.classes.length){ state=JSON.parse(document.getElementById("pm-pre").textContent); pre=true; }
+  mostrarEj(); render(); syncJson();
+  say(pre?"Tu diagrama del parcial está cargado: movelo, editalo o agregá lo que falte.":"Se recuperó tu último diagrama.");
+})();
+</script>
+<script>
+(function(){
+function ta(id,key,init,tab){
+  var t=document.getElementById(id); if(!t) return;
+  var saved=null; try{saved=localStorage.getItem(key);}catch(e){}
+  t.value=(saved!==null&&saved!=="")?saved:init;
+  var st=document.getElementById(id+"-st");
+  function save(){ try{localStorage.setItem(key,t.value); if(st) st.textContent="Guardado en este navegador";}catch(e){ if(st) st.textContent="No se pudo guardar en este navegador"; } }
+  t.addEventListener("input",save);
+  if(tab) t.addEventListener("keydown",function(e){
+    if(e.key==="Tab"){ e.preventDefault(); var a=t.selectionStart,b=t.selectionEnd; t.value=t.value.slice(0,a)+"    "+t.value.slice(b); t.selectionStart=t.selectionEnd=a+4; save(); }
+  });
+  var r=document.getElementById(id+"-reset");
+  if(r){ var armed=false; r.addEventListener("click",function(){
+    if(!armed){ armed=true; r.textContent="¿Seguro? Tocá de nuevo"; setTimeout(function(){armed=false; r.textContent="Volver al texto inicial";},3000); return; }
+    armed=false; r.textContent="Volver al texto inicial"; t.value=init; save();
+  }); }
+  var c=document.getElementById(id+"-copy");
+  if(c) c.addEventListener("click",function(){
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t.value).then(function(){c.textContent="Copiado";setTimeout(function(){c.textContent="Copiar";},1500);},function(){t.select();}); } else { t.select(); }
+  });
+}
+var d=document.getElementById("pm-init"); var I={}; try{I=JSON.parse(d.textContent);}catch(e){}
+ta("pm-enun-ta","ipoo-parcial-martin-enun",I.enun||"",false);
+ta("pm-code-ta","ipoo-parcial-martin-code",I.code||"",true);
+var rd=document.getElementById("pm-restaurar-dib");
+if(rd){ var armed=false; rd.addEventListener("click",function(){
+  if(!armed){ armed=true; rd.textContent="¿Seguro? Tocá de nuevo"; setTimeout(function(){armed=false; rd.textContent="Volver al diagrama inicial";},3000); return; }
+  armed=false; rd.textContent="Volver al diagrama inicial";
+  var j=document.getElementById("pm-json"); j.value=document.getElementById("pm-pre").textContent; document.getElementById("pm-cargar").click();
+}); }
+})();
+</script>
+
 <script>
 (function(){
 "use strict";
